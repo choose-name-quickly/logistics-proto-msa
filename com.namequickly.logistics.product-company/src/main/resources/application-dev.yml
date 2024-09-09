@@ -1,0 +1,14 @@
+# 서버
+server:
+  port: 19093
+
+# 스프링 설정
+spring:
+  application:
+    name: product-company-service
+
+# 유레카 클라이언트 설정
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:19090/eureka/ # 유레카 서버와 통신하기 위해 사용할 기본 서비스 URL
