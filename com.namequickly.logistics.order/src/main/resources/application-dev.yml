@@ -1,10 +1,31 @@
-spring:
-  application:
-    name: order-service
+# 서버
 server:
   port: 19092
 
+# 스프링 설정
+spring:
+  application:
+    name: order-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/logistics
+    username: logistics
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true # sql 로깅
+        format_sql: true # SQL 문 정렬하여 출력
+        highlight_sql: true # SQL 문 색 부여
+        use_sql_comments: true # 콘솔에 표시되는 쿼리문 위에 어떤 실행을 하려는지 HINT 표시
+        dialect: org.hibernate.dialect.PostgreSQLDialect # Hibernate가 PostgreSQL 데이터베이스에 맞는 dialect 를 사용하도록 설정합니다.
+        default_schema: order_service # 각 서비스에 맞는 스키마를 설정
+
+# 유레카 클라이언트 설정
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:19090/eureka/ # 유레카 서버와 통신하기 위해 사용할 기본 서비스 URL
+
