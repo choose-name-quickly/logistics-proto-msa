@@ -1,0 +1,17 @@
+# IDE 설정 파일 무시
+.idea/
+*.iml
+
+# SonarLint 설정 파일 무시
+.sonarlint/
+
+# 로그 파일
+*.log
+
+# OS 생성 파일
+.DS_Store
+Thumbs.db
+
+# 빌드 결과물
+/target/
+/build/
