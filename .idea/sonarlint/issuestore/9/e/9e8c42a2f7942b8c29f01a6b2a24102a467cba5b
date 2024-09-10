@@ -1,0 +1,25 @@
+
+z
+java:S1450"_Remove the "destinationHubId" field and declare it as a local variable in the relevant methods.(«À¥ºüÿÿÿÿ
+r
+java:S1450"WRemove the "distance" field and declare it as a local variable in the relevant methods.(Ýýõ½ûÿÿÿÿ
+w
+java:S1450"\Remove the "estimatedTime" field and declare it as a local variable in the relevant methods.(èµ½üøÿÿÿÿ
+r
+java:S1450"WRemove the "isDelete" field and declare it as a local variable in the relevant methods.(Ô€§Òþÿÿÿÿ
+u
+java:S1450"ZRemove the "originHubId" field and declare it as a local variable in the relevant methods.( Ûœüþÿÿÿÿ
+z
+java:S1450"_Remove the "routeDescription" field and declare it as a local variable in the relevant methods.(ìØº¨øÿÿÿÿ
+J
+java:S1068"/Remove this unused "originHubId" private field.( Ûœüþÿÿÿÿ
+O
+java:S1068"4Remove this unused "destinationHubId" private field.(«À¥ºüÿÿÿÿ
+O
+java:S1068"4Remove this unused "routeDescription" private field.(ìØº¨øÿÿÿÿ
+L
+java:S1068"1Remove this unused "estimatedTime" private field.(èµ½üøÿÿÿÿ
+G
+java:S1068",Remove this unused "distance" private field.(Ýýõ½ûÿÿÿÿ
+G
+java:S1068",Remove this unused "isDelete" private field.(Ô€§Òþÿÿÿÿ

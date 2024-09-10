@@ -1,0 +1,17 @@
+
+q
+java:S1450"VRemove the "address" field and declare it as a local variable in the relevant methods.(÷§ùÿÿÿÿ
+q
+java:S1450"VRemove the "hubName" field and declare it as a local variable in the relevant methods.(³¸ùªşÿÿÿÿ
+z
+java:S1450"_Remove the "locationLatitude" field and declare it as a local variable in the relevant methods.(¸¶©Øùÿÿÿÿ
+{
+java:S1450"`Remove the "locationLongitude" field and declare it as a local variable in the relevant methods.(ï—ı“ûÿÿÿÿ
+F
+java:S1068"+Remove this unused "hubName" private field.(³¸ùªşÿÿÿÿ
+F
+java:S1068"+Remove this unused "address" private field.(÷§ùÿÿÿÿ
+O
+java:S1068"4Remove this unused "locationLatitude" private field.(¸¶©Øùÿÿÿÿ
+P
+java:S1068"5Remove this unused "locationLongitude" private field.(ï—ı“ûÿÿÿÿ
