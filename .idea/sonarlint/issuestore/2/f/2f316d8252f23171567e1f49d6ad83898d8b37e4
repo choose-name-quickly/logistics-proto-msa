@@ -1,26 +1,0 @@
-
-t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(‘¹Ÿãûÿÿÿÿ
-{
-java:S1450"`Remove the "distanceToNextHub" field and declare it as a local variable in the relevant methods.(½ÈƒÍüÿÿÿÿ
-o
-java:S1450"TRemove the "hubId" field and declare it as a local variable in the relevant methods.(ãÏÇúÿÿÿÿ
-r
-java:S1450"WRemove the "isDelete" field and declare it as a local variable in the relevant methods.(Ô€§Òşÿÿÿÿ
-v
-java:S1450"[Remove the "orderInRoute" field and declare it as a local variable in the relevant methods.(ş÷£Ğÿÿÿÿÿ
-q
-java:S1450"VRemove the "routeId" field and declare it as a local variable in the relevant methods.(™ËÜòıÿÿÿÿ
-w
-java:S1450"\Remove the "timeToNextHub" field and declare it as a local variable in the relevant methods.(ıóøòûÿÿÿÿ
-F
-java:S1068"+Remove this unused "routeId" private field.(™ËÜòıÿÿÿÿ
-D
-java:S1068")Remove this unused "hubId" private field.(ãÏÇúÿÿÿÿ
-K
-java:S1068"0Remove this unused "orderInRoute" private field.(ş÷£Ğÿÿÿÿÿ
-P
-java:S1068"5Remove this unused "distanceToNextHub" private field.(½ÈƒÍüÿÿÿÿ
-L
-java:S1068"1Remove this unused "timeToNextHub" private field.(ıóøòûÿÿÿÿ
-G
-java:S1068",Remove this unused "isDelete" private field.(Ô€§Òşÿÿÿÿ
