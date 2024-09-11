@@ -1,0 +1,21 @@
+server:
+  port: 19095
+
+spring:
+  application:
+    name: hub-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/hubdb
+    username: hubuser
+    password: hubpass
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:19090/eureka/
