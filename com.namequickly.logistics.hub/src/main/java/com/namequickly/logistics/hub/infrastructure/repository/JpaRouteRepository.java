@@ -1,5 +1,5 @@
 package com.namequickly.logistics.hub.infrastructure.repository;
 
-public interface JpaRouteRepository {
+public interface RouteRepositoryImpl extends JpaRepository<Route,UUID>, RouteRepository{
 
 }
