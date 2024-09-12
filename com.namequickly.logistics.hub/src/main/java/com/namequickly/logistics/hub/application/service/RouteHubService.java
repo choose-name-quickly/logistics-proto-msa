@@ -1,9 +1,12 @@
 package com.namequickly.logistics.hub.application.service;
 
+import com.namequickly.logistics.common.exception.GlobalException;
+import com.namequickly.logistics.common.response.ResultCase;
+import com.namequickly.logistics.hub.application.dto.RouteHubRequestDto;
 import com.namequickly.logistics.hub.application.dto.RouteHubResponseDto;
+import com.namequickly.logistics.hub.application.mapper.RouteHubMapper;
 import com.namequickly.logistics.hub.domain.model.RouteHub;
 import com.namequickly.logistics.hub.domain.repository.RouteHubRepository;
-import com.namequickly.logistics.hub.presentation.request.RouteHubRequest;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +19,13 @@ public class RouteHubService {
     private final RouteHubRepository routeHubRepository;
     private final RouteHubMapper routeHubMapper;
 
-    public RouteHubResponseDto createRouteHub(RouteHubRequest requestDto) {
+    public RouteHubResponseDto createRouteHub(RouteHubRequestDto requestDto) {
         RouteHub routeHub = RouteHub.createRouteHub(requestDto);
         RouteHub savedRouteHub = routeHubRepository.save(routeHub);
         return routeHubMapper.toDTO(savedRouteHub);
     }
 
-    public RouteHubResponseDto updateRouteHub(UUID routeHubId, RouteHubRequest requestDto) {
+    public RouteHubResponseDto updateRouteHub(UUID routeHubId, RouteHubRequestDto requestDto) {
         RouteHub routeHub = routeHubRepository.findById(routeHubId)
             .orElseThrow(() -> new GlobalException(ResultCase.NOT_FOUND));
         routeHub.updateRouteHub(requestDto);

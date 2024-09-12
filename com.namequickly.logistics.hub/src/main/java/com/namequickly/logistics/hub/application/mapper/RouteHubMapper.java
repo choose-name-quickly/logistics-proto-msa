@@ -2,13 +2,11 @@ package com.namequickly.logistics.hub.application.mapper;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
-import com.namequickly.logistics.domain.routeHub.domain.RouteHub;
-import com.namequickly.logistics.domain.routeHub.dto.RouteHubRequestDto;
-import com.namequickly.logistics.domain.routeHub.dto.RouteHubResponseDto;
+import com.namequickly.logistics.hub.application.dto.RouteHubRequestDto;
+import com.namequickly.logistics.hub.application.dto.RouteHubResponseDto;
+import com.namequickly.logistics.hub.domain.model.RouteHub;
 import java.util.List;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = SPRING)
 public interface RouteHubMapper {

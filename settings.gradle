@@ -1,0 +1,12 @@
+rootProject.name = 'logistics-proto-msa'
+
+include 'com.namequickly.logistics.auth'
+include 'com.namequickly.logistics.common'
+include 'com.namequickly.logistics.gateway'
+include 'com.namequickly.logistics.hub'
+include 'com.namequickly.logistics.hub-management'
+include 'com.namequickly.logistics.order'
+include 'com.namequickly.logistics.product-company'
+include 'com.namequickly.logistics.server'
+include 'com.namequickly.logistics.slack-message'
+include 'com.namequickly.logistics.ai'

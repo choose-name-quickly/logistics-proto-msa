@@ -2,9 +2,9 @@ package com.namequickly.logistics.hub.application.mapper;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
-import com.namequickly.logistics.domain.hub.domain.Hub;
-import com.namequickly.logistics.domain.hub.dto.HubRequestDto;
-import com.namequickly.logistics.domain.hub.dto.HubResponseDto;
+import com.namequickly.logistics.hub.application.dto.HubRequestDto;
+import com.namequickly.logistics.hub.application.dto.HubResponseDto;
+import com.namequickly.logistics.hub.domain.model.Hub;
 import java.util.List;
 import org.mapstruct.Mapper;
 

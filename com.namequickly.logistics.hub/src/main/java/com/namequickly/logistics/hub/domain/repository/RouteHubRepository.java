@@ -1,6 +1,9 @@
 package com.namequickly.logistics.hub.domain.repository;
 
-// JPA repository 의 method 를 이곳에 놓음으로써 추상화가능
-public interface RouteHubRepository {
+import com.namequickly.logistics.hub.domain.model.RouteHub;
+import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface RouteHubRepository extends JpaRepository<RouteHub, UUID> {
 
 }

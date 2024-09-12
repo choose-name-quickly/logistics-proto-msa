@@ -3,9 +3,11 @@ package com.namequickly.logistics.hub.application.dto;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@Builder
+@RequiredArgsConstructor
 public class RouteHubResponseDto {
 
     private UUID routeHubId;
