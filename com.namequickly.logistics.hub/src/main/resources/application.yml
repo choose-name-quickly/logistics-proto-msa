@@ -19,3 +19,5 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:19090/eureka/
+
+# redis 캐시 설정도 필요함

@@ -1,5 +1,9 @@
 package com.namequickly.logistics.hub.domain.repository;
 
-public interface HubRepository {
+import com.namequickly.logistics.hub.domain.model.Hub;
+import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface HubRepository extends JpaRepository<Hub, UUID> {
 
 }

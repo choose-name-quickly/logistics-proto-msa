@@ -1,0 +1,19 @@
+server:
+  port: 19098
+
+spring:
+  application:
+    name: auth-service
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:19090/eureka/
+
+security:
+  jwt:
+    secret: your-secret-key
+    expiration: 3600000
+
+# 인증과 권한 부여
+# 로그인, 로그아웃, 권한 검증 등을 수행하며, 이를 통해 각 사용자가 접근할 수 있는 리소스를 제어

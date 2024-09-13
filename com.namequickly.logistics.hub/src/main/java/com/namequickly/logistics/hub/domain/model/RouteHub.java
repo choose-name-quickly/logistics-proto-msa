@@ -1,5 +1,6 @@
 package com.namequickly.logistics.hub.domain.model;
 
+import com.namequickly.logistics.hub.application.dto.RouteHubRequestDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

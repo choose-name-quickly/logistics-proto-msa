@@ -13,13 +13,19 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/**
+          filters:
+            - JwtAuthenticationFilter
         - id: hub-service
           uri: lb://hub-service
           predicates:
             - Path=/hub/**
-          filters:
-            - JwtAuthenticationFilter
+        # 다른 서비스도 등록해야함
 
-        #?? ????? ?????
-
-# gateway-service ?? JWT ??? ??? ??? ??? ???? ??????? ? ????? ???? ?????.
+# 마이크로서비스 간의 라우팅, 인증/인가, 로드 밸런싱 등의 역할을 담당.
+# 모든 클라이언트 요청은 Gateway를 통해 라우팅
+# 복잡한 비즈니스 로직이 없으므로 application, domain, infrastructure, presentation처럼 세분화하지 않음.
+# 라우팅과 필터링을 설정하는 Config 파일들이 핵심
