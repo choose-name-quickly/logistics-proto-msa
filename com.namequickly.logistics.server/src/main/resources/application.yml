@@ -1,5 +1,13 @@
 spring:
   application:
-    name: server
-  profiles:
-    default: dev
+    name: server # 어플리케이션 이름을 'server'로 지정
+server:
+  port: 19090 # 서버가 실행될 포트 번호 19090
+eureka:
+  client:
+    register-with-eureka: false # 다른 Eureka 서버에 등록되지 않도록 설정
+    fetch-registry: false # 다른 Eureka 서버 레지스트리를 가져오지 않도록 설정
+    service-url:
+      defaultZone: http://localhost:19090/eureka/ # Eureka 서버의 기본 주소 설정
+  instance:
+    hostname: localhost # 호스트 이름을 'localhost'로 설정

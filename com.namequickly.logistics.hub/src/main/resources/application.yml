@@ -5,9 +5,10 @@ spring:
   application:
     name: hub-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/hubdb
-    username: hubuser
-    password: hubpass
+    url: jdbc:postgresql://localhost:15432/hubdb
+    username: postgres
+    password: 1234
+    driver-class-name: org.postgresql.Driver # 써야됨?
   jpa:
     hibernate:
       ddl-auto: create
