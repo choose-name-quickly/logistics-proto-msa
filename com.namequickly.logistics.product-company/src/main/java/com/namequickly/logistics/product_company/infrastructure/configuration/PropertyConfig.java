@@ -1,4 +1,4 @@
-package com.namequickly.logistics.product_company.global.property;
+package com.namequickly.logistics.product_company.infrastructure.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Configuration;

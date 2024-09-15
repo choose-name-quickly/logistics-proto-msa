@@ -1,4 +1,4 @@
-package com.namequickly.logistics.order.global.querydsl;
+package com.namequickly.logistics.product_company.infrastructure.configuration;
 
 import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.impl.JPAQueryFactory;
