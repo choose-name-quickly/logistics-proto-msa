@@ -1,5 +1,5 @@
 package com.namequickly.logistics.auth.application.dto;
 
-public class LoginRequestDto {
+public record UserInfoResponseDto() {
 
 }

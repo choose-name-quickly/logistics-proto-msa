@@ -4,16 +4,29 @@ server:
 spring:
   application:
     name: auth-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:15432/auth
+    username: postgres
+    password: 1234
+  data:
+    redis:
+      host: 172.17.129.27 # 성진 WSL 주소 -> localhost로 변경하기
+      port: 6379
+      username: default
+      password:
 
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:19090/eureka/
 
-security:
-  jwt:
-    secret: your-secret-key
-    expiration: 3600000
+jwt:
+  secret:
+    key: YW55IHNlY3JldCBleGFtcGxlIHNlY3JldCBrZXkgZm9yIGp3dA==
+  expiration: 3600000
+
+# 나중에 따로 관리해야함
 
 # 인증과 권한 부여
 # 로그인, 로그아웃, 권한 검증 등을 수행하며, 이를 통해 각 사용자가 접근할 수 있는 리소스를 제어
