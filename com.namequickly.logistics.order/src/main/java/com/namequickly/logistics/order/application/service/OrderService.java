@@ -1,11 +1,16 @@
 package com.namequickly.logistics.order.application.service;
 
 
+import com.namequickly.logistics.common.exception.GlobalException;
+import com.namequickly.logistics.common.response.ResultCase;
 import com.namequickly.logistics.order.application.dto.HubRouteDto;
-import com.namequickly.logistics.order.application.dto.OrderCreateDto;
-import com.namequickly.logistics.order.application.dto.OrderCreateDto.OrderProductDto;
+import com.namequickly.logistics.order.application.dto.OrderCreateRequestDto;
+import com.namequickly.logistics.order.application.dto.OrderCreateRequestDto.OrderProductRequestDto;
+import com.namequickly.logistics.order.application.dto.OrderCreateResponseDto;
+import com.namequickly.logistics.order.application.dto.OrderDeleteResponseDto;
 import com.namequickly.logistics.order.application.dto.OrderResponseDto;
-import com.namequickly.logistics.order.application.dto.OrderUpdateDto;
+import com.namequickly.logistics.order.application.dto.OrderUpdateRequestDto;
+import com.namequickly.logistics.order.application.dto.OrderUpdateResponseDto;
 import com.namequickly.logistics.order.application.mapper.OrderMapper;
 import com.namequickly.logistics.order.domain.model.delivery.Delivery;
 import com.namequickly.logistics.order.domain.model.delivery.DeliveryRoute;
@@ -25,7 +30,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +38,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OrderService {
 
+    private final VerifierService verifierService;
+
+    private final OrderMapper orderMapper;
     private final HubClient hubClient;
 
     private final OrderRepository orderRepository;
@@ -46,31 +53,50 @@ public class OrderService {
      * 주문 생성
      */
     @Transactional(readOnly = false)
-    public void createOrder(OrderCreateDto createDto) {
+    public OrderCreateResponseDto createOrder(OrderCreateRequestDto requestDto) {
+
+        // TODO 나중에 feign client 개발 완료되면 주석 풀기
+        /*
+        verifierService.checkCompanyExists(requestDto.getSupplierId());
+        verifierService.checkCompanyExists(requestDto.getReceiverId());
+        verifierService.checkHubExists(requestDto.getOriginHubId());
+        verifierService.checkHubExists(requestDto.getDestinationHubId());
+
+        // TODO 상품이 존재하는지 확인하는 것도 개발 필요 requestDto.getProductId();
+        if (userRole.equals("ROLE_HUBMANAGER")) {
+           // TODO 원래는 생산 업체의 허브랑 클라이언트 허브랑 같은지도 체크해야 하는데.. 아 ㅠ
+            verifierService.isMatchHub(requestDto.getHubId(), userName);
+        } else if (userRole.equals("ROLE_COMPANY")) {
+            verifierService.isMatchCompany(requestDto.getSupplierId(), userName);
+        }
+        */
+
         // 1. 주문 생성 (Order)
-        Order order = Order.create(createDto.getSupplierId(), createDto.getReceiverId());
+        Order order = Order.create(requestDto.getSupplierId(), requestDto.getReceiverId());
 
         // 2. 주문 상품 생성 (OrderProducts)
-        List<OrderProductDto> productDtos = createDto.getProducts();
+        List<OrderProductRequestDto> productDtos = requestDto.getProducts();
 
-        for (OrderProductDto productDto : productDtos) {
+        for (OrderProductRequestDto productDto : productDtos) {
             OrderProduct orderProduct = OrderProduct.create(order, productDto.getProductId(),
                 productDto.getOrderQuantity());
             order.addOrderProduct(orderProduct);
         }
+        // TODO 주문 상품 생성 될 때 재고 수량 변경되어야 할 필요가 있음
+        // TODO 재고 수량 음수 안되게 조심 즉, 재고 수량보다 주문 수량이 많은지 먼저 확인해야함
 
         // 3. 배달 생성 (Delivery)
-        Delivery delivery = Delivery.create(createDto.getOriginHubId(),
-            createDto.getDestinationHubId(), createDto.getRecipientName(),
-            createDto.getRecipientSlackId(), order);
+        Delivery delivery = Delivery.create(requestDto.getOriginHubId(),
+            requestDto.getDestinationHubId(), requestDto.getRecipientName(),
+            requestDto.getRecipientSlackId(), order);
         order.addDelivery(delivery);
 
         //orderRepository.save(order);
 
         // 4. 배달 경유 생성(DeliveryRoutes)
         // TODO 나중에 Hub 개발 완료되면 주석 제거
-        //List<HubRouteDto> hubRouteDtos = hubClient.getHubRoutes(createDto.getOriginHubId(),
-        //    createDto.getDestinationHubId());
+        //List<HubRouteDto> hubRouteDtos = hubClient.getHubRoutes(requestDto.getOriginHubId(),
+        //    requestDto.getDestinationHubId());
 
         // TODO 임시데이터 , 나중에 Hub 개발 완료되면 로직 삭제
         List<HubRouteDto> hubRouteDtos = new ArrayList<>();
@@ -78,17 +104,18 @@ public class OrderService {
             hubRouteDtos.add(HubRouteDto.builder()
                 .routeHubId(UUID.randomUUID())
                 .courierId(UUID.randomUUID())
-                .sequence(i + 1)
+                //.sequence(i + 1)
                 .build());
         }
 
         for (HubRouteDto hubRouteDto : hubRouteDtos) {
-            DeliveryRoute deliveryRoute = DeliveryRoute.create(hubRouteDto.getSequence(),
+            DeliveryRoute deliveryRoute = DeliveryRoute.create(//hubRouteDto.getSequence(),
                 hubRouteDto.getRouteHubId(),
                 hubRouteDto.getCourierId(), delivery);
             delivery.addDeliveryRoute(deliveryRoute);
         }
         orderRepository.save(order);
+        return orderMapper.toOrderCreateResponseDto(order);
     }
 
     /**
@@ -97,9 +124,9 @@ public class OrderService {
      * @param orderId
      */
     @Transactional(readOnly = false)
-    public void cancelOrder(UUID orderId) {
+    public OrderDeleteResponseDto cancelOrder(UUID orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(
-            () -> new IllegalArgumentException("Order not found")
+            () -> new GlobalException(ResultCase.NOT_FOUND_ORDER)
         );
 
         String userName = (String) SecurityContextHolder.getContext().getAuthentication()
@@ -108,8 +135,12 @@ public class OrderService {
         if (DeliveryStatus.HUB_WAITING.equals(order.getDeliveryStatus())) {
             order.cancelOrder(userName);
         } else {
-            throw new IllegalArgumentException("Order not cancelled");
+            throw new GlobalException(ResultCase.CANNOT_DELETE_ORDER_IN_DELIVERY);
         }
+
+        // TODO 주문 취소되면 재고 수량이 증가해야함
+
+        return orderMapper.toOrderDeleteResponseDto(order);
     }
 
     /**
@@ -117,16 +148,24 @@ public class OrderService {
      *
      * @param orderId
      */
-    @PreAuthorize("hasAnyRole('MASTER','HUB') || (hasRole('COMPANY') && @orderAuthService.isOrderOwner(#orderId))")
     @Transactional(readOnly = false)
-    public void updateOrder(UUID orderId, OrderUpdateDto updateDto) {
+    public OrderUpdateResponseDto updateOrder(UUID orderId, OrderUpdateRequestDto updateDto) {
         Order order = orderRepository.findById(orderId).orElseThrow(
-            () -> new IllegalArgumentException("Order not found")
+            () -> new GlobalException(ResultCase.NOT_FOUND_ORDER)
         );
 
-        if (order.getDeliveryStatus().equals(DeliveryStatus.HUB_WAITING)) {
-            order.updateOrderQuantity(updateDto.getProductId(), updateDto.getOrderQuantity());
+        if (!order.getDeliveryStatus().equals(DeliveryStatus.HUB_WAITING)) {
+            throw new GlobalException(ResultCase.CANNOT_UPDATE_ORDER_IN_DELIVERY);
         }
+
+        OrderProduct orderProduct = order.updateOrderQuantity(
+            updateDto.getProductId(), updateDto.getOrderQuantity()).orElseThrow(
+            () -> new GlobalException(ResultCase.NOT_FOUND_PRODUCT)
+        );
+
+        // TODO 주문 상품 수량이 변경되면 재고 상품 수량도 변경되어야 함
+        
+        return orderMapper.toOrderUpdateResponseDto(order, orderProduct);
     }
 
     /**
@@ -141,7 +180,7 @@ public class OrderService {
             .orElseThrow(() -> new IllegalArgumentException("Order not found"));
 
         // 변환 로직
-        return OrderMapper.INSTANCE.toOrderResponseDto(order);
+        return orderMapper.toOrderResponseDto(order);
     }
 
     /**
@@ -162,7 +201,7 @@ public class OrderService {
 
         Page<Order> orders = orderRepository.findAllOrderDetails(pageable, isDelete);
 
-        return orders.map(OrderMapper.INSTANCE::toOrderResponseDto);
+        return orders.map(orderMapper::toOrderResponseDto);
 
     }
 
