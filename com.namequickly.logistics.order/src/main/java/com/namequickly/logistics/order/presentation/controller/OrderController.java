@@ -1,15 +1,17 @@
 package com.namequickly.logistics.order.presentation.controller;
 
 import com.namequickly.logistics.common.response.CommonResponse;
-import com.namequickly.logistics.common.response.CommonResponse.CommonEmptyRes;
+import com.namequickly.logistics.order.application.dto.OrderCreateRequestDto;
+import com.namequickly.logistics.order.application.dto.OrderCreateResponseDto;
+import com.namequickly.logistics.order.application.dto.OrderDeleteResponseDto;
 import com.namequickly.logistics.order.application.dto.OrderResponseDto;
+import com.namequickly.logistics.order.application.dto.OrderUpdateRequestDto;
+import com.namequickly.logistics.order.application.dto.OrderUpdateResponseDto;
 import com.namequickly.logistics.order.application.service.OrderService;
-import com.namequickly.logistics.order.presentation.dto.OrderCreateRequestDto;
-import com.namequickly.logistics.order.presentation.dto.OrderUpdateRequestDto;
-import com.namequickly.logistics.order.presentation.mapper.OrderMapper;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,11 +37,11 @@ public class OrderController {
      * @param requestDto
      * @return
      */
+    @PreAuthorize("hasAnyRole('MASTER','HUBMANAGER','COMPANY')")
     @PostMapping("/orders")
-    public CommonResponse<CommonEmptyRes> createOrder(
+    public CommonResponse<OrderCreateResponseDto> createOrder(
         @RequestBody OrderCreateRequestDto requestDto) {
-        orderService.createOrder(OrderMapper.INSTANCE.toOrderCreateDto(requestDto));
-        return CommonResponse.success();
+        return CommonResponse.success(orderService.createOrder(requestDto));
     }
 
     /**
@@ -48,10 +50,12 @@ public class OrderController {
      * @param orderId
      * @return
      */
+    @PreAuthorize("hasAnyRole('MASTER','HUBMANAGER','COMPANY')")
     @DeleteMapping("/orders/{orderId}")
-    public CommonResponse<CommonEmptyRes> cancelOrder(@PathVariable("orderId") UUID orderId) {
-        orderService.cancelOrder(orderId);
-        return CommonResponse.success();
+    public CommonResponse<OrderDeleteResponseDto> cancelOrder(
+        @PathVariable("orderId") UUID orderId) {
+
+        return CommonResponse.success(orderService.cancelOrder(orderId));
     }
 
 
@@ -61,11 +65,11 @@ public class OrderController {
      * @param orderId
      * @return
      */
+    @PreAuthorize("hasAnyRole('MASTER','HUBMANAGER') || (hasRole('COMPANY') && @orderAuthService.isOrderOwner(#orderId))")
     @PutMapping("/orders/{orderId}")
-    public CommonResponse<CommonEmptyRes> updateOrder(@PathVariable("orderId") UUID orderId,
+    public CommonResponse<OrderUpdateResponseDto> updateOrder(@PathVariable("orderId") UUID orderId,
         @RequestBody OrderUpdateRequestDto requestDto) {
-        orderService.updateOrder(orderId, OrderMapper.INSTANCE.toOrderUpdateDto(requestDto));
-        return CommonResponse.success();
+        return CommonResponse.success(orderService.updateOrder(orderId, requestDto));
     }
 
     /**
@@ -82,9 +86,25 @@ public class OrderController {
     /**
      * 주문 정보 전체 조회
      */
-
     @GetMapping("/orders")
     public CommonResponse<Page<OrderResponseDto>> getAllOrders(
+        @RequestParam(name = "page", defaultValue = "1") int page,
+        @RequestParam(name = "size", defaultValue = "10") int size,
+        @RequestParam(name = "isAsc", defaultValue = "true") boolean isAsc,
+        @RequestParam(name = "sortBy", defaultValue = "createdAt") String sortBy,
+        @RequestParam(name = "isDelete", defaultValue = "false") boolean isDelete) {
+
+        Page<OrderResponseDto> orderResponseDtos = orderService.getAllOrders(page - 1, size, isAsc,
+            sortBy, isDelete);
+        return CommonResponse.success(orderResponseDtos);
+    }
+
+    /**
+     * 내가 한 주문 정보 전체 조회
+     */
+    @PreAuthorize("hasAnyRole('MASTER','HUBMANAGER','COMPANY')")
+    @GetMapping("/orders/mine")
+    public CommonResponse<Page<OrderResponseDto>> getMineOrders(
         @RequestParam(name = "page", defaultValue = "1") int page,
         @RequestParam(name = "size", defaultValue = "10") int size,
         @RequestParam(name = "isAsc", defaultValue = "true") boolean isAsc,
@@ -101,7 +121,6 @@ public class OrderController {
     @GetMapping("/order-product/in-delivery")
     public CommonResponse<Boolean> checkProductInDelivery(
         @RequestParam("productId") UUID productId) {
-        System.out.println("오긴 왓니?");
         return CommonResponse.success(orderService.checkProductInDelivery(productId));
     }
 
