@@ -13,6 +13,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -23,19 +24,17 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DialectOverride.Wheres;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
 
 
 @Entity
-@Table(name="p_order")
+@Table(name = "p_order")
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Order extends BaseEntity {
+
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -48,25 +47,25 @@ public class Order extends BaseEntity {
     private UUID receiverId;
 
 
-    @OneToOne(mappedBy="order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Delivery delivery;
 
-    @OneToMany(mappedBy="order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @Builder.Default
     @BatchSize(size = 1000)
     private List<OrderProduct> orderProducts = new ArrayList<>();
 
-    @Column(name="is_delete", nullable = false)
+    @Column(name = "is_delete", nullable = false)
     @ColumnDefault("false")
     private Boolean isDelete;
 
 
     /**
-     *  주문 생성 메서드
+     * 주문 생성 메서드
      */
-    public static Order create(UUID supplierId, UUID receiverId){
+    public static Order create(UUID supplierId, UUID receiverId) {
         Order order = Order.builder()
             .supplierId(supplierId)
             .receiverId(receiverId)
@@ -76,7 +75,7 @@ public class Order extends BaseEntity {
     }
 
     /**
-     *  주문 상품 설정 편의 메서드
+     * 주문 상품 설정 편의 메서드
      */
     public void addOrderProduct(OrderProduct orderProduct) {
         this.orderProducts.add(orderProduct);
@@ -85,7 +84,7 @@ public class Order extends BaseEntity {
 
 
     /**
-     *  배송 설정 편의 메서드
+     * 배송 설정 편의 메서드
      */
     public void addDelivery(Delivery delivery) {
         this.delivery = delivery;
@@ -93,13 +92,13 @@ public class Order extends BaseEntity {
     }
 
     /**
-     *  주문 취소 메서드
+     * 주문 취소 메서드
      */
-    public void cancelOrder(String userName){
+    public void cancelOrder(String userName) {
         this.isDelete = true;
         deleteEntity(userName);
 
-        for(OrderProduct orderProduct : this.orderProducts){
+        for (OrderProduct orderProduct : this.orderProducts) {
             orderProduct.cancelOrderProduct(userName);
         }
 
@@ -107,14 +106,17 @@ public class Order extends BaseEntity {
     }
 
 
-
     /**
      * 주문 수량 변경 메서드
      */
-    public void updateOrderQuantity(UUID productId, Integer quantity){
-        this.orderProducts.stream()
+    public Optional<OrderProduct> updateOrderQuantity(UUID productId, Integer quantity) {
+        return this.orderProducts.stream()
             .filter(orderProduct -> orderProduct.getProductId().equals(productId))
-            .forEach(orderProduct -> orderProduct.updateOrderQuantity(quantity));
+            .findFirst()
+            .map(orderProduct -> {
+                orderProduct.updateOrderQuantity(quantity);
+                return orderProduct;
+            });
     }
 
     public DeliveryStatus getDeliveryStatus() {

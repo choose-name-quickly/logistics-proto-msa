@@ -7,7 +7,6 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -40,8 +39,8 @@ public class DeliveryRoute extends BaseEntity {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private UUID deliveryRouteId;
 
-    @Column(name = "sequence", nullable = false)
-    private Integer sequence;
+    //@Column(name = "sequence", nullable = false)
+    //private Integer sequence;
 
     @Column(name = "actual_distance", precision = 10, scale = 2)
     @ColumnDefault("0")
@@ -80,10 +79,10 @@ public class DeliveryRoute extends BaseEntity {
 
     // TODO create 메서드 수정
 
-    public static DeliveryRoute create(Integer sequence, UUID routeHubId, UUID courierId,
+    public static DeliveryRoute create(UUID routeHubId, UUID courierId,
         Delivery delivery) {
         return DeliveryRoute.builder()
-            .sequence(sequence)
+            //.sequence(sequence)
             .routeHubId(routeHubId)
             .courierId(courierId)
             .delivery(delivery)
