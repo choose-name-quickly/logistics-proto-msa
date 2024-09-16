@@ -38,13 +38,13 @@ public class User extends BaseEntity {
     @Column(name = "is_public")
     private boolean isPublic;
 
-    public static User create(String username, String password) {
+    public static User create(String username, String password, UserRole role) {
 
         User user = new User();
 
         user.username = username;
         user.password = password;
-        // user.role = 이건 어떻게 하지?
+        user.role = role;
 
         return user;
     }

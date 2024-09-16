@@ -6,7 +6,7 @@ spring:
     name: auth-service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:15432/auth
+    url: jdbc:postgresql://localhost:15432/auth?currentSchema=user
     username: postgres
     password: 1234
   data:
@@ -15,6 +15,12 @@ spring:
       port: 6379
       username: default
       password:
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 eureka:
   client:

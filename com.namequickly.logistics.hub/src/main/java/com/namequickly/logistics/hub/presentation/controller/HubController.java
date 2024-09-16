@@ -8,26 +8,35 @@ import com.namequickly.logistics.hub.application.service.HubService;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/hubs")
 @RequiredArgsConstructor
+@Slf4j(topic = "hubController")
 public class HubController {
 
     private final HubService hubService;
 
     @PostMapping
-    public CommonResponse<HubResponseDto> createHub(@RequestBody HubRequestDto requestDto) {
+    public CommonResponse<HubResponseDto> createHub(@RequestBody HubRequestDto requestDto,
+        @RequestHeader(value = "X-User-Name", required = false) String username,
+        @RequestHeader(value = "X-User-Roles", required = false) String roles) {
+
+        log.info("username={}, roles={}", username, roles);
+
         HubResponseDto hub = hubService.createHub(requestDto);
         return CommonResponse.success(hub);
+
     }
 
     @PutMapping("/{hubId}")

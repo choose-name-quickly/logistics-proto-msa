@@ -1,4 +1,4 @@
-package com.namequickly.logistics.auth.application.security;
+package com.namequickly.logistics.auth.infrastructure.configuration.security;
 
 
 import com.namequickly.logistics.common.shared.UserRole;

@@ -88,7 +88,14 @@ public class JwtUtil {
     }
 
     /**
-     * 토큰에서 claims 가져오기
+     * 토큰 payload(claims) 다 가져오기
+     */
+    public Claims getPayloadFromToken(String token) {
+        return getUserInfoFromToken(token);
+    }
+
+    /**
+     * 토큰에서 payload (claim 들의 집합) 가져오기
      */
     private Claims getUserInfoFromToken(String token) {
         return jwtParser.parseSignedClaims(token).getPayload();

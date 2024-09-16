@@ -1,8 +1,7 @@
-package com.namequickly.logistics.auth.application.security;
+package com.namequickly.logistics.auth.infrastructure.configuration.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.namequickly.logistics.auth.application.dto.UserLoginRequestDto;
-import com.namequickly.logistics.auth.application.service.UserDetailsImpl;
 import com.namequickly.logistics.common.response.CommonResponse;
 import com.namequickly.logistics.common.shared.UserRole;
 import jakarta.annotation.PostConstruct;
@@ -29,7 +28,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @PostConstruct
     void setup() {
-        setFilterProcessesUrl("/users/sign-in");
+        setFilterProcessesUrl("/user/login");
     }
 
     @Override
@@ -67,6 +66,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String token = jwtUtil.createToken(username, role);
         jwtUtil.addJwtToCookie(token, response);
 
+        log.info("JWT 토큰 {}",token);
         // 로그인 결과 화면 보여주기
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());

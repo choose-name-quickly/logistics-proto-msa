@@ -1,8 +1,5 @@
-package com.namequickly.logistics.auth.infrastructure.configuration;
+package com.namequickly.logistics.auth.infrastructure.configuration.security;
 
-import com.namequickly.logistics.auth.application.security.JwtAuthenticationFilter;
-import com.namequickly.logistics.auth.application.security.JwtUtil;
-import com.namequickly.logistics.auth.application.service.UserDetailsServiceImpl;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -112,8 +109,10 @@ public class WebSecurityConfig {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         // Swagger UI
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .requestMatchers("/users/**").permitAll()
-                        .requestMatchers("/admin/login").permitAll()
+                        // auth api
+                        .requestMatchers("/auth/**").permitAll()
+                        // auth-filter api
+                        .requestMatchers("/user/login").permitAll()
                         // 그 외
                         .anyRequest().authenticated() // TODO : 인증 구현 후 authenticated()로 변경
         );

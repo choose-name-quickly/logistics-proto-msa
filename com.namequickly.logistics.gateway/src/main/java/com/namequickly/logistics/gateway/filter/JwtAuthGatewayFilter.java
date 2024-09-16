@@ -25,17 +25,18 @@ public class JwtAuthGatewayFilter implements GatewayFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         HttpHeaders headers = exchange.getRequest().getHeaders(); // 헤더
+        log.info("headers {}",headers);
         String token = headers.getFirst(HttpHeaders.AUTHORIZATION); // 헤더의 토큰
-        Claims claims = jwtUtils.isTokenValid(token); // 토큰의 claims ( 실제론 getPayload() )
-
-        log.info("{}",headers);
-        log.info("{}",token);
-        log.info("{}",claims); // TODO : <-- gateway 다 괜찮은데 요기 null 뜸 Auth 만들면서 gateway 가 잘못된건가 다시해봐야함
+        log.info("token {}",token);
+        Claims claims = jwtUtils.isTokenValid(token);
+        log.info("claims {}",claims); // payload 임 payload 가 claim 들의 집합임
 
         // JWT 토큰 검증
         if (token != null && claims != null) {
-            String username = jwtUtils.getUsernameFromToken(token); // 유저이름 추출
-            String roles = jwtUtils.getRoleFromToken(token); // 유저권한 추출
+            String username = jwtUtils.getUsernameFromToken(token); // 유저이름 추출 getSubject()
+            String roles = jwtUtils.getRoleFromToken(token); // 유저권한 추출 get(AUTHORIZATION_KEY)
+
+            log.info("추출한 토큰의 username = {}, , roles = {}", username,roles); // 토큰 payload(claims) 다 가져오기
 
             exchange.getRequest().mutate()
                 .header("X-User-Name", username)

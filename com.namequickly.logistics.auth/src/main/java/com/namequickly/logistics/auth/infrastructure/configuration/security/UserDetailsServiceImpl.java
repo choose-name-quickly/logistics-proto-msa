@@ -1,17 +1,12 @@
-package com.namequickly.logistics.auth.application.service;
+package com.namequickly.logistics.auth.infrastructure.configuration.security;
 
 import com.namequickly.logistics.auth.application.dto.UserDto;
 import com.namequickly.logistics.auth.domain.model.User;
 import com.namequickly.logistics.auth.domain.repository.UserRepository;
-import com.namequickly.logistics.common.redis.RedisConfig;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.cache.CacheProperties.Redis;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -46,7 +41,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         // UserDetailsImpl 을 반환해 authentication 객체를 SecurityContext에 저장
-        return new UserDetailsImpl(User.create(userDTO.username(), userDTO.password()));
+        return new UserDetailsImpl(User.create(userDTO.username(), userDTO.password(),userDTO.role()));
     }
 
 

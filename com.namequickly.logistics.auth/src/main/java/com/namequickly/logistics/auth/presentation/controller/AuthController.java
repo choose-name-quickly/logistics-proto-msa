@@ -51,9 +51,9 @@ public class AuthController {
      */
     @GetMapping("/{username}")
     public CommonResponse<UserInfoResponseDto> getUser(@PathVariable String username) {
-        UserInfoResponseDto userUpdateResponseDto = authService.getUserByUsername(username);
+        UserInfoResponseDto userInfoResponseDto = authService.getUserByUsername(username);
 
-        return CommonResponse.success(userUpdateResponseDto);
+        return CommonResponse.success(userInfoResponseDto);
     }
 
     /**

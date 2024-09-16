@@ -1,5 +1,8 @@
 package com.namequickly.logistics.auth.application.dto;
 
-public record UserInfoResponseDto() {
+public record UserInfoResponseDto(
+    String username,
+    String role
+) {
 
 }
