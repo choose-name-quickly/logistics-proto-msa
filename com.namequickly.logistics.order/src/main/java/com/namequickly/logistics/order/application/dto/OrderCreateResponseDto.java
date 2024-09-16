@@ -1,18 +1,19 @@
 package com.namequickly.logistics.order.application.dto;
 
+import java.time.LocalDate;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Getter
+
 @Builder
 @AllArgsConstructor
-public class HubRouteDto {
+@NoArgsConstructor
+@Getter
+public class OrderCreateResponseDto {
 
-    private final UUID routeHubId;
-    private final UUID courierId;
-    //private final Integer sequence;
-
-
+    private UUID orderId;
+    private LocalDate createdAt;
 }

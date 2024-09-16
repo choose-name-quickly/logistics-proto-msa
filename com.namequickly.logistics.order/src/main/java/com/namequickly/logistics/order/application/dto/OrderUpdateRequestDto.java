@@ -4,19 +4,15 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
 @AllArgsConstructor
-public class OrderUpdateDto {
+@NoArgsConstructor
+public class OrderUpdateRequestDto {
 
     private UUID productId;
     private Integer orderQuantity;
 
-    public static OrderUpdateDto create(UUID productId, Integer orderQuantity) {
-        return OrderUpdateDto.builder()
-            .productId(productId)
-            .orderQuantity(orderQuantity)
-            .build();
-    }
 }
