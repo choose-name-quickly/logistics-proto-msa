@@ -1,4 +1,4 @@
-package com.namequickly.logistics.product_company.infrastructure.dto;
+package com.namequickly.logistics.order.application.dto.client;
 
 import java.util.UUID;
 import lombok.AllArgsConstructor;
