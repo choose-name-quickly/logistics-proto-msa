@@ -1,6 +1,6 @@
 package com.namequickly.logistics.product_company.infrastructure.client;
 
-import com.namequickly.logistics.product_company.infrastructure.dto.UserInfoDto;
+import com.namequickly.logistics.product_company.application.dto.client.UserInfoDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
