@@ -16,4 +16,8 @@ public interface HubClient {
     @GetMapping("/api/hubs")
     List<HubRouteDto> getHubRoutes(@RequestParam(name = "originHubId") UUID originHubId,
         @RequestParam(name = "destinationHubId") UUID destinationHubId);
+
+    // 해당 hub 존재 여부 확인
+    @GetMapping("/api/hubs")
+    boolean checkHubExists(@RequestParam(name = "hubId") UUID hubId);
 }
