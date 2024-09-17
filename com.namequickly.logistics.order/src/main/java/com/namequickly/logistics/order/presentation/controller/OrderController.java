@@ -8,6 +8,7 @@ import com.namequickly.logistics.order.application.dto.OrderResponseDto;
 import com.namequickly.logistics.order.application.dto.OrderUpdateRequestDto;
 import com.namequickly.logistics.order.application.dto.OrderUpdateResponseDto;
 import com.namequickly.logistics.order.application.service.OrderService;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -68,8 +69,8 @@ public class OrderController {
     @PreAuthorize("hasAnyRole('MASTER','HUBMANAGER') || (hasRole('COMPANY') && @orderAuthService.isOrderOwner(#orderId))")
     @PutMapping("/orders/{orderId}")
     public CommonResponse<OrderUpdateResponseDto> updateOrder(@PathVariable("orderId") UUID orderId,
-        @RequestBody OrderUpdateRequestDto requestDto) {
-        return CommonResponse.success(orderService.updateOrder(orderId, requestDto));
+        @RequestBody List<OrderUpdateRequestDto> requestDtos) {
+        return CommonResponse.success(orderService.updateOrder(orderId, requestDtos));
     }
 
     /**
@@ -104,14 +105,15 @@ public class OrderController {
      */
     @PreAuthorize("hasAnyRole('MASTER','HUBMANAGER','COMPANY')")
     @GetMapping("/orders/mine")
-    public CommonResponse<Page<OrderResponseDto>> getMineOrders(
+    public CommonResponse<Page<OrderResponseDto>> getAllMineOrders(
         @RequestParam(name = "page", defaultValue = "1") int page,
         @RequestParam(name = "size", defaultValue = "10") int size,
         @RequestParam(name = "isAsc", defaultValue = "true") boolean isAsc,
         @RequestParam(name = "sortBy", defaultValue = "createdAt") String sortBy,
         @RequestParam(name = "isDelete", defaultValue = "false") boolean isDelete) {
 
-        Page<OrderResponseDto> orderResponseDtos = orderService.getAllOrders(page - 1, size, isAsc,
+        Page<OrderResponseDto> orderResponseDtos = orderService.getAllMineOrders(page - 1, size,
+            isAsc,
             sortBy, isDelete);
         return CommonResponse.success(orderResponseDtos);
     }
