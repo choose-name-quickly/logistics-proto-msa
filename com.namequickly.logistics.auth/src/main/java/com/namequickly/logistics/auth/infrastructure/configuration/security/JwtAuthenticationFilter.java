@@ -4,6 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.namequickly.logistics.auth.application.dto.UserLoginRequestDto;
 import com.namequickly.logistics.common.response.CommonResponse;
 import com.namequickly.logistics.common.shared.UserRole;
+import com.namequickly.logistics.common.shared.affiliation.AffiliationType;
+import com.namequickly.logistics.common.shared.affiliation.CompanyAffiliation;
+import com.namequickly.logistics.common.shared.affiliation.CourierAffiliation;
+import com.namequickly.logistics.common.shared.affiliation.HubAffiliation;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -62,8 +66,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         log.info("로그인 성공 및 JWT 생성");
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRole role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
+        AffiliationType affiliationType = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getAffiliationType();
+        String AffiliationId = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getAffiliationId();
 
-        String token = jwtUtil.createToken(username, role);
+
+        String token = jwtUtil.createToken(username, role, affiliationType, AffiliationId);
         jwtUtil.addJwtToCookie(token, response);
 
         log.info("JWT 토큰 {}",token);

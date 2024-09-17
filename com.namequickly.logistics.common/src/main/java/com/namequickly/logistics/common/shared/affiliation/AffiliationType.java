@@ -1,5 +1,7 @@
 package com.namequickly.logistics.common.shared.affiliation;
 
-public interface Affiliation {
-
+public enum AffiliationType {
+    COMPANY,
+    COURIER,
+    HUB
 }

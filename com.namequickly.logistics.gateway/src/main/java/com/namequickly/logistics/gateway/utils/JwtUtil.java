@@ -74,6 +74,19 @@ public class JwtUtil {
         return (String) getUserInfoFromToken(token).get(AUTHORIZATION_KEY);
     }
 
+    /**
+     * 토큰에서 affiliationType 가져오기
+     */
+    public String getAffiliationTypeFromToken(String token) {
+        return (String) getUserInfoFromToken(token).get("AffiliationType");
+    }
+
+    /**
+     * 토큰에서 affiliationId 가져오기
+     */
+    public String getAffiliationIdFromToken(String token) {
+        return (String) getUserInfoFromToken(token).get("AffiliationId");
+    }
 
     /**
      * 토큰에서 남은 시간을 초 단위로 가져오기

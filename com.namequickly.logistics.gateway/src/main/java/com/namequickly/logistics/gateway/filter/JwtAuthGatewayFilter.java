@@ -35,12 +35,16 @@ public class JwtAuthGatewayFilter implements GatewayFilter {
         if (token != null && claims != null) {
             String username = jwtUtils.getUsernameFromToken(token); // 유저이름 추출 getSubject()
             String roles = jwtUtils.getRoleFromToken(token); // 유저권한 추출 get(AUTHORIZATION_KEY)
+            String affiliationType = jwtUtils.getAffiliationTypeFromToken(token);
+            String affiliationId = jwtUtils.getAffiliationIdFromToken(token);
 
-            log.info("추출한 토큰의 username = {}, , roles = {}", username,roles); // 토큰 payload(claims) 다 가져오기
+            log.info("추출한 토큰의 username = {}, , roles = {}, affiliationType = {}, affiliationId = {}", username,roles,affiliationType,affiliationId); // 토큰 payload(claims) 다 가져오기
 
             exchange.getRequest().mutate()
                 .header("X-User-Name", username)
                 .header("X-User-Roles", roles)
+                .header("X-User-AffiliationType", affiliationType)
+                .header("X-User-AffiliationId", affiliationId)
                 .build();
 
             return chain.filter(exchange);

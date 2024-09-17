@@ -2,6 +2,7 @@ package com.namequickly.logistics.auth.infrastructure.configuration.security;
 
 
 import com.namequickly.logistics.common.shared.UserRole;
+import com.namequickly.logistics.common.shared.affiliation.AffiliationType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -58,13 +59,15 @@ public class JwtUtil {
     ////////////////////////////////////////////////////////////////////
 
     // 1. JWT 토큰 생성 (1) JWT 토큰을 헤더에 달아 보낼수도 있고 (2) 쿠키객체에 담아 줄 수도 있다 - 프론트와 조율해야함
-    public String createToken(String username, UserRole role) {
+    public String createToken(String username, UserRole role, AffiliationType affiliationType, String AffiliationId) {
         Date date = new Date();
 
         return BEARER_PREFIX +
                Jwts.builder()
                        .subject(username) // 사용자 식별자값(ID)
                        .claim(AUTHORIZATION_KEY, role) // 사용자 권한
+                       .claim("AffiliationType", affiliationType) // 추가 클레임
+                       .claim("AffiliationId", AffiliationId) // 추가 클레임
                        .expiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
                        .issuedAt(date) // 발급일
                        .signWith(key) // 암호화 알고리즘

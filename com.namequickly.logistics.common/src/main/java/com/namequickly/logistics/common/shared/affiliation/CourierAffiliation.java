@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 
-public enum CourierAffiliation implements Affiliation {
+public enum CourierAffiliation {
 
     // 스파르타 물류의 공통 허브 배송 담당자 ID
     COMMON_COURIER("공통 허브 배송 담당자", 10),

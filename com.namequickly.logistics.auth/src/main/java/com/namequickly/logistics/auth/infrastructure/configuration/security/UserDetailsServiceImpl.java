@@ -1,6 +1,7 @@
 package com.namequickly.logistics.auth.infrastructure.configuration.security;
 
 import com.namequickly.logistics.auth.application.dto.UserDto;
+import com.namequickly.logistics.auth.application.mapper.UserMapper;
 import com.namequickly.logistics.auth.domain.model.User;
 import com.namequickly.logistics.auth.domain.repository.UserRepository;
 import java.util.concurrent.TimeUnit;
@@ -19,6 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final UserMapper userMapper;
 
     /**
      * redis 에서 캐싱하여 User 정보를 가져오거나 존재하지 않는다면 RDBMS에서 가져와 redis에 저장
@@ -35,13 +37,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             User user = userRepository.findById(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Not Found " + username));
 
-            userDTO = new UserDto(user.getUsername(), user.getPassword(), user.getRole());
+            userDTO = userMapper.userToUserDto(user);
 
             redisTemplate.opsForValue().set(username, userDTO, 1, TimeUnit.HOURS);
         }
 
         // UserDetailsImpl 을 반환해 authentication 객체를 SecurityContext에 저장
-        return new UserDetailsImpl(User.create(userDTO.username(), userDTO.password(),userDTO.role()));
+        return new UserDetailsImpl(userMapper.userDtoToUser(userDTO));
     }
 
 

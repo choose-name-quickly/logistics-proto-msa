@@ -45,7 +45,11 @@ public class AuthService {
         User user = User.create(
             request.username(),
             encodedPassword,
-            request.role()
+            request.role(),
+            request.affiliationType(),
+            request.companyAffiliationId(),
+            request.courierAffiliationId(),
+            request.hubAffiliationId()
         );
 
         // 회원가입 완료

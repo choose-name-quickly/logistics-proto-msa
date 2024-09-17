@@ -30,9 +30,11 @@ public class HubController {
     @PostMapping
     public CommonResponse<HubResponseDto> createHub(@RequestBody HubRequestDto requestDto,
         @RequestHeader(value = "X-User-Name", required = false) String username,
-        @RequestHeader(value = "X-User-Roles", required = false) String roles) {
+        @RequestHeader(value = "X-User-Roles", required = false) String roles,
+        @RequestHeader(value = "X-User-AffiliationType", required = false) String affiliationType,
+        @RequestHeader(value = "X-User-AffiliationId", required = false) String affiliationId) {
 
-        log.info("username={}, roles={}", username, roles);
+        log.info("username={}, roles={}, affiliationType={}, affiliationId={}", username, roles, affiliationType, affiliationId);
 
         HubResponseDto hub = hubService.createHub(requestDto);
         return CommonResponse.success(hub);

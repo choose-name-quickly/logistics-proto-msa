@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public enum CompanyAffiliation implements Affiliation {
+public enum CompanyAffiliation {
 
     // 업체 ID
     COMPANY_1("업체 1"),

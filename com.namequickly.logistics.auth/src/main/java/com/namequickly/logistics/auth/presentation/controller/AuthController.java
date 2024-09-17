@@ -31,6 +31,8 @@ public class AuthController {
      */
     @PostMapping("/sign-up")
     public CommonResponse<CommonEmptyRes> signup(@RequestBody UserSignupRequestDto request) {
+        log.info("Signup request: {}", request);
+
         authService.signup(request);
         return CommonResponse.success();
     }

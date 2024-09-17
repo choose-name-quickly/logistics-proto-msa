@@ -2,6 +2,10 @@ package com.namequickly.logistics.auth.infrastructure.configuration.security;
 
 import com.namequickly.logistics.auth.domain.model.User;
 import com.namequickly.logistics.common.shared.UserRole;
+import com.namequickly.logistics.common.shared.affiliation.AffiliationType;
+import com.namequickly.logistics.common.shared.affiliation.CompanyAffiliation;
+import com.namequickly.logistics.common.shared.affiliation.CourierAffiliation;
+import com.namequickly.logistics.common.shared.affiliation.HubAffiliation;
 import java.util.ArrayList;
 import java.util.Collection;
 import lombok.Getter;
@@ -63,4 +67,5 @@ public class UserDetailsImpl implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }
