@@ -12,4 +12,6 @@ public interface DeliveryRepository extends JpaRepository<Delivery, UUID> {
 
     @Query("select d from Delivery d LEFT JOIN FETCH d.deliveryRoutes WHERE d.deliveryId = :deliveryId AND d.isDelete = false")
     Optional<Delivery> findByDeliveryIdAndIsDeleteFalse(UUID deliveryId);
+
+    long countByDeliveryId(UUID deliveryId);
 }
