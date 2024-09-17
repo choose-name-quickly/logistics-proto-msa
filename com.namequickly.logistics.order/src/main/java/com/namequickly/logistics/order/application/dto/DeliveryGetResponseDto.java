@@ -22,7 +22,6 @@ public class DeliveryGetResponseDto {
     private String recipientSlackID;
     private DeliveryStatus deliveryStatus;
     private LocalDateTime createdAt;
-    // private LocalDateTime updatedAt;
     private List<DeliveryRouteDto> deliveryRoutes;
 
     @Getter
@@ -47,8 +46,7 @@ public class DeliveryGetResponseDto {
             address
 
          */
-        // private BigDecimal actualDistance;
-        // private BigDecimal actualTime;
+
         private DeliveryStatus deliveryStatus;
 
     }

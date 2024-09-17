@@ -1,6 +1,5 @@
 package com.namequickly.logistics.order.application.dto.client;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,12 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class HubRouteDto {
+public class HubResponseDto {
 
-    private UUID routeHubId;
-    private UUID routeId;
     private UUID hubId;
-    private Integer orderInRoute;
-    private BigDecimal distanceToNextHub;
-    private BigDecimal timeToNextHub;
+    private String hubName;
+    private String address;
+    private String locationLatitude;
+    private String locationLongitude;
+
 }
