@@ -25,7 +25,8 @@ public class OrderCreateRequestDto {
     private UUID originHubId;
     private UUID destinationHubId;
     private String recipientName;
-    private String recipientSlackId; //휴대폰 번호
+    private String recipientSlackId;
+    private String deliveryAddress;
 
     @Getter
     @AllArgsConstructor

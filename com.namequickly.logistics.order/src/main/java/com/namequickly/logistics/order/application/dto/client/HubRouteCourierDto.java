@@ -1,4 +1,4 @@
-package com.namequickly.logistics.order.application.dto;
+package com.namequickly.logistics.order.application.dto.client;
 
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -8,11 +8,8 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class HubRouteDto {
+public class HubRouteCourierDto {
 
     private final UUID routeHubId;
     private final UUID courierId;
-    //private final Integer sequence;
-
-
 }

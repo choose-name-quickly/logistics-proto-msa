@@ -7,21 +7,23 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class OrderResponseDto {
 
-    private final UUID orderId;
-    private final UUID supplierId;
-    private final UUID receiverId;
-    private final List<OrderProductDto> orderProducts;
-    private final DeliveryDto delivery;
-    private final LocalDateTime createdAt;
-    private final LocalDateTime updatedAt;
+    private UUID orderId;
+    private UUID supplierId;
+    private UUID receiverId;
+    private List<OrderProductDto> orderProducts;
+    private DeliveryDto delivery;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     @Getter(AccessLevel.NONE)
-    private final boolean isDelete;
+    private boolean isDelete;
 
     public Boolean getIsDelete() {
         return isDelete;
@@ -30,14 +32,15 @@ public class OrderResponseDto {
     @Getter
     @Builder
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class OrderProductDto {
 
-        private final UUID productId;
-        private final Integer orderQuantity;
-        private final LocalDateTime createdAt;
-        private final LocalDateTime updatedAt;
+        private UUID productId;
+        private Integer orderQuantity;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
         @Getter(AccessLevel.NONE)
-        private final boolean isDelete;
+        private boolean isDelete;
 
         public Boolean getIsDelete() {
             return isDelete;
@@ -47,18 +50,20 @@ public class OrderResponseDto {
     @Getter
     @Builder
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class DeliveryDto {
 
-        private final UUID deliveryId;
-        private final UUID originHubId;
-        private final UUID destinationHubId;
-        private final String recipientName;
-        private final String recipientSlackId;
-        private final List<DeliveryRouteDto> deliveryRoutes;
-        private final LocalDateTime createdAt;
-        private final LocalDateTime updatedAt;
+        private UUID deliveryId;
+        private UUID originHubId;
+        private UUID destinationHubId;
+        private String recipientName;
+        private String recipientSlackId;
+        private String deliveryAddress;
+        private List<DeliveryRouteDto> deliveryRoutes;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
         @Getter(AccessLevel.NONE)
-        private final boolean isDelete;
+        private boolean isDelete;
 
         public Boolean getIsDelete() {
             return isDelete;
@@ -69,15 +74,16 @@ public class OrderResponseDto {
     @Getter
     @Builder
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class DeliveryRouteDto {
 
-        private final UUID routeHubId;
-        private final UUID courierId;
-        private final Integer sequence;
-        private final LocalDateTime createdAt;
-        private final LocalDateTime updatedAt;
+        private UUID routeHubId;
+        private UUID courierId;
+        private Integer sequence;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
         @Getter(AccessLevel.NONE)
-        private final boolean isDelete;
+        private boolean isDelete;
 
         public Boolean getIsDelete() {
             return isDelete;

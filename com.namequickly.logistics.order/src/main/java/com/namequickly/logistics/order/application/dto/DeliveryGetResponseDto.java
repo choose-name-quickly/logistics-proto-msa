@@ -2,7 +2,6 @@ package com.namequickly.logistics.order.application.dto;
 
 
 import com.namequickly.logistics.order.domain.model.delivery.DeliveryStatus;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -23,7 +22,7 @@ public class DeliveryGetResponseDto {
     private String recipientSlackID;
     private DeliveryStatus deliveryStatus;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    // private LocalDateTime updatedAt;
     private List<DeliveryRouteDto> deliveryRoutes;
 
     @Getter
@@ -34,23 +33,23 @@ public class DeliveryGetResponseDto {
         private UUID deliveryRouteId;
         private UUID routeHubId;
         private UUID courierId;
+
         /*
             // TODO feign client로 가져와아햐나?
             경유 정보
             hub_id
-            sequence
-            distanceToNextHub
-            timeToNextHub
+            //sequence
+            distanceToNextHub //예상거리
+            timeToNextHub //예상시간
 
             // 허브 정보
             hub_name
             address
 
          */
-        private BigDecimal actualDistance;
-        private BigDecimal actualTime;
+        // private BigDecimal actualDistance;
+        // private BigDecimal actualTime;
         private DeliveryStatus deliveryStatus;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
+
     }
 }
