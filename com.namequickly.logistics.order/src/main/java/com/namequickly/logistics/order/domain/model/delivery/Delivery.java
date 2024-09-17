@@ -57,6 +57,9 @@ public class Delivery extends BaseEntity {
     @Column(name = "recipient_slack_id", nullable = false)
     private String recipientSlackId;
 
+    @Column(name = "delivery_address", nullable = false)
+    private String deliveryAddress;
+
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'HUB_WAITING'")
     private DeliveryStatus DeliveryStatus;
@@ -80,13 +83,14 @@ public class Delivery extends BaseEntity {
     // TODO create 메서드 수정 (phone 부분)
 
     public static Delivery create(UUID originHubId, UUID destinationHubId, String recipientName,
-        String recipientSlackId, Order order) {
+        String recipientSlackId, String deliveryAddress, Order order) {
 
         return Delivery.builder()
             .originHubId(originHubId)
             .destinationHubId(destinationHubId)
             .recipientName(recipientName)
             .recipientSlackId(recipientSlackId)
+            .deliveryAddress(deliveryAddress)
             .order(order)
             .isDelete(false)
             .build();
@@ -114,7 +118,4 @@ public class Delivery extends BaseEntity {
         }
     }
 
-    //private void transferPhoneNumberFormat(String recipientSlackId) {
-    //    this.recipientSlackId = recipientSlackId.replaceAll(PHONE_NUMBER_TRANSFER_TARGET, "");
-    //}
 }

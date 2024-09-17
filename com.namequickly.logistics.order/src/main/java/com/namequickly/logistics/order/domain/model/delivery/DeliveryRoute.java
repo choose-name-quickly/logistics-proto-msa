@@ -11,7 +11,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
@@ -65,11 +64,10 @@ public class DeliveryRoute extends BaseEntity {
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 
-    // TODO 이걸 키값 객체로 줄 수 있지 않을까?
-    // 이거 주석 해야 해나 ?
-    @Transient
+    @Column(name = "actual_start_time")
     private LocalDateTime actualStartTime;
-    @Transient
+    
+    @Column(name = "actual_end_time")
     private LocalDateTime actualEndTime;
 
 
@@ -82,7 +80,6 @@ public class DeliveryRoute extends BaseEntity {
     public static DeliveryRoute create(UUID routeHubId, UUID courierId,
         Delivery delivery) {
         return DeliveryRoute.builder()
-            //.sequence(sequence)
             .routeHubId(routeHubId)
             .courierId(courierId)
             .delivery(delivery)
