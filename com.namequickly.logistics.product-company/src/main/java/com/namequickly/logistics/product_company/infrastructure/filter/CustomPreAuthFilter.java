@@ -23,9 +23,9 @@ public class CustomPreAuthFilter extends OncePerRequestFilter {
 
         String username = request.getHeader("X-User-Name");
         String roleHeader = request.getHeader("X-User-Roles");
-        String affiliationId = request.getHeader("X-Affiliation");
+        String affiliationId = request.getHeader("X-User-AffiliationId");
 
-        if (username != null && roleHeader != null && affiliationId != null) {
+        if (username != null && roleHeader != null) {
             SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleHeader.trim());
 
             com.namequickly.logistics.product_company.infrastructure.security.CustomUserDetails customUserDetails = new CustomUserDetails(
