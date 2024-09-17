@@ -56,6 +56,13 @@ public enum ResultCase {
     DUPLICATED_PRODUCT_NAME(HttpStatus.CONFLICT, 4002, "중복된 상품명을 입력하셨습니다."),
     // 유효하지 않은 접근 400
     UNAUTHORIZED_DELETE_PRODUCT(HttpStatus.BAD_REQUEST, 4003, "삭제된 상품에 접근할 수 없습니다."),
+    // 상품 수량은 0 또는 양수만 가능 400
+    NEGATIVE_STOCK_QUANTITY(HttpStatus.BAD_REQUEST, 4004, "수량은 0 또는 양수 입력만 가능합니다."),
+    // 재고 수량 보다 많은 주문 수량은 주문 불가 400
+    OUT_OF_STOCK_QUNTITY(HttpStatus.BAD_REQUEST, 4005, "재고가 부족합니다."),
+    // 잘못된 작업 요청 400
+    INVALID_OPERATION(HttpStatus.BAD_REQUEST, 4006, "잘못된 작업 요청입니다."),
+
 
     /* 회사 관련 5000번대 */
     // TODO 회사 개발 완료되면 다시 변경 예정
@@ -66,15 +73,16 @@ public enum ResultCase {
 
     /* 배송 관련 6000번대 */
     NOT_FOUND_DELIVERY(HttpStatus.NOT_FOUND, 3000, "배송 정보를 찾을 수 없습니다."),
-
+    NOT_FOUND_DELIVERY_ROUTE(HttpStatus.NOT_FOUND, 3001, "배송 경로 정보를 찾을 수 없습니다."),
+    INVALID_DELIVERY_STATUS(HttpStatus.BAD_REQUEST, 3002, "유효하지 않은 배송 상태입니다."),
+    REQUIRED_ACTUAL_DISTANCE(HttpStatus.BAD_REQUEST, 3003, "도착 상태 변경을 위해서는 실제 거리가 필요합니다."),
     /* 주문 관련 7000번대 */
     // 존재하지 않는 업체 404
     NOT_FOUND_ORDER(HttpStatus.NOT_FOUND, 7000, "주문을 찾을 수 없습니다."),
     // 배송중인 주문 취소 불가 400
     CANNOT_DELETE_ORDER_IN_DELIVERY(HttpStatus.BAD_REQUEST, 7001, "배송 중인 주문은 취소할 수 없습니다."),
     // 배송중인 상품 수정 불가 400
-    CANNOT_UPDATE_ORDER_IN_DELIVERY(HttpStatus.BAD_REQUEST, 7001, "배송 중인 주문은 변경할 수 없습니다.");
-
+    CANNOT_UPDATE_ORDER_IN_DELIVERY(HttpStatus.BAD_REQUEST, 7002, "배송 중인 주문은 변경할 수 없습니다.");
 
     private final HttpStatus httpStatus; // 응답 상태 코드
     private final Integer code; // 응답 코드. 도메인에 따라 1000번대로 나뉨
