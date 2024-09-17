@@ -31,11 +31,13 @@ public class SecurityConfig {
 
         http.csrf(AbstractHttpConfigurer::disable);
 
-        http.sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(
-            SessionCreationPolicy.STATELESS));
+        http.sessionManagement((sessionManagement) ->
+            sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        );
 
-        http.authorizeHttpRequests(
-            (authorizeHttpRequests) -> authorizeHttpRequests.anyRequest().authenticated());
+        http.authorizeHttpRequests((authorizeHttpRequests) ->
+            authorizeHttpRequests.anyRequest().authenticated()
+        );
 
         http.addFilterBefore(customePreAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
