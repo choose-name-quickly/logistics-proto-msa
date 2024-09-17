@@ -3,7 +3,6 @@ package com.namequickly.logistics.order.application.mapper;
 import com.namequickly.logistics.order.application.dto.OrderCreateResponseDto;
 import com.namequickly.logistics.order.application.dto.OrderDeleteResponseDto;
 import com.namequickly.logistics.order.application.dto.OrderResponseDto;
-import com.namequickly.logistics.order.application.dto.OrderUpdateResponseDto;
 import com.namequickly.logistics.order.domain.model.delivery.Delivery;
 import com.namequickly.logistics.order.domain.model.delivery.DeliveryRoute;
 import com.namequickly.logistics.order.domain.model.order.Order;
@@ -25,12 +24,12 @@ public interface OrderMapper {
     @Mapping(source = "order.deletedAt", target = "deletedAt")
     OrderDeleteResponseDto toOrderDeleteResponseDto(Order order);
 
-    @Mapping(source = "order.orderId", target = "orderId")
+  /*  @Mapping(source = "order.orderId", target = "orderId")
     @Mapping(source = "order.updatedAt", target = "updatedBy")
     @Mapping(source = "orderProduct.productId", target = "productId")
     @Mapping(source = "orderProduct.orderQuantity", target = "orderQuantity")
     OrderUpdateResponseDto toOrderUpdateResponseDto(Order order, OrderProduct orderProduct);
-
+*/
 
     List<OrderResponseDto.OrderProductDto> toOrderProductDtos(List<OrderProduct> orderProducts);
 
