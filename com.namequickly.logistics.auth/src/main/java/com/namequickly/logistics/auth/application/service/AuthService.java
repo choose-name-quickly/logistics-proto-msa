@@ -66,6 +66,8 @@ public class AuthService {
 
         User user = userRepository.findById(username)
             .orElseThrow(() -> new GlobalException(ResultCase.USER_NOT_FOUND));
+        log.info("DB user: {}", user.toString());
+
         return userMapper.userToUserInfoResponseDto(user);
     }
 
