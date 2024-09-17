@@ -24,8 +24,23 @@ repositories {
 }
 
 dependencies {
+
+	// actuator
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// jpa
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// postgresql
+	runtimeOnly 'org.postgresql:postgresql'
+
+	// spring mvc
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// mapstruct
 	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 
 	// querydsl
