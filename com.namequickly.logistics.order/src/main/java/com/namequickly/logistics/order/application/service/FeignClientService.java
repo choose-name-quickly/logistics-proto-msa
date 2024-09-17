@@ -1,9 +1,9 @@
 package com.namequickly.logistics.order.application.service;
 
-import com.namequickly.logistics.order.application.dto.client.CompanyDto;
-import com.namequickly.logistics.order.application.dto.client.HubDto;
+import com.namequickly.logistics.order.application.dto.client.CompanyResponse;
+import com.namequickly.logistics.order.application.dto.client.HubResponseDto;
 import com.namequickly.logistics.order.application.dto.client.HubRouteCourierDto;
-import com.namequickly.logistics.order.application.dto.client.HubRouteDto;
+import com.namequickly.logistics.order.application.dto.client.RouteHubResponseDto;
 import com.namequickly.logistics.order.infrastructure.client.CompanyClient;
 import com.namequickly.logistics.order.infrastructure.client.HubClient;
 import java.util.List;
@@ -20,22 +20,22 @@ public class FeignClientService {
 
 
     // TODO 나중에 feign client 개발 완료되면 주석 풀기
-    public CompanyDto getCompany(UUID companyId) {
-        return companyClient.getCompany(companyId);
+    public CompanyResponse getCompanyById(UUID companyId, String userRole) {
+        return companyClient.getCompanyById(companyId, userRole);
     }
 
-    public HubDto getHub(UUID hubId) {
-        return hubClient.getHub(hubId);
+    public HubResponseDto getHub(UUID hubId) {
+        return hubClient.getHub(hubId).getData();
     }
 
 
-    public HubRouteDto getHubRoute(UUID hubId) {
-        return hubClient.getHubRoute(hubId);
+    public RouteHubResponseDto getHubRoute(UUID hubId) {
+        return hubClient.getRouteHub(hubId).getData();
     }
 
-    public List<HubRouteDto> getHubRoutes(UUID routeId) {
+/*    public List<RouteHubResponseDto> getHubRoutes(UUID routeId) {
         return hubClient.getHubRoutes(routeId);
-    }
+    }*/
 
     public List<HubRouteCourierDto> getHubRoutes(UUID originHubId, UUID destinationHubId) {
         return hubClient.getHubRoutes(originHubId, destinationHubId);
