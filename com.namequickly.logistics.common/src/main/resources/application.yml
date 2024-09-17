@@ -1,0 +1,29 @@
+server:
+  port: 19000
+
+spring:
+  application:
+    name: common-module
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:15432/common
+    username: postgres
+    password: 1234
+  data:
+    redis:
+      host: 172.17.129.27 # ?? WSL ?? -> localhost? ????
+      port: 6379
+      username: default
+      password:
+
+# actuator ?? (?? ????? ?? endpoint ???? ???? ????)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+info:
+  app:
+    name: "Spring Boot Application - Common"
+    version: "1.0.0"
+    description: "Common ??? ? ?? ? ??? ???"

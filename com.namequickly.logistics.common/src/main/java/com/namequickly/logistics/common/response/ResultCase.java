@@ -37,7 +37,6 @@ public enum ResultCase {
     // 만료된 리프레쉬 토큰 401
     EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, 2005, "만료된 Refresh Token"),
 
-
     /* 허브 3000번대 */
     // 존재하지 않은 허브 404
     // TODO 허브 개발 완료되면 다시 변경 예정
@@ -82,7 +81,12 @@ public enum ResultCase {
     // 배송중인 주문 취소 불가 400
     CANNOT_DELETE_ORDER_IN_DELIVERY(HttpStatus.BAD_REQUEST, 7001, "배송 중인 주문은 취소할 수 없습니다."),
     // 배송중인 상품 수정 불가 400
-    CANNOT_UPDATE_ORDER_IN_DELIVERY(HttpStatus.BAD_REQUEST, 7002, "배송 중인 주문은 변경할 수 없습니다.");
+    CANNOT_UPDATE_ORDER_IN_DELIVERY(HttpStatus.BAD_REQUEST, 7002, "배송 중인 주문은 변경할 수 없습니다.")
+
+    // affiliaton 을 입력하지 않음
+    AFFILIATION_INVALID(HttpStatus.BAD_REQUEST, 2006, "Affiliation ID를 입력하지 않았습니다."),
+    // affilation 이 존재하지 않음
+    AFFILIATION_NOT_FOUND(HttpStatus.NOT_FOUND, 2007, "Affiliation ID가 존재하지 않습니다.");
 
     private final HttpStatus httpStatus; // 응답 상태 코드
     private final Integer code; // 응답 코드. 도메인에 따라 1000번대로 나뉨
