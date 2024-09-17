@@ -6,6 +6,7 @@ import com.namequickly.logistics.common.shared.affiliation.CompanyAffiliation;
 import com.namequickly.logistics.common.shared.affiliation.CourierAffiliation;
 import com.namequickly.logistics.common.shared.affiliation.HubAffiliation;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

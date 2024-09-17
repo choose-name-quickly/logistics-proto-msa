@@ -15,15 +15,36 @@ public class GatewayConfig {
     @Bean
     public RouteLocator customRoutes(RouteLocatorBuilder builder, JwtAuthGatewayFilter authFilter) {
 
-        // 요게 본체
         return builder.routes()
+            // hub
+            .route("ai-service", r -> r.path("/api/ai/**")
+                .filters(f -> f.filter(authFilter))
+                .uri("lb://ai-service")
+            )
+            // hub
             .route("hub-service", r -> r.path("/api/hubs/**")
                 .filters(f -> f.filter(authFilter))
                 .uri("lb://hub-service")
             )
+            // order
             .route("order-service", r -> r.path("/api/orders/**")
                 .filters(f -> f.filter(authFilter))
                 .uri("lb://order-service")
+            )
+            // hub-management
+            .route("hub-management-service", r -> r.path("/api/hub-managemnet/**")
+                .filters(f -> f.filter(authFilter))
+                .uri("lb://hub-management-service")
+            )
+            // product-company
+            .route("product-company-service", r -> r.path("/api/product-company/**")
+                .filters(f -> f.filter(authFilter))
+                .uri("lb://product-company-service")
+            )
+            // slack-message
+            .route("slack-message-service", r -> r.path("/api/slack-message/**")
+                .filters(f -> f.filter(authFilter))
+                .uri("lb://slack-message-service")
             )
             .build();
     }

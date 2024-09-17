@@ -67,10 +67,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRole role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
         AffiliationType affiliationType = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getAffiliationType();
-        String AffiliationId = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getAffiliationId();
+        String affiliationId = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getAffiliationId();
 
 
-        String token = jwtUtil.createToken(username, role, affiliationType, AffiliationId);
+        String token = jwtUtil.createToken(username, role, affiliationType, affiliationId);
         jwtUtil.addJwtToCookie(token, response);
 
         log.info("JWT 토큰 {}",token);
