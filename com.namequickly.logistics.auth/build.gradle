@@ -37,6 +37,10 @@ dependencies {
 	// postgresql
 	runtimeOnly 'org.postgresql:postgresql'
 
+	// lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
 	// mapStruct
 	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
@@ -60,9 +64,6 @@ dependencies {
 
 	// eureka client
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'

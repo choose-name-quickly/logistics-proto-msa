@@ -6,6 +6,7 @@ import com.namequickly.logistics.auth.application.dto.UserDto;
 import com.namequickly.logistics.auth.application.dto.UserInfoResponseDto;
 import com.namequickly.logistics.auth.domain.model.User;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = SPRING)
 public interface UserMapper {

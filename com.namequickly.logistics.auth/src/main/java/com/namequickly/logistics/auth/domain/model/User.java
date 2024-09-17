@@ -12,13 +12,18 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "p_user")
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor
+@AllArgsConstructor
 public class User extends BaseEntity {
 
     @Id
