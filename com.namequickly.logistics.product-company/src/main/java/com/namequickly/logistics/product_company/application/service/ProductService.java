@@ -8,11 +8,14 @@ import com.namequickly.logistics.product_company.application.dto.ProductDeleteRe
 import com.namequickly.logistics.product_company.application.dto.ProductGetResponseDto;
 import com.namequickly.logistics.product_company.application.dto.ProductUpdateRequestDto;
 import com.namequickly.logistics.product_company.application.dto.ProductUpdateResponseDto;
+import com.namequickly.logistics.product_company.application.dto.client.OperationType;
+import com.namequickly.logistics.product_company.application.dto.client.StockUpdateRequest;
 import com.namequickly.logistics.product_company.application.mapper.ProductMapper;
 import com.namequickly.logistics.product_company.domain.model.Product;
 import com.namequickly.logistics.product_company.domain.model.Stock;
 import com.namequickly.logistics.product_company.domain.repository.ProductRepository;
-import com.namequickly.logistics.product_company.infrastructure.client.UserClient;
+import com.namequickly.logistics.product_company.infrastructure.security.CustomUserDetails;
+import com.namequickly.logistics.product_company.infrastructure.security.SecurityUtils;
 import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +32,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    private final VerifierService verifierService;
-    private final UserClient userClient;
+    private final FeignClientService feignClientService;
 
     private final ProductMapper productMapper;
 
@@ -48,24 +48,28 @@ public class ProductService {
     @Transactional(readOnly = false)
     public ProductCreateResponseDto createProduct(@Valid ProductCreateRequestDto requestDto) {
 
-        String userName = (String) SecurityContextHolder.getContext().getAuthentication()
-            .getPrincipal();
-        String userRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
-            .stream().map(GrantedAuthority::getAuthority) // 권한 문자열을 추출
-            .findFirst() // 첫 번째 권한을 찾음
-            .orElse(null);
+        CustomUserDetails userDetails = SecurityUtils.getCurrentUserDetails();
+        String userName = userDetails.getUsername();
+        String affiliationId = userDetails.getAffiliationId();
+        String userRole = userDetails.getRoleAsString();
 
-        // TODO 나중에 feign client 개발 완료되면 주석 풀기
-        /*
-        verifierService.checkCompanyExists(requestDto.getSupplierId());
-        verifierService.checkHubExists(requestDto.getHubId());
+        if (feignClientService.getCompany(requestDto.getSupplierId()) == null) {
+            throw new GlobalException(ResultCase.NOT_FOUND_COMPANY);
+        }
+
+        if (feignClientService.getHub(requestDto.getHubId()) == null) {
+            throw new GlobalException(ResultCase.NOT_FOUND_HUB);
+        }
 
         if (userRole.equals("ROLE_HUBMANAGER")) {
-            verifierService.isMatchHub(requestDto.getHubId(), userName);
+            if (!affiliationId.equals(requestDto.getHubId().toString())) {
+                throw new GlobalException(ResultCase.UNAUTHORIZED_HUB);
+            }
         } else if (userRole.equals("ROLE_COMPANY")) {
-            verifierService.isMatchCompany(requestDto.getSupplierId(), userName);
+            if (!affiliationId.equals(requestDto.getSupplierId().toString())) {
+                throw new GlobalException(ResultCase.UNAUTHORIZED_COMPANY);
+            }
         }
-        */
 
         if (productRepository.existsByProductName(requestDto.getProductName())) {
             throw new GlobalException(ResultCase.DUPLICATED_PRODUCT_NAME);
@@ -93,24 +97,26 @@ public class ProductService {
      */
     @Transactional(readOnly = false)
     public ProductDeleteResponseDto deleteProduct(UUID productId) {
-        String userName = (String) SecurityContextHolder.getContext().getAuthentication()
-            .getPrincipal();
-        String userRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
-            .stream().map(GrantedAuthority::getAuthority) // 권한 문자열을 추출
-            .findFirst() // 첫 번째 권한을 찾음
-            .orElse(null);
+
+        CustomUserDetails userDetails = SecurityUtils.getCurrentUserDetails();
+        String userName = userDetails.getUsername();
+        String affiliationId = userDetails.getAffiliationId();
+        String userRole = userDetails.getRoleAsString();
 
         Product product = productRepository.findByProductIdAndIsDeleteFalse(productId)
             .orElseThrow(() -> new GlobalException(ResultCase.NOT_FOUND_PRODUCT));
 
-        // TODO 나중에 feign client 개발 완료되면 주석 풀기
-        /*
-        if (userRole.equals("ROLE_HUBMANAGEMENT")) {
-            verifierService.isMatchHub(product.getHubId(), userName);
+        if (userRole.equals("ROLE_HUBMANAGER")) {
+            if (!affiliationId.equals(product.getHubId().toString())) {
+                throw new GlobalException(ResultCase.UNAUTHORIZED_HUB);
+            }
+        } else if (userRole.equals("ROLE_COMPANY")) {
+            if (!affiliationId.equals(product.getSupplierId().toString())) {
+                throw new GlobalException(ResultCase.UNAUTHORIZED_COMPANY);
+            }
         }
-        */
 
-        verifierService.checkProductInDelivery(productId);
+        feignClientService.checkProductInDelivery(productId);
 
         product.deleteProduct(userName);
 
@@ -127,27 +133,24 @@ public class ProductService {
     @Transactional(readOnly = false)
     public ProductUpdateResponseDto updateProduct(UUID productId,
         ProductUpdateRequestDto requestDto) {
-        String userName = (String) SecurityContextHolder.getContext().getAuthentication()
-            .getPrincipal();
-        String userRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
-            .stream().map(GrantedAuthority::getAuthority) // 권한 문자열을 추출
-            .findFirst() // 첫 번째 권한을 찾음
-            .orElse(null);
 
-        // TODO 나중에 feign client 개발 완료되면 주석 풀기
-        /*
-        verifierService.checkCompanyExists(requestDto.getSupplierId());
-        verifierService.checkHubExists(requestDto.getHubId());
-
-        if (userRole.equals("ROLE_HUB")) {
-            verifierService.isMatchHub(requestDto.getHubId(), userName);
-        } else if (userRole.equals("ROLE_COMPANY")) {
-            verifierService.isMatchCompany(requestDto.getSupplierId(), userName);
-        }
-         */
+        CustomUserDetails userDetails = SecurityUtils.getCurrentUserDetails();
+        String userName = userDetails.getUsername();
+        String affiliationId = userDetails.getAffiliationId();
+        String userRole = userDetails.getRoleAsString();
 
         Product product = productRepository.findByProductIdAndIsDeleteFalse(productId)
             .orElseThrow(() -> new GlobalException(ResultCase.NOT_FOUND_PRODUCT));
+
+        if (userRole.equals("ROLE_HUBMANAGER")) {
+            if (!affiliationId.equals(product.getHubId().toString())) {
+                throw new GlobalException(ResultCase.UNAUTHORIZED_HUB);
+            }
+        } else if (userRole.equals("ROLE_COMPANY")) {
+            if (!affiliationId.equals(product.getSupplierId().toString())) {
+                throw new GlobalException(ResultCase.UNAUTHORIZED_COMPANY);
+            }
+        }
 
         productRepository.findByProductNameAndIsDeleteFalse(requestDto.getProductName())
             .filter(existingProduct -> !existingProduct.getProductId().equals(productId))
@@ -191,10 +194,8 @@ public class ProductService {
     public Page<ProductGetResponseDto> getAllProducts(int page, int size, boolean isAsc,
         String sortBy, boolean isDelete) {
 
-        String userRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
-            .stream().map(GrantedAuthority::getAuthority) // 권한 문자열을 추출
-            .findFirst() // 첫 번째 권한을 찾음
-            .orElse(null);
+        CustomUserDetails userDetails = SecurityUtils.getCurrentUserDetails();
+        String userRole = userDetails.getRoleAsString();
 
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
@@ -221,29 +222,55 @@ public class ProductService {
     @Transactional(readOnly = true)
     public Page<ProductGetResponseDto> getMyAllProducts(int page, int size, boolean isAsc,
         String sortBy, boolean isDelete) {
-        String userName = (String) SecurityContextHolder.getContext().getAuthentication()
-            .getPrincipal();
-        String userRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
-            .stream().map(GrantedAuthority::getAuthority) // 권한 문자열을 추출
-            .findFirst() // 첫 번째 권한을 찾음
-            .orElse(null);
+
+        CustomUserDetails userDetails = SecurityUtils.getCurrentUserDetails();
+        String affiliationId = userDetails.getAffiliationId();
+        String userRole = userDetails.getRoleAsString();
 
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
 
-        // TODO 나중에 feign client 개발 완료되면 주석 풀기
-        /*
-        UserInfoDto userInfoDto = userClient.findUser(userName);
-
-        if(userRole.equals("ROLE_HUB")){
-            Page<Product> products = productRepository.findAllProductsByHubId(pageable, userInfoDto.getAffiliationId() , isDelete);
+        if (userRole.equals("ROLE_HUBMANAGER")) {
+            Page<Product> products = productRepository.findAllProductsByHubId(pageable,
+                UUID.fromString(affiliationId), isDelete);
             return products.map(productMapper::toProductGetResponseDto);
-        }else {
-            Page<Product> products = productRepository.findAllProductsBySupplierId(pageable, userInfoDto.getAffiliationId() , isDelete);
+        } else {
+            Page<Product> products = productRepository.findAllProductsBySupplierId(pageable,
+                UUID.fromString(affiliationId),
+                isDelete);
             return products.map(productMapper::toProductGetResponseDto);
         }
-        */
-        return null;
 
+    }
+
+    // feign client 메서드
+    public Integer updateStockQuantity(UUID productId, StockUpdateRequest stockUpdateRequest) {
+
+        if (stockUpdateRequest.getStockQuantity() < 0) {
+            throw new GlobalException(ResultCase.NEGATIVE_STOCK_QUANTITY);
+        }
+
+        Product product = productRepository.findByProductIdAndIsDeleteFalse(productId).orElseThrow(
+            () -> new GlobalException(ResultCase.NOT_FOUND_PRODUCT)
+        );
+
+        int currentStockQuantity = product.getStock().getStockQuantity();
+        int updatedStockQuantity;
+
+        if (OperationType.INCREASE.equals(stockUpdateRequest.getOperationType())) {
+            updatedStockQuantity = currentStockQuantity + stockUpdateRequest.getStockQuantity();
+
+        } else if (OperationType.DECREASE.equals(stockUpdateRequest.getOperationType())) {
+            updatedStockQuantity = currentStockQuantity - stockUpdateRequest.getStockQuantity();
+            if (updatedStockQuantity < 0) {
+                throw new GlobalException(ResultCase.OUT_OF_STOCK_QUNTITY);
+            }
+        } else {
+            throw new GlobalException(ResultCase.INVALID_OPERATION);
+        }
+
+        product.getStock().updateStockQuantity(updatedStockQuantity);
+
+        return updatedStockQuantity;
     }
 }

@@ -3,7 +3,6 @@ package com.namequickly.logistics.order.application.service;
 
 import com.namequickly.logistics.common.exception.GlobalException;
 import com.namequickly.logistics.common.response.ResultCase;
-import com.namequickly.logistics.order.application.dto.HubRouteDto;
 import com.namequickly.logistics.order.application.dto.OrderCreateRequestDto;
 import com.namequickly.logistics.order.application.dto.OrderCreateRequestDto.OrderProductRequestDto;
 import com.namequickly.logistics.order.application.dto.OrderCreateResponseDto;
@@ -11,6 +10,10 @@ import com.namequickly.logistics.order.application.dto.OrderDeleteResponseDto;
 import com.namequickly.logistics.order.application.dto.OrderResponseDto;
 import com.namequickly.logistics.order.application.dto.OrderUpdateRequestDto;
 import com.namequickly.logistics.order.application.dto.OrderUpdateResponseDto;
+import com.namequickly.logistics.order.application.dto.client.CompanyDto;
+import com.namequickly.logistics.order.application.dto.client.HubRouteCourierDto;
+import com.namequickly.logistics.order.application.dto.client.OperationType;
+import com.namequickly.logistics.order.application.dto.client.StockUpdateRequest;
 import com.namequickly.logistics.order.application.mapper.OrderMapper;
 import com.namequickly.logistics.order.domain.model.delivery.Delivery;
 import com.namequickly.logistics.order.domain.model.delivery.DeliveryRoute;
@@ -18,10 +21,13 @@ import com.namequickly.logistics.order.domain.model.delivery.DeliveryStatus;
 import com.namequickly.logistics.order.domain.model.order.Order;
 import com.namequickly.logistics.order.domain.model.order.OrderProduct;
 import com.namequickly.logistics.order.infrastructure.client.HubClient;
+import com.namequickly.logistics.order.infrastructure.client.ProductCompanyClient;
 import com.namequickly.logistics.order.infrastructure.repository.DeliveryRepository;
 import com.namequickly.logistics.order.infrastructure.repository.DeliveryRouteRepository;
 import com.namequickly.logistics.order.infrastructure.repository.OrderProductRepository;
 import com.namequickly.logistics.order.infrastructure.repository.OrderRepository;
+import com.namequickly.logistics.order.infrastructure.security.CustomUserDetails;
+import com.namequickly.logistics.order.infrastructure.security.SecurityUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -30,7 +36,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,10 +43,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OrderService {
 
-    private final VerifierService verifierService;
+    private final FeignClientService feignClientService;
 
     private final OrderMapper orderMapper;
     private final HubClient hubClient;
+    private final ProductCompanyClient productCompanyClient;
 
     private final OrderRepository orderRepository;
     private final OrderProductRepository orderProductRepository;
@@ -54,22 +60,35 @@ public class OrderService {
      */
     @Transactional(readOnly = false)
     public OrderCreateResponseDto createOrder(OrderCreateRequestDto requestDto) {
+        CustomUserDetails userDetails = SecurityUtils.getCurrentUserDetails();
+        String userName = userDetails.getUsername();
+        String affiliationId = userDetails.getAffiliationId();
+        String userRole = userDetails.getRoleAsString();
 
-        // TODO 나중에 feign client 개발 완료되면 주석 풀기
-        /*
-        verifierService.checkCompanyExists(requestDto.getSupplierId());
-        verifierService.checkCompanyExists(requestDto.getReceiverId());
-        verifierService.checkHubExists(requestDto.getOriginHubId());
-        verifierService.checkHubExists(requestDto.getDestinationHubId());
-
-        // TODO 상품이 존재하는지 확인하는 것도 개발 필요 requestDto.getProductId();
-        if (userRole.equals("ROLE_HUBMANAGER")) {
-           // TODO 원래는 생산 업체의 허브랑 클라이언트 허브랑 같은지도 체크해야 하는데.. 아 ㅠ
-            verifierService.isMatchHub(requestDto.getHubId(), userName);
-        } else if (userRole.equals("ROLE_COMPANY")) {
-            verifierService.isMatchCompany(requestDto.getSupplierId(), userName);
+        if (feignClientService.getCompany(requestDto.getSupplierId()) == null) {
+            throw new GlobalException(ResultCase.NOT_FOUND_COMPANY);
         }
-        */
+
+        if (feignClientService.getCompany(requestDto.getReceiverId()) == null) {
+            throw new GlobalException(ResultCase.NOT_FOUND_COMPANY);
+        }
+
+        if (feignClientService.getHub(requestDto.getOriginHubId()) == null) {
+            throw new GlobalException(ResultCase.NOT_FOUND_HUB);
+        }
+        if (feignClientService.getHub(requestDto.getDestinationHubId()) == null) {
+            throw new GlobalException(ResultCase.NOT_FOUND_HUB);
+        }
+
+        if (userRole.equals("ROLE_HUBMANAGER")) {
+            if (!affiliationId.equals(requestDto.getOriginHubId().toString())) {
+                throw new GlobalException(ResultCase.UNAUTHORIZED_HUB);
+            }
+        } else if (userRole.equals("ROLE_COMPANY")) {
+            if (!affiliationId.equals(requestDto.getSupplierId().toString())) {
+                throw new GlobalException(ResultCase.UNAUTHORIZED_COMPANY);
+            }
+        }
 
         // 1. 주문 생성 (Order)
         Order order = Order.create(requestDto.getSupplierId(), requestDto.getReceiverId());
@@ -78,38 +97,33 @@ public class OrderService {
         List<OrderProductRequestDto> productDtos = requestDto.getProducts();
 
         for (OrderProductRequestDto productDto : productDtos) {
+
+            productCompanyClient.updateStockQuantity(productDto.getProductId(),
+                StockUpdateRequest.builder()
+                    .stockQuantity(productDto.getOrderQuantity())
+                    .operationType(OperationType.DECREASE)
+                    .build());
+
             OrderProduct orderProduct = OrderProduct.create(order, productDto.getProductId(),
                 productDto.getOrderQuantity());
             order.addOrderProduct(orderProduct);
         }
-        // TODO 주문 상품 생성 될 때 재고 수량 변경되어야 할 필요가 있음
-        // TODO 재고 수량 음수 안되게 조심 즉, 재고 수량보다 주문 수량이 많은지 먼저 확인해야함
 
         // 3. 배달 생성 (Delivery)
         Delivery delivery = Delivery.create(requestDto.getOriginHubId(),
             requestDto.getDestinationHubId(), requestDto.getRecipientName(),
-            requestDto.getRecipientSlackId(), order);
+            requestDto.getRecipientSlackId(), requestDto.getDeliveryAddress(), order);
         order.addDelivery(delivery);
 
         //orderRepository.save(order);
 
         // 4. 배달 경유 생성(DeliveryRoutes)
-        // TODO 나중에 Hub 개발 완료되면 주석 제거
-        //List<HubRouteDto> hubRouteDtos = hubClient.getHubRoutes(requestDto.getOriginHubId(),
-        //    requestDto.getDestinationHubId());
+        List<HubRouteCourierDto> hubRouteDtos = feignClientService.getHubRoutes(
+            requestDto.getOriginHubId(),
+            requestDto.getDestinationHubId());
 
-        // TODO 임시데이터 , 나중에 Hub 개발 완료되면 로직 삭제
-        List<HubRouteDto> hubRouteDtos = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            hubRouteDtos.add(HubRouteDto.builder()
-                .routeHubId(UUID.randomUUID())
-                .courierId(UUID.randomUUID())
-                //.sequence(i + 1)
-                .build());
-        }
-
-        for (HubRouteDto hubRouteDto : hubRouteDtos) {
-            DeliveryRoute deliveryRoute = DeliveryRoute.create(//hubRouteDto.getSequence(),
+        for (HubRouteCourierDto hubRouteDto : hubRouteDtos) {
+            DeliveryRoute deliveryRoute = DeliveryRoute.create(
                 hubRouteDto.getRouteHubId(),
                 hubRouteDto.getCourierId(), delivery);
             delivery.addDeliveryRoute(deliveryRoute);
@@ -125,20 +139,41 @@ public class OrderService {
      */
     @Transactional(readOnly = false)
     public OrderDeleteResponseDto cancelOrder(UUID orderId) {
+        CustomUserDetails userDetails = SecurityUtils.getCurrentUserDetails();
+        String userName = userDetails.getUsername();
+        String affiliationId = userDetails.getAffiliationId();
+        String userRole = userDetails.getRoleAsString();
+
         Order order = orderRepository.findById(orderId).orElseThrow(
             () -> new GlobalException(ResultCase.NOT_FOUND_ORDER)
         );
 
-        String userName = (String) SecurityContextHolder.getContext().getAuthentication()
-            .getPrincipal();
+        CompanyDto companyDto = feignClientService.getCompany(order.getSupplierId());
+
+        if (userRole.equals("ROLE_HUBMANAGER")) {
+            if (!affiliationId.equals(companyDto.getHubId().toString())) {
+                throw new GlobalException(ResultCase.UNAUTHORIZED_HUB);
+            }
+        } else if (userRole.equals("ROLE_COMPANY")) {
+            if (!affiliationId.equals(companyDto.getCompanyId().toString())) {
+                throw new GlobalException(ResultCase.UNAUTHORIZED_COMPANY);
+            }
+        }
 
         if (DeliveryStatus.HUB_WAITING.equals(order.getDeliveryStatus())) {
             order.cancelOrder(userName);
+            for (OrderProduct orderProduct : order.getOrderProducts()) {
+
+                productCompanyClient.updateStockQuantity(orderProduct.getProductId(),
+                    StockUpdateRequest.builder()
+                        .stockQuantity(orderProduct.getOrderQuantity())
+                        .operationType(OperationType.INCREASE)
+                        .build());
+            }
+
         } else {
             throw new GlobalException(ResultCase.CANNOT_DELETE_ORDER_IN_DELIVERY);
         }
-
-        // TODO 주문 취소되면 재고 수량이 증가해야함
 
         return orderMapper.toOrderDeleteResponseDto(order);
     }
@@ -149,23 +184,74 @@ public class OrderService {
      * @param orderId
      */
     @Transactional(readOnly = false)
-    public OrderUpdateResponseDto updateOrder(UUID orderId, OrderUpdateRequestDto updateDto) {
+    public OrderUpdateResponseDto updateOrder(UUID orderId,
+        List<OrderUpdateRequestDto> updateDtos) {
+
+        CustomUserDetails userDetails = SecurityUtils.getCurrentUserDetails();
+        String userName = userDetails.getUsername();
+        String affiliationId = userDetails.getAffiliationId();
+        String userRole = userDetails.getRoleAsString();
+
         Order order = orderRepository.findById(orderId).orElseThrow(
             () -> new GlobalException(ResultCase.NOT_FOUND_ORDER)
         );
+
+        CompanyDto companyDto = feignClientService.getCompany(order.getSupplierId());
+
+        if (userRole.equals("ROLE_HUBMANAGER")) {
+            if (!affiliationId.equals(companyDto.getHubId().toString())) {
+                throw new GlobalException(ResultCase.UNAUTHORIZED_HUB);
+            }
+        } else if (userRole.equals("ROLE_COMPANY")) {
+            if (!affiliationId.equals(companyDto.getCompanyId().toString())) {
+                throw new GlobalException(ResultCase.UNAUTHORIZED_COMPANY);
+            }
+        }
 
         if (!order.getDeliveryStatus().equals(DeliveryStatus.HUB_WAITING)) {
             throw new GlobalException(ResultCase.CANNOT_UPDATE_ORDER_IN_DELIVERY);
         }
 
-        OrderProduct orderProduct = order.updateOrderQuantity(
-            updateDto.getProductId(), updateDto.getOrderQuantity()).orElseThrow(
-            () -> new GlobalException(ResultCase.NOT_FOUND_PRODUCT)
-        );
+        List<OrderUpdateResponseDto.OrderProductResponseDto> updatedProducts = new ArrayList<>();
 
-        // TODO 주문 상품 수량이 변경되면 재고 상품 수량도 변경되어야 함
-        
-        return orderMapper.toOrderUpdateResponseDto(order, orderProduct);
+        for (OrderUpdateRequestDto updateDto : updateDtos) {
+            UUID productId = updateDto.getProductId();
+            int requestQuantity = updateDto.getOrderQuantity();
+
+            order.getOrderProducts().stream()
+                .filter(orderProduct -> orderProduct.getProductId().equals(productId))
+                .findFirst()
+                .ifPresent(orderProduct -> {
+                    int currentQuantity = orderProduct.getOrderQuantity();
+                    int quantityDifference = requestQuantity - currentQuantity;
+
+                    OperationType operationType =
+                        (quantityDifference > 0) ? OperationType.DECREASE : OperationType.INCREASE;
+                    int absoluteDifference = Math.abs(quantityDifference);
+
+                    if (absoluteDifference > 0) {
+                        productCompanyClient.updateStockQuantity(productId,
+                            StockUpdateRequest.builder()
+                                .stockQuantity(absoluteDifference)
+                                .operationType(operationType)
+                                .build());
+                    }
+
+                    orderProduct.updateOrderQuantity(requestQuantity);
+
+                    updatedProducts.add(OrderUpdateResponseDto.OrderProductResponseDto.builder()
+                        .productId(productId)
+                        .orderQuantity(requestQuantity)
+                        .updatedBy(order.getUpdatedAt())
+                        .build());
+                });
+        }
+
+        // OrderUpdateResponseDto 반환
+        return OrderUpdateResponseDto.builder()
+            .orderId(order.getOrderId())
+            .products(updatedProducts)
+            .build();
     }
 
     /**
@@ -206,7 +292,31 @@ public class OrderService {
     }
 
 
-    // 내부 통신
+    public Page<OrderResponseDto> getAllMineOrders(int page, int size, boolean isAsc, String sortBy,
+        boolean isDelete) {
+        //정렬 방향
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+
+        CustomUserDetails userDetails = SecurityUtils.getCurrentUserDetails();
+        String userName = userDetails.getUsername();
+        String affiliationId = userDetails.getAffiliationId();
+        String userRole = userDetails.getRoleAsString();
+
+        Page<Order> orders = Page.empty(pageable);
+
+        if (userRole.equals("ROLE_HUBMANAGER")) {
+            orders = orderRepository.findAllOrderDetailsByHubId(pageable, isDelete, affiliationId);
+        } else if (userRole.equals("ROLE_COMPANY")) {
+            orders = orderRepository.findAllOrderDetailsByCompanyId(pageable, isDelete,
+                affiliationId);
+        }
+
+        return orders.map(orderMapper::toOrderResponseDto);
+    }
+
+
+    // feign Client 통신
     public boolean checkProductInDelivery(UUID productId) {
         List<OrderProduct> orderProducts = orderProductRepository.findAllByproductId(productId);
 
@@ -219,4 +329,6 @@ public class OrderService {
         return false;
 
     }
+
+
 }
