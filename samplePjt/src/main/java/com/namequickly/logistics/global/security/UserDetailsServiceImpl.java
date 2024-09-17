@@ -1,6 +1,7 @@
 package com.namequickly.logistics.global.security;
 
 import com.namequickly.logistics.domain.user.model.User;
+import com.namequickly.logistics.domain.user.model.UserRole;
 import com.namequickly.logistics.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

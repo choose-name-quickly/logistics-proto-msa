@@ -36,6 +36,11 @@ public enum ResultCase {
     EXPIRED_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, 2004, "만료된 Access Token"),
     // 만료된 리프레쉬 토큰 401
     EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, 2005, "만료된 Refresh Token"),
+
+    // affiliaton 을 입력하지 않음
+    AFFILIATION_INVALID(HttpStatus.BAD_REQUEST, 2006, "Affiliation ID를 입력하지 않았습니다."),
+    // affilation 이 존재하지 않음
+    AFFILIATION_NOT_FOUND(HttpStatus.NOT_FOUND, 2007, "Affiliation ID가 존재하지 않습니다."),
     ;
 
     private final HttpStatus httpStatus; // 응답 상태 코드
