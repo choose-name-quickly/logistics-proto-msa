@@ -1,7 +1,6 @@
 package com.namequickly.logistics.order.presentation.controller;
 
 import com.namequickly.logistics.common.response.CommonResponse;
-import com.namequickly.logistics.order.application.dto.DeliveryGetByCourierRequestDto;
 import com.namequickly.logistics.order.application.dto.DeliveryGetByCourierResponseDto;
 import com.namequickly.logistics.order.application.dto.DeliveryGetResponseDto;
 import com.namequickly.logistics.order.application.dto.client.DeliveryStatusUpdateRequestDto;
@@ -12,6 +11,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,12 +55,13 @@ public class DeliveryController {
     /**
      * 기사 별 기사 배송 정보
      */
-    public List<DeliveryGetByCourierResponseDto> getAllDeliveriesByCourier(
-        @RequestBody List<DeliveryGetByCourierRequestDto> requestDtos) {
-        return deliveryService.getAllDeliveriesByCourier(requestDtos);
+    @GetMapping("/deliveries/delivery-status/waiting")
+    public List<DeliveryGetByCourierResponseDto> getAllHubwatingDeliveries() {
+        return deliveryService.getAllHubwatingDeliveries();
     }
 
     // 배송 상태 변경
+    @PutMapping("/deliveries/delivery-status")
     public DeliveryStatusUpdateResponseDto updateDeliveryStatus(
         @RequestBody DeliveryStatusUpdateRequestDto requestDto) {
         return deliveryService.updateDeliveryStatus(requestDto);
