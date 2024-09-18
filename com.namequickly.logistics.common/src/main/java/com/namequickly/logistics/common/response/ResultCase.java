@@ -81,7 +81,7 @@ public enum ResultCase {
     // 배송중인 주문 취소 불가 400
     CANNOT_DELETE_ORDER_IN_DELIVERY(HttpStatus.BAD_REQUEST, 7001, "배송 중인 주문은 취소할 수 없습니다."),
     // 배송중인 상품 수정 불가 400
-    CANNOT_UPDATE_ORDER_IN_DELIVERY(HttpStatus.BAD_REQUEST, 7002, "배송 중인 주문은 변경할 수 없습니다.")
+    CANNOT_UPDATE_ORDER_IN_DELIVERY(HttpStatus.BAD_REQUEST, 7002, "배송 중인 주문은 변경할 수 없습니다."),
 
     // affiliaton 을 입력하지 않음
     AFFILIATION_INVALID(HttpStatus.BAD_REQUEST, 2006, "Affiliation ID를 입력하지 않았습니다."),

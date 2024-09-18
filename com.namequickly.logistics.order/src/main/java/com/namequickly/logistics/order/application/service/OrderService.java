@@ -10,7 +10,7 @@ import com.namequickly.logistics.order.application.dto.OrderDeleteResponseDto;
 import com.namequickly.logistics.order.application.dto.OrderResponseDto;
 import com.namequickly.logistics.order.application.dto.OrderUpdateRequestDto;
 import com.namequickly.logistics.order.application.dto.OrderUpdateResponseDto;
-import com.namequickly.logistics.order.application.dto.client.CompanyDto;
+import com.namequickly.logistics.order.application.dto.client.CompanyResponse;
 import com.namequickly.logistics.order.application.dto.client.HubRouteCourierDto;
 import com.namequickly.logistics.order.application.dto.client.OperationType;
 import com.namequickly.logistics.order.application.dto.client.StockUpdateRequest;
@@ -65,11 +65,11 @@ public class OrderService {
         String affiliationId = userDetails.getAffiliationId();
         String userRole = userDetails.getRoleAsString();
 
-        if (feignClientService.getCompany(requestDto.getSupplierId()) == null) {
+        if (feignClientService.getCompanyById(requestDto.getSupplierId(), userRole) == null) {
             throw new GlobalException(ResultCase.NOT_FOUND_COMPANY);
         }
 
-        if (feignClientService.getCompany(requestDto.getReceiverId()) == null) {
+        if (feignClientService.getCompanyById(requestDto.getReceiverId(), userRole) == null) {
             throw new GlobalException(ResultCase.NOT_FOUND_COMPANY);
         }
 
@@ -118,9 +118,28 @@ public class OrderService {
         //orderRepository.save(order);
 
         // 4. 배달 경유 생성(DeliveryRoutes)
-        List<HubRouteCourierDto> hubRouteDtos = feignClientService.getHubRoutes(
+        List<HubRouteCourierDto> hubRouteDtos = new ArrayList<>();
+        // TODO 나중에 추가
+        /*= feignClientService.getHubRoutes(
             requestDto.getOriginHubId(),
-            requestDto.getDestinationHubId());
+            requestDto.getDestinationHubId());*/
+        // 임시로 UUID 생성
+        UUID routeHubId1 = UUID.randomUUID();
+        UUID courierId1 = UUID.randomUUID();
+
+        UUID routeHubId2 = UUID.randomUUID();
+        UUID courierId2 = UUID.randomUUID();
+
+        // HubRouteCourierDto 객체 생성 후 리스트에 추가
+        hubRouteDtos.add(HubRouteCourierDto.builder()
+            .routeHubId(routeHubId1)
+            .courierId(courierId1)
+            .build());
+
+        hubRouteDtos.add(HubRouteCourierDto.builder()
+            .routeHubId(routeHubId2)
+            .courierId(courierId2)
+            .build());
 
         for (HubRouteCourierDto hubRouteDto : hubRouteDtos) {
             DeliveryRoute deliveryRoute = DeliveryRoute.create(
@@ -148,7 +167,8 @@ public class OrderService {
             () -> new GlobalException(ResultCase.NOT_FOUND_ORDER)
         );
 
-        CompanyDto companyDto = feignClientService.getCompany(order.getSupplierId());
+        CompanyResponse companyDto = feignClientService.getCompanyById(order.getSupplierId(),
+            userRole);
 
         if (userRole.equals("ROLE_HUBMANAGER")) {
             if (!affiliationId.equals(companyDto.getHubId().toString())) {
@@ -196,7 +216,8 @@ public class OrderService {
             () -> new GlobalException(ResultCase.NOT_FOUND_ORDER)
         );
 
-        CompanyDto companyDto = feignClientService.getCompany(order.getSupplierId());
+        CompanyResponse companyDto = feignClientService.getCompanyById(order.getSupplierId(),
+            userRole);
 
         if (userRole.equals("ROLE_HUBMANAGER")) {
             if (!affiliationId.equals(companyDto.getHubId().toString())) {
