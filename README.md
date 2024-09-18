@@ -50,5 +50,5 @@ GeminiAPI
 API Gateway
 
 # 트러블 슈팅 (멤버 별 트러블 슈팅 케이스 모은 후 추가 예정)
-**@PreAuthorize의 hasRole()** [WIKI 보기](https://github.com/choose-name-quickly/logistics-proto-msa/wiki/%5BTrouble-Shooting%5D-@PreAuthorize-hasRole()-Prefix%EB%A1%9C-%EC%9D%B8%ED%95%9C-%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0)
-
+**@PreAuthorize의 hasRole()** [WIKI 보기](https://github.com/choose-name-quickly/logistics-proto-msa/wiki/%5BTrouble-Shooting%5D-@PreAuthorize-hasRole()-Prefix%EB%A1%9C-%EC%9D%B8%ED%95%9C-%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0)  
+**@RequestParam 또는 @PathVariable에서 name 속성** WIKI 보기 
