@@ -2,6 +2,7 @@ package com.namequickly.logistics.product_company.application.service;
 
 import com.namequickly.logistics.common.exception.GlobalException;
 import com.namequickly.logistics.common.response.ResultCase;
+import com.namequickly.logistics.common.shared.UserRole;
 import com.namequickly.logistics.product_company.application.dto.ProductCreateRequestDto;
 import com.namequickly.logistics.product_company.application.dto.ProductCreateResponseDto;
 import com.namequickly.logistics.product_company.application.dto.ProductDeleteResponseDto;
@@ -53,7 +54,7 @@ public class ProductService {
         String affiliationId = userDetails.getAffiliationId();
         String userRole = userDetails.getRoleAsString();
 
-        if (feignClientService.getCompany(requestDto.getSupplierId()) == null) {
+        if (feignClientService.getCompanyById(requestDto.getSupplierId(), userRole) == null) {
             throw new GlobalException(ResultCase.NOT_FOUND_COMPANY);
         }
 
@@ -61,11 +62,11 @@ public class ProductService {
             throw new GlobalException(ResultCase.NOT_FOUND_HUB);
         }
 
-        if (userRole.equals("ROLE_HUBMANAGER")) {
+        if (userRole.equals(UserRole.HUBMANAGER)) {
             if (!affiliationId.equals(requestDto.getHubId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_HUB);
             }
-        } else if (userRole.equals("ROLE_COMPANY")) {
+        } else if (userRole.equals(UserRole.COMPANY)) {
             if (!affiliationId.equals(requestDto.getSupplierId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_COMPANY);
             }
@@ -106,11 +107,11 @@ public class ProductService {
         Product product = productRepository.findByProductIdAndIsDeleteFalse(productId)
             .orElseThrow(() -> new GlobalException(ResultCase.NOT_FOUND_PRODUCT));
 
-        if (userRole.equals("ROLE_HUBMANAGER")) {
+        if (userRole.equals(UserRole.HUBMANAGER)) {
             if (!affiliationId.equals(product.getHubId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_HUB);
             }
-        } else if (userRole.equals("ROLE_COMPANY")) {
+        } else if (userRole.equals(UserRole.COMPANY)) {
             if (!affiliationId.equals(product.getSupplierId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_COMPANY);
             }
@@ -142,11 +143,11 @@ public class ProductService {
         Product product = productRepository.findByProductIdAndIsDeleteFalse(productId)
             .orElseThrow(() -> new GlobalException(ResultCase.NOT_FOUND_PRODUCT));
 
-        if (userRole.equals("ROLE_HUBMANAGER")) {
+        if (userRole.equals(UserRole.HUBMANAGER)) {
             if (!affiliationId.equals(product.getHubId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_HUB);
             }
-        } else if (userRole.equals("ROLE_COMPANY")) {
+        } else if (userRole.equals(UserRole.COMPANY)) {
             if (!affiliationId.equals(product.getSupplierId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_COMPANY);
             }
@@ -200,7 +201,7 @@ public class ProductService {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
 
-        if (!userRole.equals("ROLE_MASTER") && isDelete) {
+        if (!userRole.equals(UserRole.MASTER) && isDelete) {
             throw new GlobalException(ResultCase.UNAUTHORIZED_DELETE_PRODUCT);
         }
 
@@ -230,7 +231,7 @@ public class ProductService {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
 
-        if (userRole.equals("ROLE_HUBMANAGER")) {
+        if (userRole.equals(UserRole.HUBMANAGER)) {
             Page<Product> products = productRepository.findAllProductsByHubId(pageable,
                 UUID.fromString(affiliationId), isDelete);
             return products.map(productMapper::toProductGetResponseDto);
@@ -244,6 +245,7 @@ public class ProductService {
     }
 
     // feign client 메서드
+    @Transactional(readOnly = false)
     public Integer updateStockQuantity(UUID productId, StockUpdateRequest stockUpdateRequest) {
 
         if (stockUpdateRequest.getStockQuantity() < 0) {

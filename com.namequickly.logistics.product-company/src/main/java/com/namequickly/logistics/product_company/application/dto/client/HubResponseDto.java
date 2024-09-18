@@ -1,4 +1,4 @@
-package com.namequickly.logistics.order.application.dto.client;
+package com.namequickly.logistics.product_company.application.dto.client;
 
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -10,9 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class HubDto {
+public class HubResponseDto {
 
     private UUID hubId;
     private String hubName;
-    private String hubAddress;
+    private String address;
+    private String locationLatitude;
+    private String locationLongitude;
+
 }

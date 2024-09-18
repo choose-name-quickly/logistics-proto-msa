@@ -7,16 +7,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class CompanyDto {
+@NoArgsConstructor
+@Builder
+public class HubResponseDto {
 
-    private UUID companyId;
     private UUID hubId;
-    private String companyName;
-    private String type;
+    private String hubName;
     private String address;
-    private String phone;
+    private String locationLatitude;
+    private String locationLongitude;
 
 }

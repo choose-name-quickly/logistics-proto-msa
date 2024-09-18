@@ -60,6 +60,10 @@ public class User extends BaseEntity {
     @Column(name = "hub_affiliation_id")
     private HubAffiliation hubAffiliationId;
 
+    // 슬랙 ID
+    @Column(name = "slack_id", length = 255)
+    private String slackId;
+
     @Column(name = "is_public")
     private boolean isPublic;
 

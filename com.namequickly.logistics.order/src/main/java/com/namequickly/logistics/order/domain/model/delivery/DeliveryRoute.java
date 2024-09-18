@@ -66,7 +66,7 @@ public class DeliveryRoute extends BaseEntity {
 
     @Column(name = "actual_start_time")
     private LocalDateTime actualStartTime;
-    
+
     @Column(name = "actual_end_time")
     private LocalDateTime actualEndTime;
 
@@ -84,6 +84,7 @@ public class DeliveryRoute extends BaseEntity {
             .courierId(courierId)
             .delivery(delivery)
             .isDelete(false)
+            .actualStartTime(LocalDateTime.now())
             .build();
     }
 
