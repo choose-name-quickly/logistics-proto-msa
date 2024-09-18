@@ -1,5 +1,6 @@
 package com.namequickly.logistics.hub.domain.model;
 
+import com.namequickly.logistics.common.shared.affiliation.HubAffiliation;
 import com.namequickly.logistics.hub.application.dto.HubRequestDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +27,7 @@ public class Hub extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID hubId;
 
+    private HubAffiliation affiliationId;
     private String hubName;
     private String address;
     private String locationLatitude;
@@ -33,6 +35,7 @@ public class Hub extends BaseEntity {
 
     public static Hub createHub(HubRequestDto hubDTO) {
         return Hub.builder()
+            .affiliationId(hubDTO.getAffiliationId())
             .hubName(hubDTO.getHubName())
             .address(hubDTO.getAddress())
             .locationLatitude(hubDTO.getLocationLatitude())
@@ -43,6 +46,7 @@ public class Hub extends BaseEntity {
     public void updateHub(HubRequestDto hubDTO) {
         this.hubName = hubDTO.getHubName();
         this.address = hubDTO.getAddress();
+        this.affiliationId = hubDTO.getAffiliationId();
         this.locationLatitude = hubDTO.getLocationLatitude();
         this.locationLongitude = hubDTO.getLocationLongitude();
     }

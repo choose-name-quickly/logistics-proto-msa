@@ -85,4 +85,10 @@ public class AuthService {
             .toList();
     }
 
+    /**
+     * (Feign) slackId 를 기반으로 실제 유저인지체크
+     */
+    public boolean checkUserExistsbySlackId(String slackId) {
+        return userRepository.checkUserExistsbySlackId(slackId);
+    }
 }

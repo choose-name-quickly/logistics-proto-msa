@@ -41,7 +41,10 @@ public enum ResultCase {
     AFFILIATION_INVALID(HttpStatus.BAD_REQUEST, 2006, "Affiliation ID를 입력하지 않았습니다."),
     // affilation 이 존재하지 않음
     AFFILIATION_NOT_FOUND(HttpStatus.NOT_FOUND, 2007, "Affiliation ID가 존재하지 않습니다."),
-    ;
+
+
+    /* 허브 3000번대 */
+    HUB_NOT_FOUND(HttpStatus.NOT_FOUND, 3000, "Hub ID가 존재하지 않습니다.");
 
     private final HttpStatus httpStatus; // 응답 상태 코드
     private final Integer code; // 응답 코드. 도메인에 따라 1000번대로 나뉨

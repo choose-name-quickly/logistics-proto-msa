@@ -2,6 +2,7 @@ package com.namequickly.logistics.hub.application.service;
 
 import com.namequickly.logistics.common.exception.GlobalException;
 import com.namequickly.logistics.common.response.ResultCase;
+import com.namequickly.logistics.common.shared.affiliation.HubAffiliation;
 import com.namequickly.logistics.hub.application.dto.HubRequestDto;
 import com.namequickly.logistics.hub.application.dto.HubResponseDto;
 import com.namequickly.logistics.hub.application.mapper.HubMapper;
@@ -54,4 +55,22 @@ public class HubService {
             .map(hubMapper::toDTO)
             .toList();
     }
+
+    /**
+     * (Feign) 존재하는 허브ID 인지 체크
+     */
+    public boolean checkHubExists(UUID hubId) {
+        return hubRepository.existsById(hubId);
+    }
+
+    /**
+     * (Feign) affiliationId 기반으로 허브ID 리턴
+     */
+    public UUID getHubIdByAffiliationId(HubAffiliation affiliationId) {
+        Hub hub = hubRepository.findHubIdByAffiliationId(affiliationId)
+            .orElseThrow(()-> new GlobalException(ResultCase.HUB_NOT_FOUND));
+
+        return hub.getHubId();
+    }
+
 }
