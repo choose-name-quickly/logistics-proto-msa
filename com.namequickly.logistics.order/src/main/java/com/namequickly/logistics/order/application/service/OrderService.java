@@ -3,6 +3,7 @@ package com.namequickly.logistics.order.application.service;
 
 import com.namequickly.logistics.common.exception.GlobalException;
 import com.namequickly.logistics.common.response.ResultCase;
+import com.namequickly.logistics.common.shared.UserRole;
 import com.namequickly.logistics.order.application.dto.OrderCreateRequestDto;
 import com.namequickly.logistics.order.application.dto.OrderCreateRequestDto.OrderProductRequestDto;
 import com.namequickly.logistics.order.application.dto.OrderCreateResponseDto;
@@ -80,11 +81,11 @@ public class OrderService {
             throw new GlobalException(ResultCase.NOT_FOUND_HUB);
         }
 
-        if (userRole.equals("ROLE_HUBMANAGER")) {
+        if (userRole.equals(UserRole.HUBMANAGER.getAuthority())) {
             if (!affiliationId.equals(requestDto.getOriginHubId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_HUB);
             }
-        } else if (userRole.equals("ROLE_COMPANY")) {
+        } else if (userRole.equals(UserRole.COMPANY.getAuthority())) {
             if (!affiliationId.equals(requestDto.getSupplierId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_COMPANY);
             }
@@ -170,11 +171,11 @@ public class OrderService {
         CompanyResponse companyDto = feignClientService.getCompanyById(order.getSupplierId(),
             userRole);
 
-        if (userRole.equals("ROLE_HUBMANAGER")) {
+        if (userRole.equals(UserRole.HUBMANAGER.getAuthority())) {
             if (!affiliationId.equals(companyDto.getHubId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_HUB);
             }
-        } else if (userRole.equals("ROLE_COMPANY")) {
+        } else if (userRole.equals(UserRole.COMPANY.getAuthority())) {
             if (!affiliationId.equals(companyDto.getCompanyId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_COMPANY);
             }
@@ -219,11 +220,11 @@ public class OrderService {
         CompanyResponse companyDto = feignClientService.getCompanyById(order.getSupplierId(),
             userRole);
 
-        if (userRole.equals("ROLE_HUBMANAGER")) {
+        if (userRole.equals(UserRole.HUBMANAGER.getAuthority())) {
             if (!affiliationId.equals(companyDto.getHubId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_HUB);
             }
-        } else if (userRole.equals("ROLE_COMPANY")) {
+        } else if (userRole.equals(UserRole.COMPANY.getAuthority())) {
             if (!affiliationId.equals(companyDto.getCompanyId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_COMPANY);
             }
@@ -326,9 +327,9 @@ public class OrderService {
 
         Page<Order> orders = Page.empty(pageable);
 
-        if (userRole.equals("ROLE_HUBMANAGER")) {
+        if (userRole.equals(UserRole.HUBMANAGER.getAuthority())) {
             orders = orderRepository.findAllOrderDetailsByHubId(pageable, isDelete, affiliationId);
-        } else if (userRole.equals("ROLE_COMPANY")) {
+        } else if (userRole.equals(UserRole.COMPANY.getAuthority())) {
             orders = orderRepository.findAllOrderDetailsByCompanyId(pageable, isDelete,
                 affiliationId);
         }
