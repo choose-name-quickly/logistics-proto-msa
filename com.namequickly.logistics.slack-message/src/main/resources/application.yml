@@ -1,3 +1,11 @@
+server:
+  port: 19097
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:19090/eureka/
+
+
 spring:
   application:
     name: slack-message-service
@@ -11,18 +19,17 @@ spring:
         format_sql: true
         use_sql_comments: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/slack_message
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=slack_message
     username: postgres
     password: 1234
     driver-class-name: org.postgresql.Driver
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      username: default
+      password: systempass
 
-
-server:
-  port: 19097
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:19090/eureka/
 
 management:
   zipkin:
@@ -31,3 +38,8 @@ management:
   tracing:
     sampling:
       probability: 1.0
+
+slack:
+  token: xoxb-7725857658918-7734896494435-UQMAhsDSiA4MJLQ7ycKs1XvA
+  webhook:
+    url: https://hooks.slack.com/services/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

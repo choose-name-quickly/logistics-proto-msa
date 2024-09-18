@@ -6,11 +6,11 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @EnableFeignClients
-@SpringBootApplication(exclude = SecurityAutoConfiguration.class) // 개발위해 시큐리티 임시 비활성화
+@SpringBootApplication//(exclude = SecurityAutoConfiguration.class) // 개발위해 시큐리티 임시 비활성화
 public class ProductCompanyApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ProductCompanyApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ProductCompanyApplication.class, args);
+    }
 
 }

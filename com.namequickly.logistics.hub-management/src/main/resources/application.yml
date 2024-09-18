@@ -11,7 +11,7 @@ spring:
         format_sql: true
         use_sql_comments: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/hub_management
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=hub_management
     username: postgres
     password: 1234
     driver-class-name: org.postgresql.Driver
