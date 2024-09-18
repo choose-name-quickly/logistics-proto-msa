@@ -23,4 +23,5 @@ AI API를 활용한 허브 및 업체 간 배송과 주문 관리 시스템
 
 
 # 트러블 슈팅 
-**@PreAuthorize의 hasRole()** WIKI 보기 
+**@PreAuthorize의 hasRole()** [WIKI 보기](https://github.com/choose-name-quickly/logistics-proto-msa/wiki/%5BTrouble-Shooting%5D-@PreAuthorize-hasRole()-Prefix%EB%A1%9C-%EC%9D%B8%ED%95%9C-%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0)
+
