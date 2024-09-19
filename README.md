@@ -72,7 +72,6 @@ AI API를 활용한 허브 및 업체 간 배송과 주문 관리 시스템
 **postgreSQL의 스키마와 DB** [WIKI 보기](https://github.com/choose-name-quickly/logistics-proto-msa/wiki/%5BTrouble-Shooting%5D-postgreSQL%EC%9D%98-%EC%8A%A4%ED%82%A4%EB%A7%88%EC%99%80-DB)  
 **멀티 모듈을 통한 유지 보수성 향상** [WIKI 보기](https://github.com/choose-name-quickly/logistics-proto-msa/wiki/%5BTrouble-Shooting%5D-%EB%A9%80%ED%8B%B0-%EB%AA%A8%EB%93%88%EC%9D%84-%ED%86%B5%ED%95%9C-%EC%9C%A0%EC%A7%80-%EB%B3%B4%EC%88%98%EC%84%B1-%ED%96%A5%EC%83%81)  
 
-(트러블 슈팅이 너무 지엽적이고 사소하다 판단되면 제거 예정 + 멤버 별로 추가 예정)
 <br>
 <br>
 <br> 
