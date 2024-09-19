@@ -36,4 +36,9 @@ public class FeignClientService {
         }
     }
 
+
+    public boolean checkCompanyId(UUID companyId) {
+        return companyClient.checkId(companyId);
+    }
+
 }

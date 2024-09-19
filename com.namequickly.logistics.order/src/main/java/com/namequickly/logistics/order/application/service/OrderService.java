@@ -70,15 +70,13 @@ public class OrderService {
         String affiliationId = userDetails.getAffiliationId();
         String userRole = userDetails.getRoleAsString();
 
-        if (feignClientService.getCompanyById(requestDto.getSupplierId(), userRole, affiliationId)
-            == null) {
+        if (!feignClientService.checkCompanyId(requestDto.getSupplierId())) {
             throw new GlobalException(ResultCase.NOT_FOUND_COMPANY);
         }
 
-       /* if (feignClientService.getCompanyById(requestDto.getReceiverId(), userRole, affiliationId)
-            == null) {
+        if (!feignClientService.checkCompanyId(requestDto.getReceiverId())) {
             throw new GlobalException(ResultCase.NOT_FOUND_COMPANY);
-        }*/
+        }
 
         if (feignClientService.getHub(requestDto.getOriginHubId()) == null) {
             throw new GlobalException(ResultCase.NOT_FOUND_HUB);

@@ -54,8 +54,7 @@ public class ProductService {
         String affiliationId = userDetails.getAffiliationId();
         String userRole = userDetails.getRoleAsString();
 
-        if (feignClientService.getCompanyById(requestDto.getSupplierId(), userRole, affiliationId)
-            == null) {
+        if (!feignClientService.checkCompanyId(requestDto.getSupplierId())) {
             throw new GlobalException(ResultCase.NOT_FOUND_COMPANY);
         }
 
