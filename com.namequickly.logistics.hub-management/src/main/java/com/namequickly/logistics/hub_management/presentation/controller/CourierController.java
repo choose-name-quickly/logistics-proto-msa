@@ -7,6 +7,7 @@ import com.namequickly.logistics.hub_management.application.exception.ErrorRespo
 import com.namequickly.logistics.hub_management.application.exception.HubNotFoundException;
 import com.namequickly.logistics.hub_management.application.service.CourierService;
 import com.namequickly.logistics.hub_management.application.service.HubManagerService;
+import com.namequickly.logistics.hub_management.domain.model.courier.CourierStatus;
 import com.namequickly.logistics.hub_management.presentation.dto.courier.CourierRequest;
 import com.namequickly.logistics.hub_management.presentation.dto.courier.CourierSearch;
 import org.springframework.data.domain.Page;
@@ -88,15 +89,18 @@ public class CourierController {
         } else throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
     }
 
-    // TODO: CourierListResponse로 응답객체 생성하기
-    // 배송기사 전체 조회
+  // 배송기사 전체 조회
     @GetMapping
     public Page<CourierListResponse> getCouriers(@RequestHeader(value = "X-User-Role", required = true) String role,
-                                                   @RequestHeader(value = "X-User-AffiliationId") UUID affiliationId,
-                                                   @RequestBody CourierSearch search,
-                                                   @RequestParam("page") int page,
-                                                   @RequestParam("size") int size) {
+                                                 @RequestHeader(value = "X-User-AffiliationId") UUID affiliationId,
+                                                 @RequestParam(required = false) UUID courierId,
+                                                 @RequestParam(required = false) UUID hubId,
+                                                 @RequestParam(required = false) String name,
+                                                 @RequestParam(required = false)CourierStatus status,
+                                                 @RequestParam("page") int page,
+                                                 @RequestParam("size") int size) {
 
+        CourierSearch search = new CourierSearch(courierId, hubId, name, status);
         Pageable pageable = PageRequest.of(page, size);
 
         if ("ROLE_MASTER".equals(role)) return courierService.getCouriers(search, pageable);

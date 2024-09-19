@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 @RestController
@@ -21,12 +22,10 @@ import java.util.UUID;
 public class SlackMessageController {
 
     private final SlackMessageService slackMessageService;
-    private final SlackService slackService;
 
 
-    public SlackMessageController(SlackMessageService slackMessageService, SlackService slackService) {
+    public SlackMessageController(SlackMessageService slackMessageService) {
         this.slackMessageService = slackMessageService;
-        this.slackService = slackService;
     }
 
     // 메세지 생성
@@ -63,10 +62,14 @@ public class SlackMessageController {
 
     // 메세지 전체 조회
     @GetMapping
-    public Page<SlackMessageListResponse> getAllMessages(@RequestBody SlackMessageSearch search,
-                                                                  @RequestParam("page") int page,
-                                                                  @RequestParam("size") int size,
-                                                                  @RequestHeader(value = "X-User-Name") String username) {
+    public Page<SlackMessageListResponse> getAllMessages(@RequestParam(required = false) String slackId,
+                                                         @RequestParam(required = false) String content,
+                                                         @RequestParam(required = false)Timestamp sendAt,
+                                                         @RequestParam("page") int page,
+                                                         @RequestParam("size") int size,
+                                                         @RequestHeader(value = "X-User-Name") String username) {
+
+        SlackMessageSearch search = new SlackMessageSearch(slackId, content, sendAt);
         Pageable pageable = PageRequest.of(page, size);
         return slackMessageService.getMessages(search, pageable, username);
     }

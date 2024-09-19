@@ -85,12 +85,15 @@ public class CompanyController {
     }
 
     // 업체 전체 조회
-    // TODO: CompanyListResponse로 응답객체 생성하기
     @GetMapping
     public Page<CompanyListResponse> getCompanies(@RequestHeader(value = "X-User-Role") String role,
-                                                  @RequestBody CompanySearch search,
-                                                  @RequestParam("page") int page,
-                                                  @RequestParam("size") int size) {
+                                                  @RequestParam(required = false) UUID companyId,
+                                                  @RequestParam(required = false) UUID hubId,
+                                                  @RequestParam(required = false) String name,
+                                                  @RequestParam(defaultValue = "10") int page,
+                                                  @RequestParam(defaultValue = "1") int size) {
+
+        CompanySearch search = new CompanySearch(companyId, hubId, name);
 
         if ("ROLE_MASTER".equals(role) || "ROLE_HUBMANAGER".equals(role) || "ROLE_COMPANY".equals(role)) {
             Pageable pageable = PageRequest.of(page, size);
