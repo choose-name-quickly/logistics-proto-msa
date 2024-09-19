@@ -83,9 +83,14 @@ public class HubManagerService {
         return HubManagerResponse.toResponse(hubManager);
     }
 
-    //허브 매니저 아이디
+    //허브 매니저 ID 체크
     @Transactional
-    public List<UUID> getMangerIds() {
-        return hubManagerRepo.findAllHubManagerIds();
+    public boolean checkId(UUID managerId) {
+        return hubManagerRepo.checkId(managerId) != null;
+    }
+
+    //허브 매니저 소속 허브
+    public UUID getHubId(UUID managerId) {
+        return hubManagerRepo.findHubId(managerId);
     }
 }

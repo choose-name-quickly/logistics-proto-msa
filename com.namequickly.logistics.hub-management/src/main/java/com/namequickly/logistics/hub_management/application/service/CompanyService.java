@@ -79,9 +79,15 @@ public class CompanyService {
         return CompanyResponse.toResponse(company);
     }
 
-    // 업체 ID 리스트
+    // 업체 ID 체크
     @Transactional
-    public List<UUID> getCompanyIds() {
-        return companyRepo.findAllCompanyIds();
+    public boolean checkId(UUID companyId) {
+        return companyRepo.checkId(companyId) != null;
+    }
+
+    // 업체 소속 허브 ID
+    @Transactional
+    public UUID findHubId(UUID companyId) {
+        return companyRepo.findHubId(companyId);
     }
 }

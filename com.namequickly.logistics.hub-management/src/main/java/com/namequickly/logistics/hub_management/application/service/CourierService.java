@@ -104,9 +104,11 @@ public class CourierService {
         return mapList;
     }
 
-    // 배송기사 ID
+    // 배송기사 ID 체크
     @Transactional
-    public List<UUID> getCourierIds() {
-        return courierRepo.findAllCourierIds();
-    }
+    public boolean checkId(UUID courierId) { return courierRepo.checkId(courierId) != null;}
+
+    // 배송기사 소속 허브 ID
+    @Transactional
+    public UUID findHubId(UUID courierId) { return courierRepo.findHubId(courierId); }
 }

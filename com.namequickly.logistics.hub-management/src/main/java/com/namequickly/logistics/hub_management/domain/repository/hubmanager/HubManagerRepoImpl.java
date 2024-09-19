@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.namequickly.logistics.common.querydsl.QuerydslConfig;
 import static com.namequickly.logistics.hub_management.domain.model.hubmanager.QHubManager.hubManager;
 
 public class HubManagerRepoImpl implements HubManagerRepoCustom {
