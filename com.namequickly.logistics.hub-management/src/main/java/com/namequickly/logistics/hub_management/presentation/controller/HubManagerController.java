@@ -33,13 +33,13 @@ public class HubManagerController {
     // 허브 매니저 등록
     @PostMapping
     public ResponseEntity<HubManagerResponse> createHubManager(@RequestBody final HubManagerRequest request,
-                                                               @RequestHeader(value = "X-User-Name") UUID userId,
+                                                               @RequestHeader(value = "X-User-Name") String username,
                                                                @RequestHeader(value = "X-User-Role") String role) {
         // 마스터만 권한 있음
         if(!"ROLE_MASTER".equals(role)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
         }
-        return ResponseEntity.ok(hubManagerService.createHubManager(request, userId));
+        return ResponseEntity.ok(hubManagerService.createHubManager(request, username));
     }
 
     // 허브 아이디 예외 처리
@@ -54,14 +54,14 @@ public class HubManagerController {
     @PatchMapping("/{managerId}")
     public HubManagerResponse updateHubManager(@PathVariable UUID managerId,
                                                @RequestBody final HubManagerRequest request,
-                                               @RequestHeader(value = "X-User-Name") UUID userId,
+                                               @RequestHeader(value = "X-User-Name") String username,
                                                @RequestHeader(value = "X-User-Role") String role,
                                                @RequestHeader(value = "X-User-AffiliationId") UUID affiliationId) {
         // 마스터 + 허브 매니저 본인만
         if("ROLE_MASTER".equals(role)) {
-            return hubManagerService.updateHubManager(managerId, request, userId);
+            return hubManagerService.updateHubManager(managerId, request, username);
         } else if("ROLE_HUBMANAGER".equals(role) && managerId.equals(affiliationId)) {
-            return hubManagerService.updateHubManager(managerId, request, userId);
+            return hubManagerService.updateHubManager(managerId, request, username);
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
         }
@@ -71,12 +71,12 @@ public class HubManagerController {
     // 삭제 결과는 T/F
     @DeleteMapping("/{managerId}")
     public Boolean deleteHubManager(@PathVariable UUID managerId,
-                                 @RequestHeader(value = "X-User-Name") UUID userId,
+                                 @RequestHeader(value = "X-User-Name") String username,
                                  @RequestHeader(value = "X-User-Role") String role) {
         if(!"ROLE_MASTER".equals(role)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
         }
-        return hubManagerService.deleteHubManager(managerId, userId);
+        return hubManagerService.deleteHubManager(managerId, username);
     }
 
     // TODO: HubManagerListResponse로 응답객체 생성하기

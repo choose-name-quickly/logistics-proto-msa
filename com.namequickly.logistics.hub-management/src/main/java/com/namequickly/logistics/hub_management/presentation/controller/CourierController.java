@@ -37,14 +37,14 @@ public class CourierController {
     // 배송기사 등록
     @PostMapping
     public ResponseEntity<CourierResponse> addCourier(@RequestBody final CourierRequest request,
-                                                      @RequestHeader(value = "X-User-Name") UUID userId,
+                                                      @RequestHeader(value = "X-User-Name") String username,
                                                       @RequestHeader(value = "X-User-Role") String role,
                                                       @RequestHeader(value = "X-User-AffiliationId") UUID affiliationId) {
         // 마스터
-        if("ROLE_MASTER".equals(role)) return ResponseEntity.ok(courierService.createCourier(request, userId));
+        if("ROLE_MASTER".equals(role)) return ResponseEntity.ok(courierService.createCourier(request, username));
         else if("ROLE_HUBMANAGER".equals(role)) {
             // 같은 소속 허브 매니저만
-            if(hubManagerService.getHubId(affiliationId).equals(request.hubId())) return ResponseEntity.ok(courierService.createCourier(request, userId));
+            if(hubManagerService.getHubId(affiliationId).equals(request.hubId())) return ResponseEntity.ok(courierService.createCourier(request, username));
             else throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
         } else throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
     }
@@ -61,29 +61,29 @@ public class CourierController {
     @PatchMapping("/{courierId}")
     public CourierResponse updateCourier(@PathVariable UUID courierId,
                                          @RequestBody final CourierRequest request,
-                                         @RequestHeader(value = "X-User-Name") UUID userId,
+                                         @RequestHeader(value = "X-User-Name") String username,
                                          @RequestHeader(value = "X-User-Role") String role,
                                          @RequestHeader(value = "X-User-AffiliationId") UUID affiliationId) {
 
-        if ("ROLE_MASTER".equals(role)) return courierService.updateCourier(courierId, request, userId);
+        if ("ROLE_MASTER".equals(role)) return courierService.updateCourier(courierId, request, username);
         else if ("ROLE_HUBMANAGER".equals(role)) {
-            if(hubManagerService.getHubId(affiliationId).equals(request.hubId())) return courierService.updateCourier(courierId, request, userId);
+            if(hubManagerService.getHubId(affiliationId).equals(request.hubId())) return courierService.updateCourier(courierId, request, username);
             else throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
-        }  else if("ROLE_COURIER".equals(role) && courierId.equals(affiliationId)) return courierService.updateCourier(courierId, request, userId);
+        }  else if("ROLE_COURIER".equals(role) && courierId.equals(affiliationId)) return courierService.updateCourier(courierId, request, username);
         else throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
     }
 
     // 배송기사 삭제
     @DeleteMapping("/{courierId}")
     public Boolean deleteCourier(@PathVariable UUID courierId,
-                                 @RequestHeader(value = "X-User-Name", required = true) UUID userId,
+                                 @RequestHeader(value = "X-User-Name", required = true) String username,
                                  @RequestHeader(value = "X-User-Role", required = true) String role,
                                  @RequestHeader(value = "X-User-AffiliationId") UUID affiliationId) {
 
         // 마스터, 소속 허브 매니저만 권한 있음
-        if ("ROLE_MASTER".equals(role)) return courierService.deleteCourier(courierId, userId);
+        if ("ROLE_MASTER".equals(role)) return courierService.deleteCourier(courierId, username);
         else if ("ROLE_HUBMANAGER".equals(role)) {
-            if(hubManagerService.getHubId(affiliationId).equals(courierService.findHubId(courierId))) return courierService.deleteCourier(courierId, userId);
+            if(hubManagerService.getHubId(affiliationId).equals(courierService.findHubId(courierId))) return courierService.deleteCourier(courierId, username);
             else throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
         } else throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
     }
@@ -123,8 +123,8 @@ public class CourierController {
 
     // 배송기사 배정
     @GetMapping("/assignCouriers")
-    public List<Map<UUID, UUID>> assignCouriers() {
-        return courierService.assignCouriers();
+    public List<Map<UUID, UUID>> assignCouriers(List<UUID> routeHubList) {
+        return courierService.assignCouriers(routeHubList);
     }
 
     // 배송 기사 아이디

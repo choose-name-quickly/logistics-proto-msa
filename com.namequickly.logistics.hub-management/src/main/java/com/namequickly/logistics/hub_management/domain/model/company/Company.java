@@ -38,15 +38,15 @@ public class Company {
     @Column(updatable = false)
     @CreatedDate
     private Timestamp createdAt;
-    private UUID createdBy;
+    private String createdBy;
 
     @Column
     @LastModifiedDate
     private Timestamp updatedAt;
-    private UUID updatedBy;
+    private String updatedBy;
 
     private Timestamp deletedAt;
-    private UUID deletedBy;
+    private String deletedBy;
     @Builder.Default
     private Boolean isDelete = false;
 
@@ -60,7 +60,7 @@ public class Company {
     @PreUpdate
     protected void onUpdate() { updatedAt = Timestamp.valueOf(LocalDateTime.now());}
 
-    public static Company create(CompanyRequest request, UUID userId){
+    public static Company create(CompanyRequest request, String username){
 
         return Company.builder()
                 .type(request.type())
@@ -68,18 +68,19 @@ public class Company {
                 .name(request.name())
                 .address(request.address())
                 .phone(request.phone())
+                .createdBy(username)
                 .build();
     }
 
-    public void update(CompanyRequest request, UUID userId) {
+    public void update(CompanyRequest request, String username) {
         this.address = request.address();
         this.phone = request.phone();
-        this.updatedBy = userId;
+        this.updatedBy = username;
     }
 
-    public void delete(UUID userId) {
+    public void delete(String username) {
         this.deletedAt = Timestamp.valueOf(LocalDateTime.now());
-        this.deletedBy = userId;
+        this.deletedBy = username;
         this.isDelete = true;
     }
 }
