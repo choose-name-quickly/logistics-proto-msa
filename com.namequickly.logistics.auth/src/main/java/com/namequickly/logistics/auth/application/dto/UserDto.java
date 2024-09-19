@@ -5,6 +5,7 @@ import com.namequickly.logistics.common.shared.affiliation.AffiliationType;
 import com.namequickly.logistics.common.shared.affiliation.CompanyAffiliation;
 import com.namequickly.logistics.common.shared.affiliation.CourierAffiliation;
 import com.namequickly.logistics.common.shared.affiliation.HubAffiliation;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class UserDto {
     private String password;
     private UserRole role;
     private AffiliationType affiliationType;
-    private CompanyAffiliation companyAffiliationId;
-    private CourierAffiliation courierAffiliationId;
-    private HubAffiliation hubAffiliationId;
+    private UUID companyAffiliationId;
+    private UUID courierAffiliationId;
+    private UUID hubAffiliationId;
 }

@@ -7,14 +7,15 @@ import com.namequickly.logistics.common.shared.affiliation.AffiliationType;
 import com.namequickly.logistics.common.shared.affiliation.CompanyAffiliation;
 import com.namequickly.logistics.common.shared.affiliation.CourierAffiliation;
 import com.namequickly.logistics.common.shared.affiliation.HubAffiliation;
+import java.util.UUID;
 
 public record UserInfoResponseDto(
     String username,
     UserRole role,
     AffiliationType affiliationType,
-    CompanyAffiliation companyAffiliationId,
-    CourierAffiliation courierAffiliationId,
-    HubAffiliation hubAffiliationId
+    UUID companyAffiliationId,
+    UUID courierAffiliationId,
+    UUID hubAffiliationId
 ) {
 
 }

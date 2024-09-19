@@ -42,7 +42,9 @@ public class AuthService {
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(request.password());
 
-        // affiliation Id 검증로직
+        // affiliation Id 검증로직 (각 서비스 호출 feign Client 안만들어서 다시)
+
+        /*
         switch (request.affiliationType()) {
             case COMPANY:
                 if (!userRepository.existsByCompanyAffiliationId(request.companyAffiliationId())) {
@@ -62,6 +64,7 @@ public class AuthService {
             default:
                 throw new GlobalException(ResultCase.SYSTEM_ERROR);
         }
+        */
 
         // 유저 entity 생성 (유저의 이름, 패스워드를 전달 받아 회원가입을 진행)
         User user = User.create(
