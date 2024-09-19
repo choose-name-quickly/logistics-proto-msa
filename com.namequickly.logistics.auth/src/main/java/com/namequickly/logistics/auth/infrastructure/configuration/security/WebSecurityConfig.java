@@ -110,7 +110,7 @@ public class WebSecurityConfig {
                         // Swagger UI
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         // auth api
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
                         // auth-filter api
                         .requestMatchers("/user/login").permitAll()
                         // 그 외

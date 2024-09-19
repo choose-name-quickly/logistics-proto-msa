@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 
+// -> 배송기사가 어느소속인지 상관x courier_id 만 있으면됨
 public enum CourierAffiliation {
 
     // 스파르타 물류의 공통 허브 배송 담당자 ID

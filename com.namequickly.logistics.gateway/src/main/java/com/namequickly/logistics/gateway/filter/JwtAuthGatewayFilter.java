@@ -42,9 +42,8 @@ public class JwtAuthGatewayFilter implements GatewayFilter {
 
             exchange.getRequest().mutate()
                 .header("X-User-Name", username)
-                .header("X-User-Roles", roles)
-                .header("X-User-AffiliationType", affiliationType)
-                .header("X-User-AffiliationId", affiliationId)
+                .header("X-User-Role", roles)
+                .header("X-User-AffiliationId", affiliationId) // hub, company, courier id (key값)
                 .build();
 
             return chain.filter(exchange);

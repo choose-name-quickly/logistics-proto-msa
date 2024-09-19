@@ -13,5 +13,7 @@ import org.mapstruct.Mapper;
 public interface HubMapper {
     HubResponseDto toDTO(Hub hub);
     Hub toEntity(HubRequestDto hubDTO);
+
     List<HubResponseDto> toDTOs(List<Hub> hubs);
+    List<Hub> toEntities(List<HubRequestDto> hubDTOs);
 }

@@ -2,6 +2,7 @@ package com.namequickly.logistics.auth.presentation.controller;
 
 import com.namequickly.logistics.auth.application.dto.UserInfoResponseDto;
 import com.namequickly.logistics.auth.application.dto.UserSignupRequestDto;
+import com.namequickly.logistics.auth.application.dto.UserSignupResponseDto;
 import com.namequickly.logistics.auth.application.service.AuthService;
 import com.namequickly.logistics.common.response.CommonResponse;
 import com.namequickly.logistics.common.response.CommonResponse.CommonEmptyRes;
@@ -30,11 +31,11 @@ public class AuthController {
      * 회원가입
      */
     @PostMapping("/sign-up")
-    public CommonResponse<CommonEmptyRes> signup(@RequestBody UserSignupRequestDto request) {
+    public CommonResponse<UserSignupResponseDto> signup(@RequestBody UserSignupRequestDto request) {
         log.info("Signup request: {}", request);
 
-        authService.signup(request);
-        return CommonResponse.success();
+        UserSignupResponseDto username = authService.signup(request);
+        return CommonResponse.success(username);
     }
 
     /**

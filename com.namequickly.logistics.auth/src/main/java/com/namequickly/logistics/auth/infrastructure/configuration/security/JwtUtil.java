@@ -21,6 +21,7 @@ import java.net.URLEncoder;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -59,7 +60,7 @@ public class JwtUtil {
     ////////////////////////////////////////////////////////////////////
 
     // 1. JWT 토큰 생성 (1) JWT 토큰을 헤더에 달아 보낼수도 있고 (2) 쿠키객체에 담아 줄 수도 있다 - 프론트와 조율해야함
-    public String createToken(String username, UserRole role, AffiliationType affiliationType, String AffiliationId) {
+    public String createToken(String username, UserRole role, AffiliationType affiliationType, UUID AffiliationId) {
         Date date = new Date();
 
         return BEARER_PREFIX +

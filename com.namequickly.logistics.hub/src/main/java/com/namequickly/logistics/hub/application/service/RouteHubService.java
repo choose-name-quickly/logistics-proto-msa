@@ -5,8 +5,12 @@ import com.namequickly.logistics.common.response.ResultCase;
 import com.namequickly.logistics.hub.application.dto.RouteHubRequestDto;
 import com.namequickly.logistics.hub.application.dto.RouteHubResponseDto;
 import com.namequickly.logistics.hub.application.mapper.RouteHubMapper;
+import com.namequickly.logistics.hub.domain.model.Hub;
 import com.namequickly.logistics.hub.domain.model.RouteHub;
+import com.namequickly.logistics.hub.domain.repository.HubRepository;
 import com.namequickly.logistics.hub.domain.repository.RouteHubRepository;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class RouteHubService {
 
     private final RouteHubRepository routeHubRepository;
+    private final HubRepository hubRepository;
     private final RouteHubMapper routeHubMapper;
 
     public RouteHubResponseDto createRouteHub(RouteHubRequestDto requestDto) {
@@ -49,4 +54,5 @@ public class RouteHubService {
         List<RouteHub> routeHubs = routeHubRepository.findAll();
         return routeHubMapper.toDTOs(routeHubs);
     }
+
 }

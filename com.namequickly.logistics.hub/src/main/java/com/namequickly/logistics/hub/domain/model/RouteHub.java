@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "p_route_hub")
@@ -20,36 +21,37 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class RouteHub extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID routeHubId;
 
-    private UUID routeId;
-    private UUID hubId;
-    private Integer orderInRoute;
-    private Double distanceToNextHub;
-    private Double timeToNextHub;
-    private Boolean isDelete;
+    private UUID routeId; // 경로 ID
+    private UUID hubId; // 허브 ID
+    private UUID nextHubId; // 다음허브 ID
+    private int orderInRoute; // 경로산 순서
+    private Double distanceToNextHub; // 다음 허브까지 거리
+    private Double timeToNextHub; // 다음 허브까지 소요 시간
+    private Boolean isDelete; // 논리적 삭제 여부
 
     public static RouteHub createRouteHub(RouteHubRequestDto routeHubDTO) {
         return RouteHub.builder()
             .routeId(routeHubDTO.getRouteId())
             .hubId(routeHubDTO.getHubId())
-            .orderInRoute(routeHubDTO.getOrderInRoute())
+            .nextHubId(routeHubDTO.getNextHubId())
             .distanceToNextHub(routeHubDTO.getDistanceToNextHub())
             .timeToNextHub(routeHubDTO.getTimeToNextHub())
-            .isDelete(routeHubDTO.getIsDelete())
+            .isDelete(false)
             .build();
     }
 
     public void updateRouteHub(RouteHubRequestDto routeHubDTO) {
         this.routeId = routeHubDTO.getRouteId();
         this.hubId = routeHubDTO.getHubId();
-        this.orderInRoute = routeHubDTO.getOrderInRoute();
+        this.nextHubId = routeHubDTO.getNextHubId();
         this.distanceToNextHub = routeHubDTO.getDistanceToNextHub();
         this.timeToNextHub = routeHubDTO.getTimeToNextHub();
-        this.isDelete = routeHubDTO.getIsDelete();
     }
 }

@@ -1,5 +1,6 @@
 package com.namequickly.logistics.hub.application.dto;
 
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,4 +21,6 @@ public class RouteResponseDto {
     private String routeDescription;
     private double estimatedTime;
     private String distance;
+    private List<RouteHubResponseDto> routeHubs;
+
 }
