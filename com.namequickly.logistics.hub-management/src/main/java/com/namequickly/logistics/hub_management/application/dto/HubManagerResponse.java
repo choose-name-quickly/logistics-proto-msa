@@ -18,11 +18,11 @@ public class HubManagerResponse {
     private String address;
     private String phone;
     private Timestamp createdAt;
-    private UUID createdBy;
+    private String createdBy;
     private Timestamp updatedAt;
-    private UUID updatedBy;
+    private String updatedBy;
     private Timestamp deletedAt;
-    private UUID deletedBy;
+    private String deletedBy;
     private Boolean isDelete;
 
     public static HubManagerResponse toResponse(HubManager hubManager) {

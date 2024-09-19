@@ -20,11 +20,11 @@ public class CompanyResponse {
     private String address;
     private String phone;
     private Timestamp createdAt;
-    private UUID createdBy;
+    private String createdBy;
     private Timestamp updatedAt;
-    private UUID updatedBy;
+    private String updatedBy;
     private Timestamp deletedAt;
-    private UUID deletedBy;
+    private String deletedBy;
     private Boolean isDelete;
 
     // 변환 메서드

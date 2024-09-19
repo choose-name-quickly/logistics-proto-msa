@@ -22,11 +22,11 @@ public class CourierResponse {
     private String phone;
     private CourierStatus status;
     private Timestamp createdAt;
-    private UUID createdBy;
+    private String createdBy;
     private Timestamp updatedAt;
-    private UUID updatedBy;
+    private String updatedBy;
     private Timestamp deletedAt;
-    private UUID deletedBy;
+    private String deletedBy;
     private Boolean isDelete;
 
     public static CourierResponse toResponse(Courier courier) {

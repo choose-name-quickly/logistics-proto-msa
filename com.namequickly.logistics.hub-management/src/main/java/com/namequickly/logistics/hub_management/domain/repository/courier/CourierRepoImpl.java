@@ -1,6 +1,6 @@
 package com.namequickly.logistics.hub_management.domain.repository.courier;
 
-import com.namequickly.logistics.hub_management.application.dto.CourierResponse;
+import com.namequickly.logistics.hub_management.application.dto.CourierListResponse;
 import com.namequickly.logistics.hub_management.domain.model.courier.Courier;
 import com.namequickly.logistics.hub_management.domain.model.courier.CourierStatus;
 import com.namequickly.logistics.hub_management.presentation.dto.courier.CourierSearch;
@@ -30,7 +30,7 @@ public class CourierRepoImpl implements CourierRepoCustom {
     }
 
     @Override
-    public Page<CourierResponse> searchCouriers(CourierSearch search, Pageable pageable) {
+    public Page<CourierListResponse> searchCouriers(CourierSearch search, Pageable pageable) {
 
         List<OrderSpecifier<?>> orders = getAllOrderSpecifiers(pageable);
 
@@ -47,8 +47,8 @@ public class CourierRepoImpl implements CourierRepoCustom {
                 .limit(pageable.getPageSize())
                 .fetchResults();
 
-        List<CourierResponse> content = results.getResults().stream()
-                .map(CourierResponse::toResponse)
+        List<CourierListResponse> content = results.getResults().stream()
+                .map(CourierListResponse::toResponse)
                 .collect(Collectors.toList());
 
         long total = results.getTotal();

@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Getter
 @Entity
-@Table(name = "p_hub_manager", schema="hub_management")
+@Table(name = "p_hub_manager")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(access = AccessLevel.PRIVATE)
@@ -33,15 +33,15 @@ public class HubManager {
     @Column(updatable = false)
     @CreatedDate
     private Timestamp createdAt;
-    private UUID createdBy;
+    private String createdBy;
 
     @Column
     @LastModifiedDate
     private Timestamp updatedAt;
-    private UUID updatedBy;
+    private String updatedBy;
 
     private Timestamp deletedAt;
-    private UUID deletedBy;
+    private String deletedBy;
 
     @Builder.Default
     private Boolean isDelete = false;
@@ -56,25 +56,25 @@ public class HubManager {
     @PreUpdate
     protected void onUpdate() { updatedAt = Timestamp.valueOf(LocalDateTime.now());}
 
-    public static HubManager create(HubManagerRequest request, UUID userId){
+    public static HubManager create(HubManagerRequest request, String username){
         return HubManager.builder()
                 .hubId(request.hubId())
                 .name(request.name())
                 .address(request.address())
                 .phone(request.phone())
-                .createdBy(userId)
+                .createdBy(username)
                 .build();
     }
 
-    public void update(HubManagerRequest request, UUID userId) {
+    public void update(HubManagerRequest request, String username) {
         this.address = request.address();
         this.phone = request.phone();
-        this.updatedBy = userId;
+        this.updatedBy = username;
     }
 
-    public void delete(UUID userId) {
+    public void delete(String username) {
         this.deletedAt = Timestamp.valueOf(LocalDateTime.now());
-        this.deletedBy = userId;
+        this.deletedBy = username;
         this.isDelete = true;
     }
 }

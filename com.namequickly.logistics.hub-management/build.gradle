@@ -73,6 +73,10 @@ dependencies {
 	// Spring Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+
+	//common
+	implementation project(':com.namequickly.logistics.common')
 }
 
 dependencyManagement {
@@ -84,6 +88,9 @@ dependencyManagement {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// common dependency추가 관련
+tasks.register("prepareKotlinBuildScriptModel"){}
 
 def querydslSrcDir = 'src/main/generated'
 clean {
