@@ -53,7 +53,7 @@ public class DeliveryController {
     // feign client 용
 
     /**
-     * 기사 별 기사 배송 정보
+     * 대기 중 배송 정보
      */
     @GetMapping("/deliveries/delivery-status/waiting")
     public List<DeliveryGetByCourierResponseDto> getAllHubwatingDeliveries() {

@@ -33,7 +33,7 @@ public class ProductController {
 
     // TODO 추후에 Role에 대한 Enum이 생기면 적용 예정 (ex UserRole.HUBMANAGEMENT)
     // 상품 추가
-    @PreAuthorize("hasAnyRole('MASTER','HUBMANAGER','COMPANY')")
+    //@PreAuthorize("hasAnyRole('MASTER','HUBMANAGER','COMPANY')")
     @PostMapping("/products")
     public CommonResponse<ProductCreateResponseDto> createProduct(
         @Valid @RequestBody ProductCreateRequestDto requestDto) {

@@ -59,7 +59,7 @@ public class ProductService {
         }
 
         if (feignClientService.getHub(requestDto.getHubId()) == null) {
-            throw new GlobalException(ResultCase.NOT_FOUND_HUB);
+            throw new GlobalException(ResultCase.HUB_NOT_FOUND);
         }
 
         if (userRole.equals(UserRole.HUBMANAGER.getAuthority())) {

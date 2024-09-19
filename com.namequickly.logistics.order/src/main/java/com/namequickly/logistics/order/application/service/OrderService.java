@@ -31,6 +31,7 @@ import com.namequickly.logistics.order.infrastructure.security.CustomUserDetails
 import com.namequickly.logistics.order.infrastructure.security.SecurityUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -79,10 +80,10 @@ public class OrderService {
         }
 
         if (feignClientService.getHub(requestDto.getOriginHubId()) == null) {
-            throw new GlobalException(ResultCase.NOT_FOUND_HUB);
+            throw new GlobalException(ResultCase.HUB_NOT_FOUND);
         }
         if (feignClientService.getHub(requestDto.getDestinationHubId()) == null) {
-            throw new GlobalException(ResultCase.NOT_FOUND_HUB);
+            throw new GlobalException(ResultCase.HUB_NOT_FOUND);
         }
 
         if (userRole.equals(UserRole.HUBMANAGER.getAuthority())) {
@@ -126,27 +127,22 @@ public class OrderService {
 
         // 4. 배달 경유 생성(DeliveryRoutes)
         List<HubRouteCourierDto> hubRouteDtos = new ArrayList<>();
-        // TODO 나중에 메소드 구현되면 추가하기
-        /*= feignClientService.getHubRoutes(
-            requestDto.getOriginHubId(),
-            requestDto.getDestinationHubId()); */
-        // 임시로 UUID 생성
-        UUID routeHubId1 = UUID.randomUUID();
-        UUID courierId1 = UUID.randomUUID();
 
-        UUID routeHubId2 = UUID.randomUUID();
-        UUID courierId2 = UUID.randomUUID();
+        // hub로 부터 경로 가져오기
+        List<Map<UUID, UUID>> hubRouteCourierDtos = feignClientService.findOptimalRoute(
+            requestDto.getOriginHubId(), requestDto.getDestinationHubId());
+        
+        for (Map<UUID, UUID> hubRouteCourierDto : hubRouteCourierDtos) {
+            UUID routeHubId = hubRouteCourierDto.keySet().iterator().next();
+            UUID courierId = hubRouteCourierDto.get(routeHubId);
 
-        // HubRouteCourierDto 객체 생성 후 리스트에 추가
-        hubRouteDtos.add(HubRouteCourierDto.builder()
-            .routeHubId(routeHubId1)
-            .courierId(courierId1)
-            .build());
+            HubRouteCourierDto dto = HubRouteCourierDto.builder()
+                .routeHubId(routeHubId)
+                .courierId(courierId)
+                .build();
 
-        hubRouteDtos.add(HubRouteCourierDto.builder()
-            .routeHubId(routeHubId2)
-            .courierId(courierId2)
-            .build());
+            hubRouteDtos.add(dto);
+        }
 
         for (HubRouteCourierDto hubRouteDto : hubRouteDtos) {
             DeliveryRoute deliveryRoute = DeliveryRoute.create(

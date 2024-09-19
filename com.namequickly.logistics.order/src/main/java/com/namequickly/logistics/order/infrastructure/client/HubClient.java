@@ -5,6 +5,7 @@ import com.namequickly.logistics.order.application.dto.client.HubResponseDto;
 import com.namequickly.logistics.order.application.dto.client.HubRouteCourierDto;
 import com.namequickly.logistics.order.application.dto.client.RouteHubResponseDto;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,9 @@ public interface HubClient {
     @GetMapping("/api/route-hubs/{routeHubId}")
     CommonResponse<RouteHubResponseDto> getRouteHub(@PathVariable("routeHubId") UUID routeHubId);
 
-    /*@GetMapping("/api/routes/{routeId}")
-    List<RouteHubResponseDto> getRoute(@PathVariable("routeId") UUID routeId);
-*/
+    @GetMapping("/api/routesFeign/find-route")
+    CommonResponse<List<Map<UUID, UUID>>> findOptimalRoute(
+        @RequestParam UUID originHubId,
+        @RequestParam UUID destinationHubId);
+
 }

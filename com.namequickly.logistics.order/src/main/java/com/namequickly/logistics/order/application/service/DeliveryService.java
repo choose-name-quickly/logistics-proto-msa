@@ -80,6 +80,8 @@ public class DeliveryService {
             DeliveryStatus.HUB_WAITING);
 
         List<DeliveryGetByCourierResponseDto> responseDtos = new ArrayList<>();
+        // TODO 허브 - 업체간 배달은 나중에 구현
+        UUID lastHubId = null;
 
         // 배달 경로 가져오기
         for (DeliveryRoute deliveryRoute : deliveryRoutes) {
@@ -102,7 +104,7 @@ public class DeliveryService {
             // 배달 경로 정보 - 출발 허브 정보 가져오기
             RouteHubResponseDto hubRouteDto = feignClientService.getHubRoute(
                 deliveryRoute.getRouteHubId());
-            UUID startRouteHubId = hubRouteDto.getHub().getHubId();
+            UUID startRouteHubId = hubRouteDto.getHubId();
             int sequence = hubRouteDto.getOrderInRoute();
 
             // 배달 경로 정보 - 예상 시간, 예상 경로
@@ -120,29 +122,20 @@ public class DeliveryService {
             size = deliveryRepository.countByDeliveryId(
                 deliveryRoute.getDelivery().getDeliveryId());
 
-            // 마지막 배달지이면 업체 배송 , 그 외에는 허브 배송
-            if (sequence == (size - 1)) {
+            // 허브 간 배송
+            arriveRouteHubId = hubRouteDto.getNextHubId();
+            HubResponseDto nextHubDto = feignClientService.getHub(arriveRouteHubId);
+            arriveHubName = nextHubDto.getHubName();
+            arriveHubAddress = nextHubDto.getAddress();
+
+            // TODO 허브 - 업체간 배달은 나중에 구현
+            if (sequence == size) {
                 // 업체 배송
-                // 수령인 , 수령 ID, 배달 주소
+                lastHubId = hubRouteDto.getNextHubId();
+               /* // 수령인 , 수령 ID, 배달 주소
                 recipientName = deliveryRoute.getDelivery().getRecipientName();
                 recipientSlackId = deliveryRoute.getDelivery().getRecipientSlackId();
-                deliveryAddress = deliveryRoute.getDelivery().getDeliveryAddress();
-            } else {
-                // 허브 간 배송
-                // 출발 허브 sequence + 1 인 sequence에 해당하는 허브 찾기 (= 도착 허브 찾기 )
-                RouteHubResponseDto nextHubRouteDto = null;
-                // TODO 나중에 성진님이 개발해준 거 보고 다시 구현 필요
-/*                    getRoutes().stream()
-                    .filter(dto -> dto.get == sequence + 1)
-                    .findFirst()
-                    .orElse(null);*/
-
-                if (nextHubRouteDto != null) {
-                    arriveRouteHubId = nextHubRouteDto.getHub().getHubId();
-                    HubResponseDto nextHubDto = feignClientService.getHub(arriveRouteHubId);
-                    arriveHubName = nextHubDto.getHubName();
-                    arriveHubAddress = nextHubDto.getAddress();
-                }
+                deliveryAddress = deliveryRoute.getDelivery().getDeliveryAddress();*/
             }
 
             // DeliveryGetByCourierResponseDto 객체 생성
@@ -193,42 +186,43 @@ public class DeliveryService {
             deliveryRoute.getRouteHubId());
         int sequence = hubRouteDto.getOrderInRoute();
 
-        if (sequence == (size - 1)) {
+      /* if (sequence == (size + 1)) {
             // 업체 배송
-            if (DeliveryStatus.HUB_IN_TRANSIT.equals(updateDeliveryStatus)) {
-                if (!DeliveryStatus.HUB_WAITING.equals(currentDeliveryStatus)) {
-                    throw new GlobalException(ResultCase.INVALID_DELIVERY_STATUS);
-                }
-                deliveryRoute.departFromHub();
-            } else if (DeliveryStatus.HUB_ARRIVED.equals(updateDeliveryStatus)) {
-                if (!DeliveryStatus.HUB_IN_TRANSIT.equals(currentDeliveryStatus)) {
-                    throw new GlobalException(ResultCase.INVALID_DELIVERY_STATUS);
-                }
-
-                if (requestDto.getActualDistance() == null) {
-                    throw new GlobalException(ResultCase.REQUIRED_ACTUAL_DISTANCE);
-                }
-                deliveryRoute.arriveAtHub(requestDto.getActualDistance());
+                if (DeliveryStatus.OUT_FOR_DELIVERY.equals(updateDeliveryStatus)) {
+            if (!DeliveryStatus.HUB_WAITING.equals(currentDeliveryStatus)) {
+                throw new GlobalException(ResultCase.INVALID_DELIVERY_STATUS);
             }
-        } else {
-            // 허브 배송
-            if (DeliveryStatus.OUT_FOR_DELIVERY.equals(updateDeliveryStatus)) {
-                if (!DeliveryStatus.HUB_WAITING.equals(currentDeliveryStatus)) {
-                    throw new GlobalException(ResultCase.INVALID_DELIVERY_STATUS);
-                }
-                deliveryRoute.departForCompany();
-            } else if (DeliveryStatus.HUB_ARRIVED.equals(updateDeliveryStatus)) {
-                if (!DeliveryStatus.OUT_FOR_DELIVERY.equals(currentDeliveryStatus)) {
-                    throw new GlobalException(ResultCase.INVALID_DELIVERY_STATUS);
-                }
-
-                if (requestDto.getActualDistance() == null) {
-                    throw new GlobalException(ResultCase.REQUIRED_ACTUAL_DISTANCE);
-                }
-
-                deliveryRoute.arriveAtCompany(requestDto.getActualDistance());
+            deliveryRoute.departForCompany();
+        } else if (DeliveryStatus.HUB_ARRIVED.equals(updateDeliveryStatus)) {
+            if (!DeliveryStatus.OUT_FOR_DELIVERY.equals(currentDeliveryStatus)) {
+                throw new GlobalException(ResultCase.INVALID_DELIVERY_STATUS);
             }
 
+            if (requestDto.getActualDistance() == null) {
+                throw new GlobalException(ResultCase.REQUIRED_ACTUAL_DISTANCE);
+            }
+
+            deliveryRoute.arriveAtCompany(requestDto.getActualDistance());
+        }
+
+
+            }
+        } else {*/
+        // 허브 배송
+        if (DeliveryStatus.HUB_IN_TRANSIT.equals(updateDeliveryStatus)) {
+            if (!DeliveryStatus.HUB_WAITING.equals(currentDeliveryStatus)) {
+                throw new GlobalException(ResultCase.INVALID_DELIVERY_STATUS);
+            }
+            deliveryRoute.departFromHub();
+        } else if (DeliveryStatus.HUB_ARRIVED.equals(updateDeliveryStatus)) {
+            if (!DeliveryStatus.HUB_IN_TRANSIT.equals(currentDeliveryStatus)) {
+                throw new GlobalException(ResultCase.INVALID_DELIVERY_STATUS);
+            }
+
+            if (requestDto.getActualDistance() == null) {
+                throw new GlobalException(ResultCase.REQUIRED_ACTUAL_DISTANCE);
+            }
+            deliveryRoute.arriveAtHub(requestDto.getActualDistance());
         }
         deliveryRouteRepository.flush();
 
