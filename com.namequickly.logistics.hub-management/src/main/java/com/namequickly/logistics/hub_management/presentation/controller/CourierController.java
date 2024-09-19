@@ -122,7 +122,7 @@ public class CourierController {
     }
 
     // 배송기사 배정
-    @GetMapping("/assignCouriers")
+    @PostMapping("/assignCouriers")
     public List<Map<UUID, UUID>> assignCouriers(List<UUID> routeHubList) {
         return courierService.assignCouriers(routeHubList);
     }
