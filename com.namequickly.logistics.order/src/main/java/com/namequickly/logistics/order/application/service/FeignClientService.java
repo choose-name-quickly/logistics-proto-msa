@@ -7,6 +7,7 @@ import com.namequickly.logistics.order.application.dto.client.RouteHubResponseDt
 import com.namequickly.logistics.order.infrastructure.client.CompanyClient;
 import com.namequickly.logistics.order.infrastructure.client.HubClient;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -33,9 +34,10 @@ public class FeignClientService {
         return hubClient.getRouteHub(hubId).getData();
     }
 
-/*    public List<RouteHubResponseDto> getHubRoutes(UUID routeId) {
-        return hubClient.getHubRoutes(routeId);
-    }*/
+    public List<Map<UUID, UUID>> findOptimalRoute(UUID originHubId, UUID destinationHubId) {
+        return hubClient.findOptimalRoute(originHubId, destinationHubId).getData();
+    }
+
 
     public List<HubRouteCourierDto> getHubRoutes(UUID originHubId, UUID destinationHubId) {
         return hubClient.getHubRoutes(originHubId, destinationHubId);

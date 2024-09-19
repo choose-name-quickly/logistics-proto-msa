@@ -1,15 +1,11 @@
 package com.namequickly.logistics.order.application.dto.client;
 
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Setter
 public class HubResponseDto {
 
     private UUID hubId;
@@ -17,5 +13,4 @@ public class HubResponseDto {
     private String address;
     private String locationLatitude;
     private String locationLongitude;
-
 }
