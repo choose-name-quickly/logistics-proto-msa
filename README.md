@@ -23,7 +23,9 @@ AI API를 활용한 허브 및 업체 간 배송과 주문 관리 시스템
 <br>
 
 
-# 서비스 구성 및 실행 방법
+# 서비스 구성 및 실행 방법  
+![image](https://github.com/user-attachments/assets/21f5fe86-2e12-4ab6-bbda-77059b155964)  
+
 **MASTER**  
 [auth] Master 회원가입, 로그인    
 - 회원가입 : `POST` http://auth-service:19098/api/auth/sign-up  
