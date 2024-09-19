@@ -1,6 +1,7 @@
 package com.namequickly.logistics.slack_message.domain.repository;
 
-import com.namequickly.logistics.slack_message.application.dto.SlackMessageResponse;
+import com.namequickly.logistics.slack_message.application.mapper.SlackMessageMapper;
+import com.namequickly.logistics.slack_message.application.dto.SlackMessageListResponse;
 import com.namequickly.logistics.slack_message.domain.model.SlackMessage;
 import com.namequickly.logistics.slack_message.presentation.dto.SlackMessageSearch;
 import com.querydsl.core.QueryResults;
@@ -22,21 +23,23 @@ import static com.namequickly.logistics.slack_message.domain.model.QSlackMessage
 public class SlackMessageRepoImpl implements SlackMessageRepoCustom {
 
     private final JPAQueryFactory queryFactory;
+    private final SlackMessageMapper slackMessageMapper;
 
-    public SlackMessageRepoImpl(JPAQueryFactory queryFactory) {
+    public SlackMessageRepoImpl(JPAQueryFactory queryFactory, SlackMessageMapper slackMessageMapper) {
         this.queryFactory = queryFactory;
+        this.slackMessageMapper = slackMessageMapper;
     }
 
     @Override
-    public Page<SlackMessageResponse> searchMessages(SlackMessageSearch search, Pageable pageable) {
+    public Page<SlackMessageListResponse> searchMessages(SlackMessageSearch search, Pageable pageable, String username) {
 
         List<OrderSpecifier<?>> orders = getAllOrderSpecifiers(pageable);
 
         QueryResults<SlackMessage> results = queryFactory
                 .selectFrom(slackMessage)
                 .where(
+                        createdByMatches(username),
                         slackIdMatches(search.slackId()),
-                        titleContains(search.title()),
                         contentContains(search.content()),
                         sendAtMatches(search.sendAt())
                 )
@@ -45,8 +48,8 @@ public class SlackMessageRepoImpl implements SlackMessageRepoCustom {
                 .limit(pageable.getPageSize())
                 .fetchResults();
 
-        List<SlackMessageResponse> content = results.getResults().stream()
-                .map(SlackMessageResponse::toResponse)
+        List<SlackMessageListResponse> content = results.getResults().stream()
+                .map(slackMessageMapper::toListResponse)
                 .collect(Collectors.toList());
 
         long total = results.getTotal();
@@ -54,12 +57,13 @@ public class SlackMessageRepoImpl implements SlackMessageRepoCustom {
         return new PageImpl<>(content, pageable, total);
     }
 
-    private BooleanExpression slackIdMatches(String slackId) {
-        return slackId != null ? slackMessage.slackId.eq(slackId) : null;
+    // userId와 createdBy가 일치하는 경우에만 검색가능
+    private BooleanExpression createdByMatches(String username) {
+        return slackMessage.createdBy.eq(username);
     }
 
-    private BooleanExpression titleContains(String title) {
-        return title != null ? slackMessage.title.containsIgnoreCase(title) : null;
+    private BooleanExpression slackIdMatches(String slackId) {
+        return slackId != null ? slackMessage.slackId.eq(slackId) : null;
     }
 
     private BooleanExpression contentContains(String content) {
@@ -83,9 +87,6 @@ public class SlackMessageRepoImpl implements SlackMessageRepoCustom {
                         break;
                     case "slackId":
                         orders.add(new OrderSpecifier<>(direction, slackMessage.slackId));
-                        break;
-                    case "title":
-                        orders.add(new OrderSpecifier<>(direction, slackMessage.title));
                         break;
                 }
             }

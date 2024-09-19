@@ -1,6 +1,5 @@
 package com.namequickly.logistics.slack_message.application.dto;
 
-import com.namequickly.logistics.slack_message.domain.model.SlackMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,18 +12,10 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SlackMessageResponse {
+public class SlackMessageListResponse {
 
     private UUID messageId;
     private String channel;
-    private String slackId;
     private String content;
     private Timestamp sendAt;
-    private Timestamp createdAt;
-    private String createdBy;
-    private Timestamp updatedAt;
-    private String updatedBy;
-    private Timestamp deletedAt;
-    private String deletedBy;
-    private Boolean isDelete;
 }
