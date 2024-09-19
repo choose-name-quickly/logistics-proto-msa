@@ -20,8 +20,8 @@ public class FeignClientService {
 
 
     // TODO 나중에 feign client 개발 완료되면 주석 풀기
-    public CompanyResponse getCompanyById(UUID companyId, String userRole) {
-        return companyClient.getCompanyById(companyId, userRole);
+    public CompanyResponse getCompanyById(UUID companyId, String userRole, String affiliationId) {
+        return companyClient.getCompanyById(companyId, userRole, UUID.fromString(affiliationId));
     }
 
     public HubResponseDto getHub(UUID hubId) {

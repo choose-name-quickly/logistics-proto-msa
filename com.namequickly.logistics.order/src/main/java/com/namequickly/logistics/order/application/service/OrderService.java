@@ -61,18 +61,24 @@ public class OrderService {
      */
     @Transactional(readOnly = false)
     public OrderCreateResponseDto createOrder(OrderCreateRequestDto requestDto) {
+        // TODO 리팩터링 필요한 부분
+        // 권한을 위한 값을 가져오는 부분 + 유효성 체크하는 부분이 메소드 마다 반복됨
+        // 분리 시킬 순 없을까
+
         CustomUserDetails userDetails = SecurityUtils.getCurrentUserDetails();
         String userName = userDetails.getUsername();
         String affiliationId = userDetails.getAffiliationId();
         String userRole = userDetails.getRoleAsString();
 
-        if (feignClientService.getCompanyById(requestDto.getSupplierId(), userRole) == null) {
+        if (feignClientService.getCompanyById(requestDto.getSupplierId(), userRole, affiliationId)
+            == null) {
             throw new GlobalException(ResultCase.NOT_FOUND_COMPANY);
         }
 
-        if (feignClientService.getCompanyById(requestDto.getReceiverId(), userRole) == null) {
+       /* if (feignClientService.getCompanyById(requestDto.getReceiverId(), userRole, affiliationId)
+            == null) {
             throw new GlobalException(ResultCase.NOT_FOUND_COMPANY);
-        }
+        }*/
 
         if (feignClientService.getHub(requestDto.getOriginHubId()) == null) {
             throw new GlobalException(ResultCase.NOT_FOUND_HUB);
@@ -98,7 +104,9 @@ public class OrderService {
         List<OrderProductRequestDto> productDtos = requestDto.getProducts();
 
         for (OrderProductRequestDto productDto : productDtos) {
-
+            // TODO 이 부분 추후에 리팩터링이 필요하다고 생각
+            // 하나씩 보내는 것이 아닌 List 형태로 전달하고,
+            // List 형태로 전달 받는게 네트워크 비용을 줄일 수 있는 방법이라고 생각함
             productCompanyClient.updateStockQuantity(productDto.getProductId(),
                 StockUpdateRequest.builder()
                     .stockQuantity(productDto.getOrderQuantity())
@@ -120,10 +128,10 @@ public class OrderService {
 
         // 4. 배달 경유 생성(DeliveryRoutes)
         List<HubRouteCourierDto> hubRouteDtos = new ArrayList<>();
-        // TODO 나중에 추가
+        // TODO 나중에 메소드 구현되면 추가하기
         /*= feignClientService.getHubRoutes(
             requestDto.getOriginHubId(),
-            requestDto.getDestinationHubId());*/
+            requestDto.getDestinationHubId()); */
         // 임시로 UUID 생성
         UUID routeHubId1 = UUID.randomUUID();
         UUID courierId1 = UUID.randomUUID();
@@ -169,7 +177,7 @@ public class OrderService {
         );
 
         CompanyResponse companyDto = feignClientService.getCompanyById(order.getSupplierId(),
-            userRole);
+            userRole, affiliationId);
 
         if (userRole.equals(UserRole.HUBMANAGER.getAuthority())) {
             if (!affiliationId.equals(companyDto.getHubId().toString())) {
@@ -218,7 +226,7 @@ public class OrderService {
         );
 
         CompanyResponse companyDto = feignClientService.getCompanyById(order.getSupplierId(),
-            userRole);
+            userRole, affiliationId);
 
         if (userRole.equals(UserRole.HUBMANAGER.getAuthority())) {
             if (!affiliationId.equals(companyDto.getHubId().toString())) {
@@ -328,10 +336,11 @@ public class OrderService {
         Page<Order> orders = Page.empty(pageable);
 
         if (userRole.equals(UserRole.HUBMANAGER.getAuthority())) {
-            orders = orderRepository.findAllOrderDetailsByHubId(pageable, isDelete, affiliationId);
+            orders = orderRepository.findAllOrderDetailsByHubId(pageable, isDelete,
+                UUID.fromString(affiliationId));
         } else if (userRole.equals(UserRole.COMPANY.getAuthority())) {
             orders = orderRepository.findAllOrderDetailsByCompanyId(pageable, isDelete,
-                affiliationId);
+                UUID.fromString(affiliationId));
         }
 
         return orders.map(orderMapper::toOrderResponseDto);
