@@ -29,12 +29,15 @@ AI API를 활용한 허브 및 업체 간 배송과 주문 관리 시스템
 **MASTER**  
 [auth] Master 회원가입, 로그인    
 - 회원가입 : `POST` http://auth-service:19098/api/auth/sign-up  
-- 로그인 : `GET` http://auth-service:19098/user/login  
+- 로그인 : `GET` http://auth-service:19098/user/login
+  
 [hub] 여러 허브 생성  
-- 허브 생성 : `POST` http://hub-service:19091/api/hubs/many  
+- 허브 생성 : `POST` http://hub-service:19091/api/hubs/many
+
 [hub-management] 생산업체, 배송기사 등록  
 - 생산 업체 생성 : `POST` http://hub-management-service:19091/api/companies  
-- 배송 기사 생성 : `POST` http://hub-management-service:19091/api/couriers  
+- 배송 기사 생성 : `POST` http://hub-management-service:19091/api/couriers
+
 [auth] 허브매니저, 생산업체, 배송기사 회원가입  
 - 허브 매니저 회원 가입 : `POST` http://auth-service:19098/api/auth/sign-up  
 - 생산 업체 회원 가입 : `POST` http://auth-service:19098/api/auth/sign-up  
@@ -42,10 +45,13 @@ AI API를 활용한 허브 및 업체 간 배송과 주문 관리 시스템
 
 **생산업체**  
 [auth] 로그인  
-- 로그인 : `GET` http://auth-service:19098/user/login  
+- 로그인 : `GET` http://auth-service:19098/user/login
+
+
 [product-company] 상품 등록, 조회(재고확인)  
 - 상품 등록 : `POST` http://product-company-service:19091/api/products  
-- 상품 조회 : `GET` http://product-company-service:19091/api/products/{product_id}  
+- 상품 조회 : `GET` http://product-company-service:19091/api/products/{product_id}
+
 [order] 주문 및 배송 등록
 - 주문 및 배송 등록 : `POST` http://orders-service:19091/api/orders  
   
