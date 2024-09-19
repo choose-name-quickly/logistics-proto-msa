@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public interface CompanyClient {
 
     @GetMapping("/api/companies/{companyId}")
-    CompanyResponse getCompanyById(@PathVariable(name = "companyId") UUID companyId,
-        @RequestHeader(value = "X-User-Roles") String role);
+    CompanyResponse getCompanyById(@PathVariable UUID companyId,
+        @RequestHeader(value = "X-User-Role") String role,
+        @RequestHeader(value = "X-User-AffiliationId") UUID affiliationId);
 }
