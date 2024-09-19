@@ -37,7 +37,7 @@ public class GatewayConfig {
                 .uri("lb://hub-management-service")
             )
             // product-company
-            .route("product-company-service", r -> r.path("/api/product-company/**")
+            .route("product-company-service", r -> r.path("/api/products/**")
                 .filters(f -> f.filter(authFilter))
                 .uri("lb://product-company-service")
             )
