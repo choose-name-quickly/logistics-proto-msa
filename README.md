@@ -40,7 +40,7 @@ AI API를 활용한 허브 및 업체 간 배송과 주문 관리 시스템
 - 생산 업체 회원 가입 : `POST` http://auth-service:19098/api/auth/sign-up  
 - 배송 기사 회원 가입 : `POST` http://auth-service:19098/api/auth/sign-up  
 
-**생산업체**
+**생산업체**  
 [auth] 로그인  
 - 로그인 : `GET` http://auth-service:19098/user/login  
 [product-company] 상품 등록, 조회(재고확인)  
@@ -49,15 +49,15 @@ AI API를 활용한 허브 및 업체 간 배송과 주문 관리 시스템
 [order] 주문 및 배송 등록
 - 주문 및 배송 등록 : `POST` http://orders-service:19091/api/orders  
   
-**허브매니저**
-[auth] 로그인
-[hub-management] 허브매니저 본인 정보, 소속업체 정보 수정
-[slack-message] 메세지 보내기
+**허브매니저**  
+[auth] 로그인  
+[hub-management] 허브매니저 본인 정보, 소속업체 정보 수정  
+[slack-message] 메세지 보내기  
 
-**배송기사**
-[auth] 로그인
-[hub-management] 배송기사 본인정보 수정
-[ai] 배송정보 메세지확인
+**배송기사**  
+[auth] 로그인  
+[hub-management] 배송기사 본인정보 수정  
+[ai] 배송정보 메세지확인  
 
 
 <br>
@@ -67,7 +67,7 @@ AI API를 활용한 허브 및 업체 간 배송과 주문 관리 시스템
 ![미니물류시스템ERD (1)](https://github.com/user-attachments/assets/e41f4863-4f94-4dc5-9682-068ab540acd3)  
 
   
- 
+
 <br>
 <br>
 
