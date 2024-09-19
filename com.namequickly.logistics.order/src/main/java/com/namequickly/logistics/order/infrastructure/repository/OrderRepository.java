@@ -33,19 +33,20 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
         "JOIN o.orderProducts op " +
         "JOIN o.delivery d " +
         "JOIN d.deliveryRoutes dr " +
-        "WHERE o.isDelete = :isDelete AND o.supplierId = :affiliationId",
+        "WHERE o.isDelete = :isDelete AND o.supplierId =:affiliationId",
         countQuery = "SELECT COUNT(DISTINCT o.orderId) FROM Order o WHERE o.isDelete = :isDelete and o.supplierId = :affiliationId")
-    Page<Order> findAllOrderDetailsByHubId(Pageable pageable, boolean isDelete,
-        String affiliationId);
+    Page<Order> findAllOrderDetailsByHubId(Pageable pageable, @Param("isDelete") boolean isDelete,
+        @Param("affiliationId") UUID affiliationId);
 
     @Query(value = "SELECT DISTINCT o FROM Order o " +
         "JOIN o.orderProducts op " +
         "JOIN o.delivery d " +
         "JOIN d.deliveryRoutes dr " +
-        "WHERE o.isDelete = :isDelete AND d.originHubId =:hubId",
+        "WHERE o.isDelete = :isDelete AND d.originHubId =:affiliationId",
         countQuery = "SELECT COUNT(DISTINCT o.orderId) FROM Order o LEFT JOIN FETCH Delivery d " +
             "WHERE d.originHubId = :affiliationId AND o.isDelete = :isDelete")
-    Page<Order> findAllOrderDetailsByCompanyId(Pageable pageable, boolean isDelete,
-        String affiliationId);
+    Page<Order> findAllOrderDetailsByCompanyId(Pageable pageable,
+        @Param("isDelete") boolean isDelete,
+        @Param("affiliationId") UUID affiliationId);
 }
 
