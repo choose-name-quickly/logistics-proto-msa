@@ -1,6 +1,7 @@
 package com.namequickly.logistics.hub_management.presentation.controller;
 
 
+import com.namequickly.logistics.hub_management.application.dto.CourierListResponse;
 import com.namequickly.logistics.hub_management.application.dto.CourierResponse;
 import com.namequickly.logistics.hub_management.application.exception.ErrorResponse;
 import com.namequickly.logistics.hub_management.application.exception.HubNotFoundException;
@@ -31,7 +32,6 @@ public class CourierController {
         this.courierService = courierService;
         this.hubManagerService = hubManagerService;
     }
-
 
 
     // 배송기사 등록
@@ -91,11 +91,11 @@ public class CourierController {
     // TODO: CourierListResponse로 응답객체 생성하기
     // 배송기사 전체 조회
     @GetMapping
-    public Page<CourierResponse> getCouriers(@RequestHeader(value = "X-User-Role", required = true) String role,
-                                             @RequestHeader(value = "X-User-AffiliationId") UUID affiliationId,
-                                             @RequestBody CourierSearch search,
-                                             @RequestParam("page") int page,
-                                             @RequestParam("size") int size) {
+    public Page<CourierListResponse> getCouriers(@RequestHeader(value = "X-User-Role", required = true) String role,
+                                                   @RequestHeader(value = "X-User-AffiliationId") UUID affiliationId,
+                                                   @RequestBody CourierSearch search,
+                                                   @RequestParam("page") int page,
+                                                   @RequestParam("size") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
 

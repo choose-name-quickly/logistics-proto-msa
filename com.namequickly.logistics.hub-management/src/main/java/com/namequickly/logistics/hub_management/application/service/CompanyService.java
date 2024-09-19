@@ -1,5 +1,6 @@
 package com.namequickly.logistics.hub_management.application.service;
 
+import com.namequickly.logistics.hub_management.application.dto.CompanyListResponse;
 import com.namequickly.logistics.hub_management.application.dto.CompanyResponse;
 import com.namequickly.logistics.hub_management.application.exception.HubNotFoundException;
 import com.namequickly.logistics.hub_management.domain.model.company.Company;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -65,7 +65,7 @@ public class CompanyService {
     }
 
     // 업체 전체 조회
-    public Page<CompanyResponse> getCompanies(CompanySearch search, Pageable pageable) {
+    public Page<CompanyListResponse> getCompanies(CompanySearch search, Pageable pageable) {
         return companyRepo.searchCompanies(search, pageable);
     }
 

@@ -1,6 +1,6 @@
 package com.namequickly.logistics.hub_management.domain.repository.company;
 
-import com.namequickly.logistics.hub_management.application.dto.CompanyResponse;
+import com.namequickly.logistics.hub_management.application.dto.CompanyListResponse;
 import com.namequickly.logistics.hub_management.domain.model.company.Company;
 import com.namequickly.logistics.hub_management.presentation.dto.company.CompanySearch;
 import com.querydsl.core.QueryResults;
@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.namequickly.logistics.common.querydsl.QuerydslConfig;
 import static com.namequickly.logistics.hub_management.domain.model.company.QCompany.company;
 
 public class CompanyRepoImpl implements CompanyRepoCustom {
@@ -29,7 +28,7 @@ public class CompanyRepoImpl implements CompanyRepoCustom {
     }
 
     @Override
-    public Page<CompanyResponse> searchCompanies(CompanySearch search, Pageable pageable) {
+    public Page<CompanyListResponse> searchCompanies(CompanySearch search, Pageable pageable) {
 
         List<OrderSpecifier<?>> orders = getAllOrderSpecifiers(pageable);
 
@@ -45,8 +44,8 @@ public class CompanyRepoImpl implements CompanyRepoCustom {
                 .limit(pageable.getPageSize())
                 .fetchResults();
 
-        List<CompanyResponse> content = results.getResults().stream()
-                .map(CompanyResponse::toResponse)
+        List<CompanyListResponse> content = results.getResults().stream()
+                .map(CompanyListResponse::toResponse)
                 .collect(Collectors.toList());
 
         long total = results.getTotal();

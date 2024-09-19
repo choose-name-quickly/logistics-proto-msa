@@ -1,5 +1,6 @@
 package com.namequickly.logistics.hub_management.presentation.controller;
 
+import com.namequickly.logistics.hub_management.application.dto.CompanyListResponse;
 import com.namequickly.logistics.hub_management.application.dto.CompanyResponse;
 import com.namequickly.logistics.hub_management.application.exception.ErrorResponse;
 import com.namequickly.logistics.hub_management.application.exception.HubNotFoundException;
@@ -15,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -87,10 +87,10 @@ public class CompanyController {
     // 업체 전체 조회
     // TODO: CompanyListResponse로 응답객체 생성하기
     @GetMapping
-    public Page<CompanyResponse> getCompanies(@RequestHeader(value = "X-User-Role") String role,
-                                              @RequestBody CompanySearch search,
-                                              @RequestParam("page") int page,
-                                              @RequestParam("size") int size) {
+    public Page<CompanyListResponse> getCompanies(@RequestHeader(value = "X-User-Role") String role,
+                                                  @RequestBody CompanySearch search,
+                                                  @RequestParam("page") int page,
+                                                  @RequestParam("size") int size) {
 
         if ("ROLE_MASTER".equals(role) || "ROLE_HUBMANAGER".equals(role) || "ROLE_COMPANY".equals(role)) {
             Pageable pageable = PageRequest.of(page, size);

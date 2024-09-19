@@ -1,5 +1,6 @@
 package com.namequickly.logistics.hub_management.application.service;
 
+import com.namequickly.logistics.hub_management.application.dto.HubManagerListResponse;
 import com.namequickly.logistics.hub_management.application.dto.HubManagerResponse;
 import com.namequickly.logistics.hub_management.application.exception.HubNotFoundException;
 import com.namequickly.logistics.hub_management.domain.model.hubmanager.HubManager;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -69,7 +69,7 @@ public class HubManagerService {
 
     // 허브 매니저 전체 조회
     // TODO: 전체 조회 시에 @Transactional 안 붙이는 이유?
-    public Page<HubManagerResponse> getHubManagers(HubManagerSearch search, Pageable pageable) {
+    public Page<HubManagerListResponse> getHubManagers(HubManagerSearch search, Pageable pageable) {
         return hubManagerRepo.searchHubManagers(search, pageable);
     }
 

@@ -1,5 +1,6 @@
 package com.namequickly.logistics.hub_management.domain.repository.hubmanager;
 
+import com.namequickly.logistics.hub_management.application.dto.HubManagerListResponse;
 import com.namequickly.logistics.hub_management.application.dto.HubManagerResponse;
 import com.namequickly.logistics.hub_management.domain.model.hubmanager.HubManager;
 import com.namequickly.logistics.hub_management.presentation.dto.hubmanager.HubManagerSearch;
@@ -17,7 +18,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.namequickly.logistics.common.querydsl.QuerydslConfig;
 import static com.namequickly.logistics.hub_management.domain.model.hubmanager.QHubManager.hubManager;
 
 public class HubManagerRepoImpl implements HubManagerRepoCustom {
@@ -29,7 +29,7 @@ public class HubManagerRepoImpl implements HubManagerRepoCustom {
     }
 
     @Override
-    public Page<HubManagerResponse> searchHubManagers(HubManagerSearch search, Pageable pageable) {
+    public Page<HubManagerListResponse> searchHubManagers(HubManagerSearch search, Pageable pageable) {
 
         List<OrderSpecifier<?>> orders = getAllOrderSpecifiers(pageable);
 
@@ -47,8 +47,8 @@ public class HubManagerRepoImpl implements HubManagerRepoCustom {
                 .limit(pageable.getPageSize())
                 .fetchResults();
 
-        List<HubManagerResponse> content = results.getResults().stream()
-                .map(HubManagerResponse::toResponse)
+        List<HubManagerListResponse> content = results.getResults().stream()
+                .map(HubManagerListResponse::toResponse)
                 .collect(Collectors.toList());
 
         long total = results.getTotal();

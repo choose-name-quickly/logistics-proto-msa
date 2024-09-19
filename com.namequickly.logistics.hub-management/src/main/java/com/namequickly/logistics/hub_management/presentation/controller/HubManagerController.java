@@ -1,6 +1,7 @@
 package com.namequickly.logistics.hub_management.presentation.controller;
 
 
+import com.namequickly.logistics.hub_management.application.dto.HubManagerListResponse;
 import com.namequickly.logistics.hub_management.application.dto.HubManagerResponse;
 import com.namequickly.logistics.hub_management.application.exception.ErrorResponse;
 import com.namequickly.logistics.hub_management.application.exception.HubNotFoundException;
@@ -15,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -82,10 +82,10 @@ public class HubManagerController {
     // TODO: HubManagerListResponse로 응답객체 생성하기
     // 허브 매니저 전체 조회
     @GetMapping
-    public Page<HubManagerResponse> getHubManagers(@RequestHeader(value = "X-User-Role") String role,
-                                                   @RequestBody HubManagerSearch search,
-                                                   @RequestParam("page") int page,
-                                                   @RequestParam("size") int size){
+    public Page<HubManagerListResponse> getHubManagers(@RequestHeader(value = "X-User-Role") String role,
+                                                       @RequestBody HubManagerSearch search,
+                                                       @RequestParam("page") int page,
+                                                       @RequestParam("size") int size){
         if(!"ROLE_MASTER".equals(role)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
         }
