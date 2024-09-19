@@ -2,10 +2,8 @@ package com.namequickly.logistics.hub_management.application.service;
 
 import com.namequickly.logistics.hub_management.application.dto.CompanyListResponse;
 import com.namequickly.logistics.hub_management.application.dto.CompanyResponse;
-import com.namequickly.logistics.hub_management.application.exception.HubNotFoundException;
 import com.namequickly.logistics.hub_management.domain.model.company.Company;
 import com.namequickly.logistics.hub_management.domain.repository.company.CompanyRepo;
-import com.namequickly.logistics.hub_management.infrastructure.client.HubClient;
 import com.namequickly.logistics.hub_management.presentation.dto.company.CompanyRequest;
 import com.namequickly.logistics.hub_management.presentation.dto.company.CompanySearch;
 import org.springframework.data.domain.Page;
@@ -21,40 +19,35 @@ import java.util.UUID;
 public class CompanyService {
 
     private final CompanyRepo companyRepo;
-    private final HubClient hubClient;
 
-    public CompanyService(CompanyRepo companyRepo, HubClient hubClient) {
+
+    public CompanyService(CompanyRepo companyRepo) {
         this.companyRepo = companyRepo;
-        this.hubClient = hubClient;
     }
 
     // 업체 등록
     @Transactional
-    public CompanyResponse createCompany(CompanyRequest request, UUID userId) {
-        // TODO: 실제 존재하는 hubId인지 체크
-        if(!hubClient.checkHubId(request.hubId())){
-            // 예외 처리, 컨트롤러에서 오류 처리
-            throw new HubNotFoundException("해당 아이디를 찾을 수 없습니다.");
-        } else {
-            Company company = Company.create(request, userId);
-            return CompanyResponse.toResponse(companyRepo.save(company));}
+    public CompanyResponse createCompany(CompanyRequest request, String username) {
+            Company company = Company.create(request, username);
+            companyRepo.save(company);
+            return CompanyResponse.toResponse(company);
     }
 
     // 업체 수정
     @Transactional
-    public CompanyResponse updateCompany(UUID companyId, CompanyRequest request, UUID userId) {
+    public CompanyResponse updateCompany(UUID companyId, CompanyRequest request, String username) {
         Company company = companyRepo.findById(companyId)
                 .filter(p -> !p.getIsDelete())
                 .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 정보를 찾을 수 없거나 이미 삭제된 상태입니다."));
 
-        company.update(request, userId);
+        company.update(request, username);
         return CompanyResponse.toResponse(companyRepo.save(company));
     }
 
     // TODO: userId 검증
     // 업체 삭제
     @Transactional
-    public Boolean deleteCompany(UUID companyId, UUID userId) {
+    public Boolean deleteCompany(UUID companyId,  String username) {
         try {
             Company company = companyRepo.findById(companyId)
                     .filter(p -> !p.getIsDelete())

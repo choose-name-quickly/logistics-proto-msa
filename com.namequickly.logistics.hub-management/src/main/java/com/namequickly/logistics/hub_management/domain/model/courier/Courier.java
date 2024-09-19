@@ -43,15 +43,15 @@ public class Courier {
     @Column(updatable = false)
     @CreatedDate
     private Timestamp createdAt;
-    private UUID createdBy;
+    private String createdBy;
 
     @Column
     @LastModifiedDate
     private Timestamp updatedAt;
-    private UUID updatedBy;
+    private String updatedBy;
 
     private Timestamp deletedAt;
-    private UUID deletedBy;
+    private String deletedBy;
     @Builder.Default
     private Boolean isDelete = false;
 
@@ -65,7 +65,7 @@ public class Courier {
     @PreUpdate
     protected void onUpdate() { updatedAt = Timestamp.valueOf(LocalDateTime.now());}
 
-    public static Courier create(CourierRequest request, UUID userId){
+    public static Courier create(CourierRequest request, String username){
         return Courier.builder()
                 .type(request.type())
                 .hubId(request.hubId())
@@ -73,21 +73,21 @@ public class Courier {
                 .address(request.address())
                 .phone(request.phone())
                 .status(request.status())
-                .createdBy(userId)
+                .createdBy(username)
                 .build();
     }
 
-    public void update(CourierRequest request, UUID userId) {
+    public void update(CourierRequest request, String username) {
         this.hubId = request.hubId();
         this.address = request.address();
         this.phone = request.phone();
         this.status = request.status();
-        this.updatedBy = userId;
+        this.updatedBy = username;
     }
 
-    public void delete(UUID userId) {
+    public void delete(String username) {
         this.deletedAt = Timestamp.valueOf(LocalDateTime.now());
-        this.deletedBy = userId;
+        this.deletedBy = username;
         this.isDelete = true;
     }
 }

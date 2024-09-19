@@ -33,14 +33,14 @@ public class CompanyController {
     // 업체 등록
     @PostMapping
     public ResponseEntity<CompanyResponse> createCompany(@RequestBody final CompanyRequest request,
-                                                         @RequestHeader(value = "X-User-Id") UUID userId,
+                                                         @RequestHeader(value = "X-User-Name") String username,
                                                          @RequestHeader(value = "X-User-Role") String role,
                                                          @RequestHeader(value = "X-User-AffiliationId") UUID affiliationId) {
 
-        if ("ROLE_MASTER".equals(role) ) return ResponseEntity.ok(companyService.createCompany(request, userId));
+        if ("ROLE_MASTER".equals(role) ) return ResponseEntity.ok(companyService.createCompany(request, username));
         else if("ROLE_HUBMANAGER".equals(role)) {
             // 같은 소속 허브 매니저만
-            if(hubManagerService.getHubId(affiliationId).equals(request.hubId())) return ResponseEntity.ok(companyService.createCompany(request, userId));
+            if(hubManagerService.getHubId(affiliationId).equals(request.hubId())) return ResponseEntity.ok(companyService.createCompany(request, username));
             else   throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
         } else throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
     }
@@ -57,29 +57,29 @@ public class CompanyController {
     @PatchMapping("/{companyId}")
     public CompanyResponse updateCompany(@PathVariable(name = "companyId") UUID companyId,
                                          @RequestBody final CompanyRequest request,
-                                         @RequestHeader(value = "X-User-Id") UUID userId,
+                                         @RequestHeader(value = "X-User-Name") String username,
                                          @RequestHeader(value = "X-User-Role") String role,
                                          @RequestHeader(value = "X-User-AffiliationId") UUID affiliationId) {
 
-        if ("ROLE_MASTER".equals(role)) return companyService.updateCompany(companyId, request, userId);
+        if ("ROLE_MASTER".equals(role)) return companyService.updateCompany(companyId, request, username);
         else if ("ROLE_HUBMANAGER".equals(role)) {
-            if(hubManagerService.getHubId(affiliationId).equals(request.hubId())) return companyService.updateCompany(companyId, request, userId);
+            if(hubManagerService.getHubId(affiliationId).equals(request.hubId())) return companyService.updateCompany(companyId, request, username);
             else throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
-        } else if ("ROLE_COMPANY".equals(role) && companyId.equals(affiliationId)) return companyService.updateCompany(companyId, request, userId);
+        } else if ("ROLE_COMPANY".equals(role) && companyId.equals(affiliationId)) return companyService.updateCompany(companyId, request, username);
         else throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
     }
 
     // 업체 삭제
     @DeleteMapping("/{companyId}")
     public Boolean deleteCompany(@PathVariable UUID companyId,
-                                 @RequestHeader(value = "X-User-Id") UUID userId,
+                                 @RequestHeader(value = "X-User-Name") String username,
                                  @RequestHeader(value = "X-User-Role") String role,
                                  @RequestHeader(value = "X-User-AffiliationId") UUID affiliationId) {
 
         // 마스터, 소속 허브 매니저만 권한 있음
-        if ("ROLE_MASTER".equals(role)) return companyService.deleteCompany(companyId, userId);
+        if ("ROLE_MASTER".equals(role)) return companyService.deleteCompany(companyId, username);
         else if ("ROLE_HUBMANAGER".equals(role)) {
-            if(hubManagerService.getHubId(affiliationId).equals(companyService.findHubId(companyId))) return companyService.deleteCompany(companyId, userId);
+            if(hubManagerService.getHubId(affiliationId).equals(companyService.findHubId(companyId))) return companyService.deleteCompany(companyId, username);
             else throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
         } else throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
     }
