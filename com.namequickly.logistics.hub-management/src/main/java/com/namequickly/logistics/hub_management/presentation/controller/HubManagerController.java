@@ -83,9 +83,13 @@ public class HubManagerController {
     // 허브 매니저 전체 조회
     @GetMapping
     public Page<HubManagerListResponse> getHubManagers(@RequestHeader(value = "X-User-Role") String role,
-                                                       @RequestBody HubManagerSearch search,
+                                                       @RequestParam(required = false) UUID managerId,
+                                                       @RequestParam(required = false) UUID hubId,
+                                                       @RequestParam(required = false) String name,
                                                        @RequestParam("page") int page,
                                                        @RequestParam("size") int size){
+
+        HubManagerSearch search = new HubManagerSearch(managerId, hubId, name);
         if(!"ROLE_MASTER".equals(role)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
         }
