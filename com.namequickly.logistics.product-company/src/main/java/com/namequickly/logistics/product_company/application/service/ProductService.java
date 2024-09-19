@@ -54,7 +54,7 @@ public class ProductService {
         String affiliationId = userDetails.getAffiliationId();
         String userRole = userDetails.getRoleAsString();
 
-        if (feignClientService.getCompanyById(requestDto.getSupplierId(), userRole) == null) {
+        if (!feignClientService.checkCompanyId(requestDto.getSupplierId())) {
             throw new GlobalException(ResultCase.NOT_FOUND_COMPANY);
         }
 
@@ -62,11 +62,11 @@ public class ProductService {
             throw new GlobalException(ResultCase.NOT_FOUND_HUB);
         }
 
-        if (userRole.equals(UserRole.HUBMANAGER)) {
+        if (userRole.equals(UserRole.HUBMANAGER.getAuthority())) {
             if (!affiliationId.equals(requestDto.getHubId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_HUB);
             }
-        } else if (userRole.equals(UserRole.COMPANY)) {
+        } else if (userRole.equals(UserRole.COMPANY.getAuthority())) {
             if (!affiliationId.equals(requestDto.getSupplierId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_COMPANY);
             }
@@ -107,11 +107,11 @@ public class ProductService {
         Product product = productRepository.findByProductIdAndIsDeleteFalse(productId)
             .orElseThrow(() -> new GlobalException(ResultCase.NOT_FOUND_PRODUCT));
 
-        if (userRole.equals(UserRole.HUBMANAGER)) {
+        if (userRole.equals(UserRole.HUBMANAGER.getAuthority())) {
             if (!affiliationId.equals(product.getHubId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_HUB);
             }
-        } else if (userRole.equals(UserRole.COMPANY)) {
+        } else if (userRole.equals(UserRole.COMPANY.getAuthority())) {
             if (!affiliationId.equals(product.getSupplierId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_COMPANY);
             }
@@ -143,11 +143,11 @@ public class ProductService {
         Product product = productRepository.findByProductIdAndIsDeleteFalse(productId)
             .orElseThrow(() -> new GlobalException(ResultCase.NOT_FOUND_PRODUCT));
 
-        if (userRole.equals(UserRole.HUBMANAGER)) {
+        if (userRole.equals(UserRole.HUBMANAGER.getAuthority())) {
             if (!affiliationId.equals(product.getHubId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_HUB);
             }
-        } else if (userRole.equals(UserRole.COMPANY)) {
+        } else if (userRole.equals(UserRole.COMPANY.getAuthority())) {
             if (!affiliationId.equals(product.getSupplierId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_COMPANY);
             }
@@ -201,7 +201,7 @@ public class ProductService {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
 
-        if (!userRole.equals(UserRole.MASTER) && isDelete) {
+        if (!userRole.equals(UserRole.MASTER.getAuthority()) && isDelete) {
             throw new GlobalException(ResultCase.UNAUTHORIZED_DELETE_PRODUCT);
         }
 
@@ -231,7 +231,7 @@ public class ProductService {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
 
-        if (userRole.equals(UserRole.HUBMANAGER)) {
+        if (userRole.equals(UserRole.HUBMANAGER.getAuthority())) {
             Page<Product> products = productRepository.findAllProductsByHubId(pageable,
                 UUID.fromString(affiliationId), isDelete);
             return products.map(productMapper::toProductGetResponseDto);

@@ -22,7 +22,7 @@ public class CustomPreAuthFilter extends OncePerRequestFilter {
         FilterChain filterChain) throws ServletException, IOException {
 
         String username = request.getHeader("X-User-Name");
-        String roleHeader = request.getHeader("X-User-Roles");
+        String roleHeader = request.getHeader("X-User-Role");
         String affiliationId = request.getHeader("X-User-AffiliationId");
 
         if (username != null && roleHeader != null) {

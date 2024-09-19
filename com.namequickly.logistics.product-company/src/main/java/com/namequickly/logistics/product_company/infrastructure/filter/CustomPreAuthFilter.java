@@ -22,13 +22,13 @@ public class CustomPreAuthFilter extends OncePerRequestFilter {
         FilterChain filterChain) throws ServletException, IOException {
 
         String username = request.getHeader("X-User-Name");
-        String roleHeader = request.getHeader("X-User-Roles");
+        String roleHeader = request.getHeader("X-User-Role");
         String affiliationId = request.getHeader("X-User-AffiliationId");
 
         if (username != null && roleHeader != null) {
             SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleHeader.trim());
 
-            com.namequickly.logistics.product_company.infrastructure.security.CustomUserDetails customUserDetails = new CustomUserDetails(
+            CustomUserDetails customUserDetails = new CustomUserDetails(
                 username, affiliationId,
                 authority);
 

@@ -27,17 +27,16 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     Optional<Product> findByProductNameAndIsDeleteFalse(@Param("productName") String productName);
 
     @Query(value = "select p from Product p where p.isDelete = :isDelete",
-        countQuery = "select p.productId from Product p where p.isDelete = :isDelete")
+        countQuery = "select COUNT(p.productId) from Product p where p.isDelete = :isDelete")
     Page<Product> findAllProducts(Pageable pageable, @Param("isDelete") boolean isDelete);
 
     @Query(value = "select p from Product p where p.isDelete = :isDelete and p.hubId = :hubId",
-        countQuery = "select p.productId from Product p where p.isDelete = :isDelete and p.hubId = :hubId")
+        countQuery = "select COUNT(p.productId) from Product p where p.isDelete = :isDelete and p.hubId = :hubId")
     Page<Product> findAllProductsByHubId(Pageable pageable, @Param("hubId") UUID hubId,
         @Param("isDelete") boolean isDelete);
 
     @Query(value = "select p from Product p where p.isDelete = :isDelete and p.supplierId = :supplierId",
-        countQuery = "select p.productId from Product p where p.isDelete = :isDelete and p.supplierId = :supplierId")
+        countQuery = "select COUNT(p) from Product p where p.isDelete = :isDelete and p.supplierId = :supplierId")
     Page<Product> findAllProductsBySupplierId(Pageable pageable,
         @Param("supplierId") UUID supplierId, @Param("isDelete") boolean isDelete);
-
 }
