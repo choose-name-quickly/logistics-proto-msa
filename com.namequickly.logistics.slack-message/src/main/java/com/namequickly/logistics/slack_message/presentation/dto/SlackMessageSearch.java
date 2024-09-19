@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 
 public record SlackMessageSearch(
         String slackId,
-        String title,
         String content,
         Timestamp sendAt
 ) {

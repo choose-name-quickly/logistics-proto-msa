@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Getter
 @Entity
-@Table(name = "p_message", schema="slack_message")
+@Table(name = "p_message")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(access = AccessLevel.PRIVATE)
@@ -24,8 +24,10 @@ public class SlackMessage {
     private UUID messageId;
 
     @Column(nullable = false)
+    private String channel;
+
+    @Column(nullable = false)
     private String slackId;
-    private String title;
 
     @Column(nullable = false)
     private String content;
@@ -36,15 +38,15 @@ public class SlackMessage {
     @CreatedDate
     private Timestamp createdAt;
     @Column(nullable = false)
-    private UUID createdBy;
+    private String createdBy;
 
     @Column
     @LastModifiedDate
     private Timestamp updatedAt;
-    private UUID updatedBy;
+    private String updatedBy;
 
     private Timestamp deletedAt;
-    private UUID deletedBy;
+    private String deletedBy;
     @Builder.Default
     private Boolean isDelete = false;
 
@@ -58,24 +60,24 @@ public class SlackMessage {
 
     // buildup패턴의 메서드만 static으로 사용하는 경우
     // static은 객체 생성 없이도 사용할 수 있음.
-    public static SlackMessage create(SlackMessageRequest request, UUID userId){
+    public static SlackMessage create(SlackMessageRequest request, String username){
         return SlackMessage.builder()
+                .channel(request.channel())
                 .slackId(request.slackId())
-                .title(request.title())
                 .content(request.content())
-                .createdBy(userId)
+                .createdBy(username)
                .build();
     }
 
-    public void update(String title, String content, UUID userId){
-        this.slackId = slackId;
-        this.title = title;
-        this.content = content;
-        this.updatedBy = userId;
+    public void update(SlackMessageRequest request, String username) {
+        this.channel = request.channel();
+        this.slackId = request.slackId();
+        this.content = request.content();
+        this.updatedBy = username;
     }
 
-    public void delete(UUID userId) {
-        this.deletedBy = userId;
+    public void delete(String username) {
+        this.deletedBy = username;
         this.deletedAt = Timestamp.valueOf(LocalDateTime.now());
         this.isDelete = true;
     }
