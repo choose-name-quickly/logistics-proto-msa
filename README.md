@@ -7,7 +7,6 @@ AI API를 활용한 허브 및 업체 간 배송과 주문 관리 시스템
 # 👨‍👩‍👧‍👦 Our Team
 | 조성진(리더)   | 김혜린(부리더)   | 박지안(부리더)   |
 |--------|--------|----------|
-| git id | git id     | git id  |
 | 1. API Gateway <br> 2. Spring Security <br> 3. Hub| 1. AI API를 통한 배송 관리 <br> 2. slack message <br> 3.허브 관리자 및 업체 관리  | 1. 주문 <br> 2. 업체의 상품 관리 <br> 3. 배송      |
 
 <br>
@@ -19,7 +18,6 @@ AI API를 활용한 허브 및 업체 간 배송과 주문 관리 시스템
 2. MSA와 DDD 개념 통합 적용  
 3. 날씨 API, GeminiAPI 등 외부 API 통신에 대한 이해 증진  
 4. Spring Security 및 jwt를 이용한 사용자 인증/인가 관리  
-(추후 추가 예정)  
 
 <br>
 <br>
@@ -30,8 +28,11 @@ AI API를 활용한 허브 및 업체 간 배송과 주문 관리 시스템
 <br>
 <br>
 
-# ERD  
-추후 추가 예정 
+# ERD   
+![미니물류시스템ERD (1)](https://github.com/user-attachments/assets/e41f4863-4f94-4dc5-9682-068ab540acd3)  
+
+  
+ 
 <br>
 <br>
 
