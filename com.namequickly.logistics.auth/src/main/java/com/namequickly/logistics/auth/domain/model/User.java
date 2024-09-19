@@ -50,15 +50,12 @@ public class User extends BaseEntity {
     @Column(name = "affiliation_type")
     private AffiliationType affiliationType;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "company_affiliation_id")
     private UUID companyAffiliationId;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "courier_affiliation_id")
     private UUID courierAffiliationId;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "hub_affiliation_id")
     private UUID hubAffiliationId;
 
