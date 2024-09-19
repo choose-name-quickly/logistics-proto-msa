@@ -16,6 +16,9 @@ public interface CourierRepo extends JpaRepository<Courier, UUID>, CourierRepoCu
     @Query("SELECT c.courierId FROM Courier c WHERE c.status = :status")
     List<UUID> findCourierIdsByStatus(@Param("status") CourierStatus status);
 
-    @Query("SELECT c.courierId FROM Courier c")
-    List<UUID> findAllCourierIds();
+    @Query("SELECT c.courierId FROM Courier c WHERE c.courierId = :courierId")
+    UUID checkId(@Param("courierId") UUID courierId);
+
+    @Query("SELECT c.hubId FROM Courier c WHERE c.courierId = :courierId")
+    UUID findHubId(@Param("courierId") UUID courierId);
 }

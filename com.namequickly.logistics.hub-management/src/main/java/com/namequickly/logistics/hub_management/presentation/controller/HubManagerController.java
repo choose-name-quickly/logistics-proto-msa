@@ -1,11 +1,11 @@
 package com.namequickly.logistics.hub_management.presentation.controller;
 
 
+import com.namequickly.logistics.hub_management.application.dto.HubManagerListResponse;
 import com.namequickly.logistics.hub_management.application.dto.HubManagerResponse;
 import com.namequickly.logistics.hub_management.application.exception.ErrorResponse;
 import com.namequickly.logistics.hub_management.application.exception.HubNotFoundException;
 import com.namequickly.logistics.hub_management.application.service.HubManagerService;
-import com.namequickly.logistics.hub_management.domain.repository.hubmanager.HubManagerRepo;
 import com.namequickly.logistics.hub_management.presentation.dto.hubmanager.HubManagerRequest;
 import com.namequickly.logistics.hub_management.presentation.dto.hubmanager.HubManagerSearch;
 import org.springframework.data.domain.Page;
@@ -13,11 +13,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -35,8 +33,8 @@ public class HubManagerController {
     // 허브 매니저 등록
     @PostMapping
     public ResponseEntity<HubManagerResponse> createHubManager(@RequestBody final HubManagerRequest request,
-                                                               @RequestHeader(value = "X-User-Id") UUID userId,
-                                                               @RequestHeader(value = "X-Role") String role) {
+                                                               @RequestHeader(value = "X-User-Name") UUID userId,
+                                                               @RequestHeader(value = "X-User-Role") String role) {
         // 마스터만 권한 있음
         if(!"ROLE_MASTER".equals(role)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
@@ -56,13 +54,13 @@ public class HubManagerController {
     @PatchMapping("/{managerId}")
     public HubManagerResponse updateHubManager(@PathVariable UUID managerId,
                                                @RequestBody final HubManagerRequest request,
-                                               @RequestHeader(value = "X-User-Id") UUID userId,
-                                               @RequestHeader(value = "X-Role") String role,
-                                               @RequestHeader(value = "X-Affiliation-Id") UUID affiliationId) {
+                                               @RequestHeader(value = "X-User-Name") UUID userId,
+                                               @RequestHeader(value = "X-User-Role") String role,
+                                               @RequestHeader(value = "X-User-AffiliationId") UUID affiliationId) {
         // 마스터 + 허브 매니저 본인만
         if("ROLE_MASTER".equals(role)) {
             return hubManagerService.updateHubManager(managerId, request, userId);
-        } else if("ROLE_HUB_MANAGER".equals(role) && managerId.equals(affiliationId)) {
+        } else if("ROLE_HUBMANAGER".equals(role) && managerId.equals(affiliationId)) {
             return hubManagerService.updateHubManager(managerId, request, userId);
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
@@ -73,20 +71,21 @@ public class HubManagerController {
     // 삭제 결과는 T/F
     @DeleteMapping("/{managerId}")
     public Boolean deleteHubManager(@PathVariable UUID managerId,
-                                 @RequestHeader(value = "X-User-Id") UUID userId,
-                                 @RequestHeader(value = "X-Role") String role) {
+                                 @RequestHeader(value = "X-User-Name") UUID userId,
+                                 @RequestHeader(value = "X-User-Role") String role) {
         if(!"ROLE_MASTER".equals(role)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
         }
         return hubManagerService.deleteHubManager(managerId, userId);
     }
 
+    // TODO: HubManagerListResponse로 응답객체 생성하기
     // 허브 매니저 전체 조회
     @GetMapping
-    public Page<HubManagerResponse> getHubManagers(@RequestHeader(value = "X-Role") String role,
-                                                   @RequestBody HubManagerSearch search,
-                                                   @RequestParam("page") int page,
-                                                   @RequestParam("size") int size){
+    public Page<HubManagerListResponse> getHubManagers(@RequestHeader(value = "X-User-Role") String role,
+                                                       @RequestBody HubManagerSearch search,
+                                                       @RequestParam("page") int page,
+                                                       @RequestParam("size") int size){
         if(!"ROLE_MASTER".equals(role)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
         }
@@ -97,20 +96,26 @@ public class HubManagerController {
     // 허브 매니저 상세 조회
     @GetMapping("/{managerId}")
     public HubManagerResponse getHubManagerById(@PathVariable UUID managerId,
-                                                @RequestHeader(value = "X-Role") String role,
-                                                @RequestHeader(value = "X-Affiliation-Id") UUID affiliationId) {
+                                                @RequestHeader(value = "X-User-Role") String role,
+                                                @RequestHeader(value = "X-User-AffiliationId") UUID affiliationId) {
         if("ROLE_MASTER".equals(role)) {
             return hubManagerService.getHubManagerById(managerId);
-        } else if("HUB_MANAGER".equals(role)  && managerId.equals(affiliationId)) {
+        } else if("ROLE_HUBMANAGER".equals(role)  && managerId.equals(affiliationId)) {
             return hubManagerService.getHubManagerById(managerId);
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
         }
     }
 
-    // 허브 매니저 ID
-    @GetMapping("/affiliationIds")
-    public List<UUID> affiliationIds() {
-        return hubManagerService.getMangerIds();
+    // 허브 매니저 ID 체크
+    @GetMapping("/checkId")
+    public boolean checkId(@RequestParam UUID managerId) {
+        return hubManagerService.checkId(managerId);
+    }
+
+    //허브 매니저 소속 허브
+    @GetMapping("/getHubId")
+    public UUID GetHubId(@RequestParam UUID managerId){
+        return hubManagerService.getHubId(managerId);
     }
 }

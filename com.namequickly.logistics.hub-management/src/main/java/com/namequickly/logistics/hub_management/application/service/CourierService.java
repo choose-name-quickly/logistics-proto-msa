@@ -1,5 +1,6 @@
 package com.namequickly.logistics.hub_management.application.service;
 
+import com.namequickly.logistics.hub_management.application.dto.CourierListResponse;
 import com.namequickly.logistics.hub_management.application.dto.CourierResponse;
 import com.namequickly.logistics.hub_management.application.exception.HubNotFoundException;
 import com.namequickly.logistics.hub_management.domain.model.courier.Courier;
@@ -66,7 +67,7 @@ public class CourierService {
     }
 
     // 배송 기사 전체 조회
-    public Page<CourierResponse> getCouriers(CourierSearch search, Pageable pageable) {
+    public Page<CourierListResponse> getCouriers(CourierSearch search, Pageable pageable) {
         return courierRepo.searchCouriers(search, pageable);
     }
 
@@ -82,8 +83,7 @@ public class CourierService {
 
     // 배송기사 배정
     public List<Map<UUID, UUID>> assignCouriers() {
-        // TODO: 한꺼번에 배정이 필요한가? 회사 규칙에 따라 다를 것 같다. 지금 프로세스 상에서 배송 요청이 들어오면 그 건에 대해서 바로 기사를 배정해도 될 듯
-        // 먼저 배정이 필요한 경로아이디를 가져옴.
+        // 배정이 필요한 경로아이디를 가져옴.
             List<UUID> routeHubList = hubClient.assignList();
 
         // 대기 중인 상태의 기사 목록을 추출
@@ -104,9 +104,11 @@ public class CourierService {
         return mapList;
     }
 
-    // 배송기사 ID
+    // 배송기사 ID 체크
     @Transactional
-    public List<UUID> getCourierIds() {
-        return courierRepo.findAllCourierIds();
-    }
+    public boolean checkId(UUID courierId) { return courierRepo.checkId(courierId) != null;}
+
+    // 배송기사 소속 허브 ID
+    @Transactional
+    public UUID findHubId(UUID courierId) { return courierRepo.findHubId(courierId); }
 }

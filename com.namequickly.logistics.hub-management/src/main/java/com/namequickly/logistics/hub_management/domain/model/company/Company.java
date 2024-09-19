@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Getter
 @Entity
-@Table(name = "p_company", schema="hub_management")
+@Table(name = "p_company")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(access = AccessLevel.PRIVATE)

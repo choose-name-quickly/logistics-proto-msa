@@ -1,5 +1,6 @@
 package com.namequickly.logistics.hub_management.domain.repository.hubmanager;
 
+import com.namequickly.logistics.hub_management.application.dto.HubManagerListResponse;
 import com.namequickly.logistics.hub_management.application.dto.HubManagerResponse;
 import com.namequickly.logistics.hub_management.domain.model.hubmanager.HubManager;
 import com.namequickly.logistics.hub_management.presentation.dto.hubmanager.HubManagerSearch;
@@ -28,7 +29,7 @@ public class HubManagerRepoImpl implements HubManagerRepoCustom {
     }
 
     @Override
-    public Page<HubManagerResponse> searchHubManagers(HubManagerSearch search, Pageable pageable) {
+    public Page<HubManagerListResponse> searchHubManagers(HubManagerSearch search, Pageable pageable) {
 
         List<OrderSpecifier<?>> orders = getAllOrderSpecifiers(pageable);
 
@@ -46,8 +47,8 @@ public class HubManagerRepoImpl implements HubManagerRepoCustom {
                 .limit(pageable.getPageSize())
                 .fetchResults();
 
-        List<HubManagerResponse> content = results.getResults().stream()
-                .map(HubManagerResponse::toResponse)
+        List<HubManagerListResponse> content = results.getResults().stream()
+                .map(HubManagerListResponse::toResponse)
                 .collect(Collectors.toList());
 
         long total = results.getTotal();
