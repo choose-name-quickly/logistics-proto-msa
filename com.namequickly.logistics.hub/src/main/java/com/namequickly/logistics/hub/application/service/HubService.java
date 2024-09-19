@@ -10,6 +10,7 @@ import com.namequickly.logistics.hub.domain.model.Hub;
 import com.namequickly.logistics.hub.domain.repository.HubRepository;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,13 @@ public class HubService {
         Hub savedHub = hubRepository.save(hub);
         return hubMapper.toDTO(savedHub);
     }
+
+    public List<HubResponseDto> createHubs(List<HubRequestDto> requestDtos) {
+        List<Hub> hubs = hubMapper.toEntities(requestDtos); // DTO를 엔티티로 변환
+        List<Hub> savedHubs = hubRepository.saveAll(hubs); // 엔티티를 저장
+        return hubMapper.toDTOs(savedHubs); // 저장된 엔티티를 DTO로 변환
+    }
+
 
     public HubResponseDto updateHub(UUID hubId, HubRequestDto requestDto) {
         Hub hub = hubRepository.findById(hubId)

@@ -3,6 +3,7 @@ package com.namequickly.logistics.common.shared.affiliation;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+// -> 업체정보가 아닌 company_id만 있으면됨
 @RequiredArgsConstructor
 @Getter
 public enum CompanyAffiliation {

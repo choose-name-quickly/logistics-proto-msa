@@ -3,8 +3,10 @@ package com.namequickly.logistics.hub.application.dto;
 import com.namequickly.logistics.common.shared.affiliation.HubAffiliation;
 import java.util.UUID;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class HubRequestDto {
 
     private UUID hubId;
@@ -14,4 +16,5 @@ public class HubRequestDto {
     private String locationLatitude;
     private String locationLongitude;
     private Boolean isDelete;
+
 }

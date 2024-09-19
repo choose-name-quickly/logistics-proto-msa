@@ -13,11 +13,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "p_hub")
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -27,11 +29,12 @@ public class Hub extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID hubId;
 
-    private HubAffiliation affiliationId;
-    private String hubName;
-    private String address;
-    private String locationLatitude;
-    private String locationLongitude;
+    private HubAffiliation affiliationId; // 허브소속 ID
+    private String hubName; // 허브이름
+    private String address; // 허브주소 
+    private String locationLatitude; // 위도
+    private String locationLongitude; // 경도
+    private Boolean isDelete; // 논리적삭제 여부
 
     public static Hub createHub(HubRequestDto hubDTO) {
         return Hub.builder()
@@ -40,6 +43,7 @@ public class Hub extends BaseEntity {
             .address(hubDTO.getAddress())
             .locationLatitude(hubDTO.getLocationLatitude())
             .locationLongitude(hubDTO.getLocationLongitude())
+            .isDelete(false)
             .build();
     }
 

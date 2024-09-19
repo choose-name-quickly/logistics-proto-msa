@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 
+// -> 허브정보가 아닌 hub_id만 있으면됨
 public enum HubAffiliation {
 
     // 허브 ID

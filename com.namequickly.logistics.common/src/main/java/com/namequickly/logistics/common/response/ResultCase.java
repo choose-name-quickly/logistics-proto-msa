@@ -38,12 +38,15 @@ public enum ResultCase {
     EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, 2005, "만료된 Refresh Token"),
 
     /* 허브 3000번대 */
-    // 존재하지 않은 허브 404
-    // TODO 허브 개발 완료되면 다시 변경 예정
-    // 존재하지 않는 허브 404
-    NOT_FOUND_HUB(HttpStatus.NOT_FOUND, 3000, "허브를 찾을 수 없습니다."),
+
+    // 존재하지 않는 허브
+    HUB_NOT_FOUND(HttpStatus.NOT_FOUND, 3000, "허브를 찾을 수 없습니다."),
+    // 존재하지 않는 출발허브
+    START_HUB_NOT_FOUND(HttpStatus.NOT_FOUND, 3001, "출발허브를 찾을 수 없습니다."),
+    // 존재하지 않는 도착허브
+    DESTINATION_HUB_NOT_FOUND(HttpStatus.NOT_FOUND, 3002, "도착허브를 찾을 수 없습니다."),
     // 유효하지 않은 권한 403
-    UNAUTHORIZED_HUB(HttpStatus.FORBIDDEN, 3001, "작업을 수행할 수 있는 권한이 없습니다."),
+    UNAUTHORIZED_HUB(HttpStatus.FORBIDDEN, 3003, "작업을 수행할 수 있는 권한이 없습니다."),
 
 
     /* 상품 관련 4000번대 */
@@ -90,8 +93,8 @@ public enum ResultCase {
     AFFILIATION_NOT_FOUND(HttpStatus.NOT_FOUND, 2007, "Affiliation ID가 존재하지 않습니다."),
 
 
-    /* 허브 3000번대 */
-    HUB_NOT_FOUND(HttpStatus.NOT_FOUND, 3000, "Hub ID가 존재하지 않습니다.")
+    /* 경로 8000번대 */
+    ROUTE_NOT_INVALID(HttpStatus.BAD_REQUEST, 8000, "그런 경로 없습니다.");
 
 
     private final HttpStatus httpStatus; // 응답 상태 코드

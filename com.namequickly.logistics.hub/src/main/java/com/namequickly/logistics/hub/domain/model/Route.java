@@ -26,12 +26,12 @@ public class Route extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID routeId;
 
-    private UUID originHubId;
-    private UUID destinationHubId;
-    private String routeDescription;
-    private Double estimatedTime;
-    private String distance;
-    private Boolean isDelete;
+    private UUID originHubId; // 출발 허브 ID
+    private UUID destinationHubId; // 도착 허브 ID
+    private String routeDescription; // 경로 설명
+    private Double estimatedTime; // 예상 소요 시간
+    private String distance; // 경로 거리
+    private Boolean isDelete; // 논리적 삭제 여부
 
     public static Route createRoute(RouteRequestDto routeDTO) {
         return Route.builder()
@@ -40,7 +40,7 @@ public class Route extends BaseEntity {
             .routeDescription(routeDTO.getRouteDescription())
             .estimatedTime(routeDTO.getEstimatedTime())
             .distance(routeDTO.getDistance())
-            .isDelete(routeDTO.getIsDelete())
+            .isDelete(false)
             .build();
     }
 
@@ -50,6 +50,5 @@ public class Route extends BaseEntity {
         this.routeDescription = routeDTO.getRouteDescription();
         this.estimatedTime = routeDTO.getEstimatedTime();
         this.distance = routeDTO.getDistance();
-        this.isDelete = routeDTO.getIsDelete();
     }
 }

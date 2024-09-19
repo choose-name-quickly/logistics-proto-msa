@@ -27,17 +27,28 @@ public class HubController {
 
     private final HubService hubService;
 
-    @PostMapping
+    @PostMapping("one")
     public CommonResponse<HubResponseDto> createHub(@RequestBody HubRequestDto requestDto,
+
         @RequestHeader(value = "X-User-Name", required = false) String username,
         @RequestHeader(value = "X-User-Roles", required = false) String roles,
         @RequestHeader(value = "X-User-AffiliationType", required = false) String affiliationType,
         @RequestHeader(value = "X-User-AffiliationId", required = false) String affiliationId) {
 
-        log.info("username={}, roles={}, affiliationType={}, affiliationId={}", username, roles, affiliationType, affiliationId);
+        log.info("createHub() requestDto = {} ", requestDto.toString());
+        log.info("from gateway , username={}, roles={}, affiliationType={}, affiliationId={}", username, roles, affiliationType, affiliationId);
 
         HubResponseDto hub = hubService.createHub(requestDto);
         return CommonResponse.success(hub);
+
+    }
+
+    @PostMapping("many")
+    public CommonResponse<List<HubResponseDto>> createHubs(@RequestBody List<HubRequestDto> requestDtos){
+        log.info("createHubs() requestDtos = {} ", requestDtos.toString());
+
+        List<HubResponseDto> hubs = hubService.createHubs(requestDtos);
+        return CommonResponse.success(hubs);
 
     }
 
@@ -45,24 +56,32 @@ public class HubController {
     public CommonResponse<HubResponseDto> updateHub(
         @PathVariable("hubId") UUID hubId,
         @RequestBody HubRequestDto requestDto) {
+        log.info("updateHub() requestDto = {} ", requestDto);
+
         HubResponseDto hub = hubService.updateHub(hubId, requestDto);
         return CommonResponse.success(hub);
     }
 
     @DeleteMapping("/{hubId}")
     public CommonResponse<CommonEmptyRes> deleteHub(@PathVariable("hubId") UUID hubId) {
+        log.info("deleteHub() hubId = {} ", hubId);
+
         hubService.deleteHub(hubId);
         return CommonResponse.success();
     }
 
     @GetMapping("/{hubId}")
     public CommonResponse<HubResponseDto> getHub(@PathVariable("hubId") UUID hubId) {
+        log.info("getHub() hubId = {} ", hubId);
+
         HubResponseDto hub = hubService.getHub(hubId);
         return CommonResponse.success(hub);
     }
 
     @GetMapping
     public CommonResponse<List<HubResponseDto>> listHubs() {
+        log.info("listHubs()");
+
         List<HubResponseDto> hubs = hubService.listHubs();
         return CommonResponse.success(hubs);
     }

@@ -2,6 +2,7 @@ package com.namequickly.logistics.auth.infrastructure.configuration.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.namequickly.logistics.auth.application.dto.UserLoginRequestDto;
+import com.namequickly.logistics.auth.application.dto.UserLoginResponseDto;
 import com.namequickly.logistics.common.response.CommonResponse;
 import com.namequickly.logistics.common.shared.UserRole;
 import com.namequickly.logistics.common.shared.affiliation.AffiliationType;
@@ -74,10 +75,20 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         jwtUtil.addJwtToCookie(token, response);
 
         log.info("JWT 토큰 {}",token);
-        // 로그인 결과 화면 보여주기
+
+        // 로그인 결과를 담은 DTO 생성
+        UserLoginResponseDto dto = UserLoginResponseDto.createLoginReponse(username,token);
+
+        // 응답을 JSON으로 직렬화하여 응답 본문에 작성
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        CommonResponse.success("로그인 성공"); // TODO : dto 만들어 토큰까지 담을수도 있음
+
+        // 응답 객체를 JSON으로 변환하여 response에 직접 씀
+        ObjectMapper objectMapper = new ObjectMapper(); // Jackson ObjectMapper 사용
+        response.getWriter().write(objectMapper.writeValueAsString(CommonResponse.success(dto)));
+
+        // writer를 플러시하여 응답 전송
+        response.getWriter().flush();
     }
 
     @Override
