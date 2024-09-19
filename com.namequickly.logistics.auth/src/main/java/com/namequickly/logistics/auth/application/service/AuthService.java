@@ -9,6 +9,7 @@ import com.namequickly.logistics.auth.domain.repository.UserRepository;
 import com.namequickly.logistics.auth.infrastructure.configuration.security.UserDetailsServiceImpl;
 import com.namequickly.logistics.common.exception.GlobalException;
 import com.namequickly.logistics.common.response.ResultCase;
+import com.namequickly.logistics.common.shared.affiliation.AffiliationType;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -40,6 +41,27 @@ public class AuthService {
 
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(request.password());
+
+        // affiliation Id 검증로직
+        switch (request.affiliationType()) {
+            case COMPANY:
+                if (!userRepository.existsByCompanyAffiliationId(request.companyAffiliationId())) {
+                    throw new GlobalException(ResultCase.AFFILIATION_NOT_FOUND);
+                }
+                break;
+            case COURIER:
+                if (!userRepository.existsByCourierAffiliationId(request.courierAffiliationId())) {
+                    throw new GlobalException(ResultCase.AFFILIATION_NOT_FOUND);
+                }
+                break;
+            case HUB:
+                if (!userRepository.existsByHubAffiliationId(request.hubAffiliationId())) {
+                    throw new GlobalException(ResultCase.AFFILIATION_NOT_FOUND);
+                }
+                break;
+            default:
+                throw new GlobalException(ResultCase.SYSTEM_ERROR);
+        }
 
         // 유저 entity 생성 (유저의 이름, 패스워드를 전달 받아 회원가입을 진행)
         User user = User.create(

@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -68,7 +69,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRole role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
         AffiliationType affiliationType = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getAffiliationType();
-        String affiliationId = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getAffiliationId();
+        UUID affiliationId = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getAffiliationId();
 
 
         String token = jwtUtil.createToken(username, role, affiliationType, affiliationId);

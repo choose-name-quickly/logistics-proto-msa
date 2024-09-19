@@ -11,6 +11,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +22,7 @@ import lombok.ToString;
 @Entity
 @Getter
 @Setter
+@ToString
 @Table(name = "p_user")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -50,15 +52,15 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "company_affiliation_id")
-    private CompanyAffiliation companyAffiliationId;
+    private UUID companyAffiliationId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "courier_affiliation_id")
-    private CourierAffiliation courierAffiliationId;
+    private UUID courierAffiliationId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "hub_affiliation_id")
-    private HubAffiliation hubAffiliationId;
+    private UUID hubAffiliationId;
 
     // 슬랙 ID
     @Column(name = "slack_id", length = 255)
@@ -70,9 +72,9 @@ public class User extends BaseEntity {
     // 유저 생성 메서드
     public static User create(String username, String password, UserRole role,
         AffiliationType affiliationType,
-        CompanyAffiliation companyAffiliationId,
-        CourierAffiliation courierAffiliationId,
-        HubAffiliation hubAffiliationId) {
+        UUID companyAffiliationId,
+        UUID courierAffiliationId,
+        UUID hubAffiliationId) {
 
         User user = new User();
         user.username = username;
@@ -96,13 +98,13 @@ public class User extends BaseEntity {
     }
 
     // Affiliation ID 중 하나를 반환하는 메서드 - UserDetailsImpl 에서 끌고와 토큰 만들때씀
-    public String getAffiliationId() {
+    public UUID getAffiliationId() {
         if (companyAffiliationId != null) {
-            return companyAffiliationId.name();
+            return companyAffiliationId;
         } else if (courierAffiliationId != null) {
-            return courierAffiliationId.name();
+            return courierAffiliationId;
         } else if (hubAffiliationId != null) {
-            return hubAffiliationId.name();
+            return hubAffiliationId;
         }
         return null; // 모든 affiliationId가 null인 경우
     }
