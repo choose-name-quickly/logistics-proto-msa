@@ -33,7 +33,7 @@ public class ProductController {
 
     // TODO 추후에 Role에 대한 Enum이 생기면 적용 예정 (ex UserRole.HUBMANAGEMENT)
     // 상품 추가
-    //@PreAuthorize("hasAnyRole('MASTER','HUBMANAGER','COMPANY')")
+    @PreAuthorize("hasAnyAuthority('MASTER','HUBMANAGER','COMPANY')")
     @PostMapping("/products")
     public CommonResponse<ProductCreateResponseDto> createProduct(
         @Valid @RequestBody ProductCreateRequestDto requestDto) {
@@ -42,7 +42,7 @@ public class ProductController {
     }
 
     // 상품 삭제
-    @PreAuthorize("hasAnyRole('MASTER','HUBMANAGER')")
+    @PreAuthorize("hasAnyAuthority('MASTER','HUBMANAGER')")
     @DeleteMapping("/products/{product_id}")
     public CommonResponse<ProductDeleteResponseDto> deleteProduct(
         @PathVariable("product_id") UUID productId) {
@@ -51,7 +51,7 @@ public class ProductController {
     }
 
     // 상품 수정
-    @PreAuthorize("hasAnyRole('MASTER','HUBMANAGER','COMPANY')")
+    @PreAuthorize("hasAnyAuthority('MASTER','HUBMANAGER','COMPANY')")
     @PutMapping("/products/{product_id}")
     public CommonResponse<ProductUpdateResponseDto> updateProduct(
         @PathVariable("product_id") UUID productId,
@@ -83,7 +83,7 @@ public class ProductController {
 
     // 나와 관련된 상품 전체 조회
     // TODO 배송 기사는 상관 없겠지.. ?
-    @PreAuthorize("hasAnyRole('HUBMANAGER','COMPANY')")
+    @PreAuthorize("hasAnyAuthority('HUBMANAGER','COMPANY')")
     @GetMapping("/products/mine")
     public CommonResponse<Page<ProductGetResponseDto>> getMyAllProducts(
         @RequestParam(name = "page", defaultValue = "1") int page,

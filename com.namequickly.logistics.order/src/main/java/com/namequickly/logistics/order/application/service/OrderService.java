@@ -3,7 +3,6 @@ package com.namequickly.logistics.order.application.service;
 
 import com.namequickly.logistics.common.exception.GlobalException;
 import com.namequickly.logistics.common.response.ResultCase;
-import com.namequickly.logistics.common.shared.UserRole;
 import com.namequickly.logistics.order.application.dto.OrderCreateRequestDto;
 import com.namequickly.logistics.order.application.dto.OrderCreateRequestDto.OrderProductRequestDto;
 import com.namequickly.logistics.order.application.dto.OrderCreateResponseDto;
@@ -86,11 +85,11 @@ public class OrderService {
             throw new GlobalException(ResultCase.HUB_NOT_FOUND);
         }
 
-        if (userRole.equals(UserRole.HUBMANAGER.getAuthority())) {
+        if (userRole.equals("HUBMANAGER")) {
             if (!affiliationId.equals(requestDto.getOriginHubId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_HUB);
             }
-        } else if (userRole.equals(UserRole.COMPANY.getAuthority())) {
+        } else if (userRole.equals("COMPANY")) {
             if (!affiliationId.equals(requestDto.getSupplierId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_COMPANY);
             }
@@ -131,7 +130,7 @@ public class OrderService {
         // hub로 부터 경로 가져오기
         List<Map<UUID, UUID>> hubRouteCourierDtos = feignClientService.findOptimalRoute(
             requestDto.getOriginHubId(), requestDto.getDestinationHubId());
-        
+
         for (Map<UUID, UUID> hubRouteCourierDto : hubRouteCourierDtos) {
             UUID routeHubId = hubRouteCourierDto.keySet().iterator().next();
             UUID courierId = hubRouteCourierDto.get(routeHubId);
@@ -173,11 +172,11 @@ public class OrderService {
         CompanyResponse companyDto = feignClientService.getCompanyById(order.getSupplierId(),
             userRole, affiliationId);
 
-        if (userRole.equals(UserRole.HUBMANAGER.getAuthority())) {
+        if (userRole.equals("HUBMANAGER")) {
             if (!affiliationId.equals(companyDto.getHubId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_HUB);
             }
-        } else if (userRole.equals(UserRole.COMPANY.getAuthority())) {
+        } else if (userRole.equals("COMPANY")) {
             if (!affiliationId.equals(companyDto.getCompanyId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_COMPANY);
             }
@@ -222,11 +221,11 @@ public class OrderService {
         CompanyResponse companyDto = feignClientService.getCompanyById(order.getSupplierId(),
             userRole, affiliationId);
 
-        if (userRole.equals(UserRole.HUBMANAGER.getAuthority())) {
+        if (userRole.equals("HUBMANAGER")) {
             if (!affiliationId.equals(companyDto.getHubId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_HUB);
             }
-        } else if (userRole.equals(UserRole.COMPANY.getAuthority())) {
+        } else if (userRole.equals("COMPANY")) {
             if (!affiliationId.equals(companyDto.getCompanyId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_COMPANY);
             }
@@ -329,10 +328,10 @@ public class OrderService {
 
         Page<Order> orders = Page.empty(pageable);
 
-        if (userRole.equals(UserRole.HUBMANAGER.getAuthority())) {
+        if (userRole.equals("HUBMANAGER")) {
             orders = orderRepository.findAllOrderDetailsByHubId(pageable, isDelete,
                 UUID.fromString(affiliationId));
-        } else if (userRole.equals(UserRole.COMPANY.getAuthority())) {
+        } else if (userRole.equals("COMPANY")) {
             orders = orderRepository.findAllOrderDetailsByCompanyId(pageable, isDelete,
                 UUID.fromString(affiliationId));
         }

@@ -4,7 +4,6 @@ import com.namequickly.logistics.auth.application.dto.UserDto;
 import com.namequickly.logistics.auth.application.mapper.UserMapper;
 import com.namequickly.logistics.auth.domain.model.User;
 import com.namequickly.logistics.auth.domain.repository.UserRepository;
-import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -28,20 +27,25 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        // redis 에서 캐싱해온 user 정보
+     /*   // redis 에서 캐싱해온 user 정보
         UserDto userDTO = (UserDto) redisTemplate.opsForValue().get(username);
-        log.info("캐시된 User = {}", userDTO);
+        log.info("캐시된 User = {}", userDTO);*/
 
         // 캐시 데이터가 없으면 DB 조회후 캐싱
-        if (userDTO == null) {
+       /* if (userDTO == null) {
             User user = userRepository.findById(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Not Found " + username));
 
             userDTO = userMapper.userToUserDto(user);
 
             redisTemplate.opsForValue().set(username, userDTO, 1, TimeUnit.HOURS);
-        }
+        }*/
 
+        User user = userRepository.findById(username).orElseThrow(
+            () -> new IllegalArgumentException("dd")
+        );
+        UserDto userDTO = userMapper.userToUserDto(user);
+//
         // UserDetailsImpl 을 반환해 authentication 객체를 SecurityContext에 저장
         return new UserDetailsImpl(userMapper.userDtoToUser(userDTO));
     }

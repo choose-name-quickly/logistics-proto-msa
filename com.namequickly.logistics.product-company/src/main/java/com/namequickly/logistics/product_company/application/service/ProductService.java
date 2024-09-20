@@ -62,11 +62,11 @@ public class ProductService {
             throw new GlobalException(ResultCase.HUB_NOT_FOUND);
         }
 
-        if (userRole.equals(UserRole.HUBMANAGER.getAuthority())) {
+        if (userRole.equals("HUBMANAGER")) {
             if (!affiliationId.equals(requestDto.getHubId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_HUB);
             }
-        } else if (userRole.equals(UserRole.COMPANY.getAuthority())) {
+        } else if (userRole.equals("COMPANY")) {
             if (!affiliationId.equals(requestDto.getSupplierId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_COMPANY);
             }
@@ -107,11 +107,11 @@ public class ProductService {
         Product product = productRepository.findByProductIdAndIsDeleteFalse(productId)
             .orElseThrow(() -> new GlobalException(ResultCase.NOT_FOUND_PRODUCT));
 
-        if (userRole.equals(UserRole.HUBMANAGER.getAuthority())) {
+        if (userRole.equals("HUBMANAGER")) {
             if (!affiliationId.equals(product.getHubId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_HUB);
             }
-        } else if (userRole.equals(UserRole.COMPANY.getAuthority())) {
+        } else if (userRole.equals("COMPANY")) {
             if (!affiliationId.equals(product.getSupplierId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_COMPANY);
             }
@@ -143,11 +143,11 @@ public class ProductService {
         Product product = productRepository.findByProductIdAndIsDeleteFalse(productId)
             .orElseThrow(() -> new GlobalException(ResultCase.NOT_FOUND_PRODUCT));
 
-        if (userRole.equals(UserRole.HUBMANAGER.getAuthority())) {
+        if (userRole.equals("HUBMANAGER")) {
             if (!affiliationId.equals(product.getHubId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_HUB);
             }
-        } else if (userRole.equals(UserRole.COMPANY.getAuthority())) {
+        } else if (userRole.equals("COMPANY")) {
             if (!affiliationId.equals(product.getSupplierId().toString())) {
                 throw new GlobalException(ResultCase.UNAUTHORIZED_COMPANY);
             }
@@ -231,7 +231,7 @@ public class ProductService {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
 
-        if (userRole.equals(UserRole.HUBMANAGER.getAuthority())) {
+        if (userRole.equals("HUBMANAGER")) {
             Page<Product> products = productRepository.findAllProductsByHubId(pageable,
                 UUID.fromString(affiliationId), isDelete);
             return products.map(productMapper::toProductGetResponseDto);

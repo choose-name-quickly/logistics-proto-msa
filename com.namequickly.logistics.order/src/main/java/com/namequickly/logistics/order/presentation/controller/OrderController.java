@@ -38,7 +38,7 @@ public class OrderController {
      * @param requestDto
      * @return
      */
-    @PreAuthorize("hasAnyRole('MASTER','HUBMANAGER','COMPANY')")
+    @PreAuthorize("hasAnyAuthority('MASTER','HUBMANAGER','COMPANY')")
     @PostMapping("/orders")
     public CommonResponse<OrderCreateResponseDto> createOrder(
         @RequestBody OrderCreateRequestDto requestDto) {
@@ -51,7 +51,7 @@ public class OrderController {
      * @param orderId
      * @return
      */
-    @PreAuthorize("hasAnyRole('MASTER','HUBMANAGER','COMPANY')")
+    @PreAuthorize("hasAnyAuthority('MASTER','HUBMANAGER','COMPANY')")
     @DeleteMapping("/orders/{orderId}")
     public CommonResponse<OrderDeleteResponseDto> cancelOrder(
         @PathVariable("orderId") UUID orderId) {
@@ -66,7 +66,7 @@ public class OrderController {
      * @param orderId
      * @return
      */
-    @PreAuthorize("hasAnyRole('MASTER','HUBMANAGER') || (hasRole('COMPANY') && @orderAuthService.isOrderOwner(#orderId))")
+    @PreAuthorize("hasAnyAuthority('MASTER','HUBMANAGER') || (hasAuthority('COMPANY') && @orderAuthService.isOrderOwner(#orderId))")
     @PutMapping("/orders/{orderId}")
     public CommonResponse<OrderUpdateResponseDto> updateOrder(@PathVariable("orderId") UUID orderId,
         @RequestBody List<OrderUpdateRequestDto> requestDtos) {
@@ -103,7 +103,7 @@ public class OrderController {
     /**
      * 내가 한 주문 정보 전체 조회
      */
-    @PreAuthorize("hasAnyRole('MASTER','HUBMANAGER','COMPANY')")
+    @PreAuthorize("hasAnyAuthority('MASTER','HUBMANAGER','COMPANY')")
     @GetMapping("/orders/mine")
     public CommonResponse<Page<OrderResponseDto>> getAllMineOrders(
         @RequestParam(name = "page", defaultValue = "1") int page,
