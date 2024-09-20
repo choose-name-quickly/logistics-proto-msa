@@ -57,11 +57,20 @@ AI API를 활용한 허브 및 업체 간 배송과 주문 관리 시스템
   
 **허브매니저**  
 [auth] 로그인  
-[hub-management] 허브매니저 본인 정보, 소속업체 정보 수정  
-[slack-message] 메세지 보내기  
+- 로그인 : `GET` http://auth-service:19098/user/login
+
+[hub-management] 허브매니저 본인 정보 수정
+- 허브 매니저 정보 수정 : `PATCH` http://hub-management-service:19091/api/hubmanagers/{hub_manager_id}
+  
+[slack-message] 메세지 보내기
+- 슬랙 메시지 생성 : `POST` http://slack-message-service:19091/api/messages
+- 슬랙 메시지 보내기 : `GET` http://slack-message-service:19091/api/messages/{slack_message_id}/send
+
+
 
 **배송기사**  
 [auth] 로그인  
+- 로그인 : `GET` http://auth-service:19098/user/login  
 [hub-management] 배송기사 본인정보 수정  
 [ai] 배송정보 메세지확인  
 
