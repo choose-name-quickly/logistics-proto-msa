@@ -33,11 +33,11 @@ AI API를 활용한 허브 및 업체 간 배송과 주문 관리 시스템
 - 로그인 : `GET` http://auth-service:19098/user/login
   
 [hub] 여러 허브 생성  
-- 허브 생성 : `POST` http://hub-service:19091/api/hubs/many
+- 허브 생성 : `POST` http://gateway-service:19091/api/hubs/many
 
 [hub-management] 생산업체, 배송기사 등록  
-- 생산 업체 생성 : `POST` http://hub-management-service:19091/api/companies  
-- 배송 기사 생성 : `POST` http://hub-management-service:19091/api/couriers
+- 생산 업체 생성 : `POST` http://gateway-service:19091/api/companies  
+- 배송 기사 생성 : `POST` http://gateway-service:19091/api/couriers
 
 [auth] 허브매니저, 생산업체, 배송기사 회원가입  
 - 허브 매니저 회원 가입 : `POST` http://auth-service:19098/api/auth/sign-up  
@@ -52,11 +52,11 @@ AI API를 활용한 허브 및 업체 간 배송과 주문 관리 시스템
 - 로그인 : `GET` http://auth-service:19098/user/login
 
 [product-company] 상품 등록, 조회(재고확인)  
-- 상품 등록 : `POST` http://product-company-service:19091/api/products  
-- 상품 조회 : `GET` http://product-company-service:19091/api/products/{product_id}
+- 상품 등록 : `POST` http://gateway-service:19091/api/products  
+- 상품 조회 : `GET` http://gateway-service:19091/api/products/{product_id}
 
 [order] 주문 및 배송 등록
-- 주문 및 배송 등록 : `POST` http://orders-service:19091/api/orders
+- 주문 및 배송 등록 : `POST` http://gateway-service:19091/api/orders
 
   <br>
   <br>
@@ -66,13 +66,13 @@ AI API를 활용한 허브 및 업체 간 배송과 주문 관리 시스템
 - 로그인 : `GET` http://auth-service:19098/user/login
 
 [hub-management] 허브 매니저 정보 및 소속 배달 기사 & 업체 관리
-- 허브 매니저 정보 수정 : `PATCH` http://hub-management-service:19091/api/hubmanagers/{hub_manager_id}
-- 소속 업체 정보 수정 : `PATCH` http://hub-management-service:19091/api/companies/{company_id}
-- 소속 배달 기사 정보 수정 : `PATCH` http://hub-management-service:19091/api/couriers/{courier_id}
+- 허브 매니저 정보 수정 : `PATCH` http://gateway-service:19091/api/hubmanagers/{hub_manager_id}
+- 소속 업체 정보 수정 : `PATCH` http://gateway-service:19091/api/companies/{company_id}
+- 소속 배달 기사 정보 수정 : `PATCH` http://gateway-service:19091/api/couriers/{courier_id}
   
 [slack-message] 메세지 보내기
-- 슬랙 메시지 생성 : `POST` http://slack-message-service:19091/api/messages
-- 슬랙 메시지 발송 : `GET` http://slack-message-service:19091/api/messages/{slack_message_id}/send
+- 슬랙 메시지 생성 : `POST` http://gateway-service:19091/api/messages
+- 슬랙 메시지 발송 : `GET` http://gateway-service:19091/api/messages/{slack_message_id}/send
 
 
 <br>
