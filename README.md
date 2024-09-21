@@ -13,7 +13,7 @@ AI API를 활용한 허브 및 업체 간 배송과 주문 관리 시스템
 <br>
 
 
-# 프로젝트 목적
+# ⭐ 프로젝트 목적
 1. Spring Cloued와 MSA를 기반의 플랫폼 구축 역량 향상  
 2. MSA와 DDD 개념 통합 적용  
 3. 날씨 API, GeminiAPI 등 외부 API 통신에 대한 이해 증진  
@@ -23,7 +23,7 @@ AI API를 활용한 허브 및 업체 간 배송과 주문 관리 시스템
 <br>
 
 
-# 서비스 구성 및 실행 방법  
+# ✔️ 서비스 구성 및 실행 방법  
 ![image](https://github.com/user-attachments/assets/9774091f-aaf3-42b8-9a39-77c2db76a647)
 
 
@@ -78,7 +78,7 @@ AI API를 활용한 허브 및 업체 간 배송과 주문 관리 시스템
 <br>
 <br>
 
-# ERD   
+# 🔎 ERD   
 ![미니물류시스템ERD (1)](https://github.com/user-attachments/assets/e41f4863-4f94-4dc5-9682-068ab540acd3)  
 
   
@@ -87,7 +87,7 @@ AI API를 활용한 허브 및 업체 간 배송과 주문 관리 시스템
 <br>
 
 
-# 기술 스택 
+# ℹ️ 기술 스택 
 
 ![Java](https://img.shields.io/badge/Java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-%236DB33F.svg?style=for-the-badge&logo=spring-boot&logoColor=white)
@@ -116,7 +116,7 @@ AI API를 활용한 허브 및 업체 간 배송과 주문 관리 시스템
 <br>
 
 
-# 트러블 슈팅 
+# ⚒️ 트러블 슈팅 
 **build.gradle에서 MapStruct와 Lombok 설정 충돌 해결** [WIKI 보기](https://github.com/choose-name-quickly/logistics-proto-msa/wiki/%5BTrouble-Shooting%5D-build.gradle%EC%97%90%EC%84%9C-MapStruct%EC%99%80-Lombok-%EC%84%A4%EC%A0%95-%EC%B6%A9%EB%8F%8C-%ED%95%B4%EA%B2%B0)  
 **FeignClient 호출문제 및 정리** [WIKI 보기](https://github.com/choose-name-quickly/logistics-proto-msa/wiki/%5BTrouble-Shooting%5D-FeignClient-%ED%98%B8%EC%B6%9C%EB%AC%B8%EC%A0%9C-%EB%B0%8F-%EC%A0%95%EB%A6%AC)  
 **postgreSQL의 스키마와 DB** [WIKI 보기](https://github.com/choose-name-quickly/logistics-proto-msa/wiki/%5BTrouble-Shooting%5D-postgreSQL%EC%9D%98-%EC%8A%A4%ED%82%A4%EB%A7%88%EC%99%80-DB)  
